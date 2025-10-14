@@ -6,46 +6,48 @@
 ## FASE 0: PREPARACIÓN DEL ENTORNO (1-2 días)
 
 ### Backend Setup
-- [ ] Crear proyecto Node.js + Express + TypeScript
-- [ ] Configurar estructura de carpetas backend
-- [ ] Instalar dependencias (express, bcrypt, jsonwebtoken, multer, cors, dotenv)
-- [ ] Configurar conexión a Supabase (PostgreSQL)
-- [ ] Configurar variables de entorno (.env)
-- [ ] Configurar Cloudinary para subida de archivos
+- [x] Crear proyecto Node.js + Express + TypeScript
+- [x] Configurar estructura de carpetas backend
+- [x] Instalar dependencias (express, bcrypt, jsonwebtoken, multer, cors, dotenv)
+- [x] Configurar conexión a Supabase (PostgreSQL)
+- [x] Configurar variables de entorno (.env)
+- [x] Configurar Cloudinary para subida de archivos
 
 ### Frontend Setup
-- [ ] Instalar dependencias Material UI
-- [ ] Instalar React Router, Axios, Zustand
-- [ ] Configurar estructura de carpetas frontend
-- [ ] Crear archivo de variables de entorno
-- [ ] Configurar proxy para desarrollo
+- [x] Instalar dependencias Material UI
+- [x] Instalar React Router, Axios, Zustand
+- [x] Configurar estructura de carpetas frontend
+- [x] Crear archivo de variables de entorno
+- [x] Configurar proxy para desarrollo
 
 ### Database Setup
-- [ ] Crear proyecto en Supabase
-- [ ] Diseñar esquema de base de datos
-- [ ] Crear tablas: users, courses, enrollments, quizzes, questions, answers, forum_posts, payments, transactions
-- [ ] Definir relaciones y constraints
-- [ ] Crear índices necesarios
+- [x] Crear proyecto en Supabase
+- [x] Diseñar esquema de base de datos
+- [x] Crear tablas: users, courses, enrollments, quizzes, questions, answers, forum_posts, payments, transactions
+- [x] Definir relaciones y constraints
+- [x] Crear índices necesarios
 
 ---
 
 ## FASE 1: AUTENTICACIÓN Y ROLES (3-5 días)
 
 ### Backend - Epic 1
-- [ ] Crear modelo User (id, name, email, password, role, status, created_at)
-- [ ] Implementar endpoint POST /api/auth/register
-  - Validar datos de entrada
-  - Hashear password con bcrypt
-  - Guardar usuario en DB
-  - Marcar teachers como "pending_validation"
-- [ ] Implementar endpoint POST /api/auth/login
-  - Validar credenciales
-  - Generar JWT token
-  - Retornar token y datos del usuario
-- [ ] Crear middleware de autenticación (verificar JWT)
-- [ ] Crear middleware de roles (admin, teacher, student)
-- [ ] Implementar endpoint GET /api/auth/me (validar token)
-- [ ] Implementar endpoint POST /api/auth/refresh (renovar token)
+ - [x] Crear modelo User (id, name, email, password, role, status, created_at)
+ - [x] Implementar endpoint POST /api/auth/register
+   - Validar datos de entrada
+   - Hashear password (**Supabase Auth maneja el hash de contraseña automáticamente al crear el usuario, por lo que no se almacena en texto plano ni es necesario usar bcrypt manualmente**)
+   - Guardar usuario en DB
+   - Marcar teachers como "pending_validation"
+ - [x] Implementar endpoint POST /api/auth/login
+   - Validar credenciales
+   - Generar JWT token
+   - Retornar token y datos del usuario
+ - [x] Crear middleware de autenticación (verificar JWT)
+ - [x] Crear middleware de roles (admin, teacher, student)
+ - [x] Implementar endpoint GET /api/auth/me (validar token)
+ - [x] Implementar endpoint POST /api/auth/refresh (renovar token)
+
+> **Nota:** El hash de la contraseña es gestionado por Supabase Auth, garantizando la seguridad de las credenciales sin intervención manual en el backend.
 
 ### Frontend - Epic 1
 - [ ] Crear types: User, Role, AuthState
