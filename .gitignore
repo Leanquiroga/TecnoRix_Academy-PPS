@@ -14,6 +14,8 @@ lerna-debug.log*
 .env.*.local
 .env.production
 .env.development
+.env.test
+.env.staging
 
 # Mantén un archivo de ejemplo (opcional pero recomendado)
 !.env.example
@@ -30,6 +32,7 @@ build/
 .nuxt/
 .output/
 .svelte-kit/
+.vite/
 
 # Test results
 coverage/
@@ -52,6 +55,7 @@ desktop.ini
 
 # Cache files
 .eslintcache
+*.tsbuildinfo
 
 # Ignorar solo archivos .md dentro de notes y sus subcarpetas
 notes/**/*.md
