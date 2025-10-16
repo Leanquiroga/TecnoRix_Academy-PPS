@@ -7,18 +7,48 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Environment variables
+# Nunca subas archivos .env a tu repositorio.
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Mantén un archivo de ejemplo (opcional pero recomendado)
+!.env.example
+!.env.sample
+
+# Dependencies
 node_modules
+
+# Build output
 dist
 dist-ssr
-*.local
+build/
+.next/
+.nuxt/
+.output/
+.svelte-kit/
+
+# Test results
+coverage/
+.nyc_output/
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Cache files
+.eslintcache
