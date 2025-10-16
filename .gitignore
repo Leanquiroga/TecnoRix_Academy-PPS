@@ -52,3 +52,6 @@ desktop.ini
 
 # Cache files
 .eslintcache
+
+# Ignorar solo archivos .md dentro de notes y sus subcarpetas
+notes/**/*.md
