@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import type { AuthPayload } from '../types/auth.types.js'
+import type { AuthPayload } from '../types/auth.types'
 import type { SignOptions, Secret } from 'jsonwebtoken'
 
 const JWT_SECRET: Secret = (process.env.JWT_SECRET ?? 'change_me') as Secret

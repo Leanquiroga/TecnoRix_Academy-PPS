@@ -1,6 +1,6 @@
 import type { NextFunction, Response } from 'express'
-import type { AuthRequest } from '../types/common.types.js'
-import type { UserRole } from '../types/auth.types.js'
+import type { AuthRequest } from '../types/common.types'
+import type { UserRole } from '../types/auth.types'
 
 export function authorizeRoles(...roles: UserRole[]) {
   return (req: AuthRequest, res: Response, next: NextFunction): void => {

@@ -1,5 +1,5 @@
-import { supabase, supabaseAdmin } from '../config/supabase.js'
-import type { UserRole, UserStatus } from '../types/auth.types.js'
+import { supabase, supabaseAdmin } from '../config/supabase'
+import type { UserRole, UserStatus } from '../types/auth.types'
 
 export interface CreateUserInput {
   email: string

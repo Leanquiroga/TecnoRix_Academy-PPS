@@ -6,8 +6,8 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 // Importar configuración
-import './config/supabase.js'
-import './config/cloudinary.js'
+import './config/supabase'
+import './config/cloudinary'
 
 const app: Express = express()
 
@@ -26,7 +26,7 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 })
 
 // Rutas
-import authRoutes from './routes/auth.routes.js'
+import authRoutes from './routes/auth.routes'
 app.use('/api/auth', authRoutes)
 
 // Ruta de prueba

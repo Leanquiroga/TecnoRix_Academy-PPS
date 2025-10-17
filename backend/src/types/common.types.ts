@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { AuthPayload } from './auth.types.js';
+import { AuthPayload } from './auth.types';
 
 export interface AuthRequest extends Request {
   user?: AuthPayload;

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios'
 
 const baseURL = import.meta.env.VITE_API_URL || '/api'
 
@@ -11,16 +11,30 @@ export const http = axios.create({
   },
 })
 
+let authToken: string | null = null
+export function setAuthToken(token: string | null) {
+  authToken = token
+  if (token) {
+    http.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  } else {
+    delete http.defaults.headers.common['Authorization']
+  }
+}
+
 // Interceptores básicos
 http.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  // TODO: inyectar token desde store si existe
+  if (authToken) {
+    const headers: AxiosRequestHeaders = (config.headers || {}) as AxiosRequestHeaders
+    headers.Authorization = `Bearer ${authToken}`
+    config.headers = headers
+  }
   return config
 })
 
 http.interceptors.response.use(
   (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    // TODO: manejar refresh token 401 en el futuro
+  async (error: AxiosError) => {
+    // Opcional: manejar 401 y reintentar con refresh
     return Promise.reject(error)
   }
 )

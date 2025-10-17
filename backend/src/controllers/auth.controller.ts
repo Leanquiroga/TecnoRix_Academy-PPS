@@ -1,8 +1,8 @@
 import type { Request, Response } from 'express'
-import { signToken } from '../utils/jwt.js'
-import type { AuthRequest } from '../types/common.types.js'
-import type { RegisterRequest, LoginRequest, UserRole } from '../types/auth.types.js'
-import { createUser, getUserByAuthId, getUserByEmail, getUserById, signInWithPassword } from '../services/user.service.js'
+import { signToken } from '../utils/jwt'
+import type { AuthRequest } from '../types/common.types'
+import type { RegisterRequest, LoginRequest, UserRole } from '../types/auth.types'
+import { createUser, getUserByAuthId, getUserByEmail, getUserById, signInWithPassword } from '../services/user.service'
 
 export async function register(req: Request, res: Response) {
   try {
@@ -91,6 +91,11 @@ export async function login(req: Request, res: Response) {
     const profile = await getUserByAuthId(userAuth.id)
     if (!profile) {
       return res.status(404).json({ success: false, error: 'Perfil de usuario no encontrado' })
+    }
+
+    // Validar si el usuario está suspendido
+    if (profile.status === 'suspended') {
+      return res.status(403).json({ success: false, error: 'Usuario suspendido. Contacta al administrador.' })
     }
 
     const token = signToken({ userId: profile.id, email: profile.email, role: profile.role })
