@@ -27,7 +27,10 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 
 // Rutas
 import authRoutes from './routes/auth.routes'
+import adminRoutes from './routes/admin.routes'
+
 app.use('/api/auth', authRoutes)
+app.use('/api/admin', adminRoutes)
 
 // Ruta de prueba
 app.get('/', (_req: Request, res: Response) => {

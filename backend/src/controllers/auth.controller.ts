@@ -1,7 +1,8 @@
 import type { Request, Response } from 'express'
 import { signToken } from '../utils/jwt'
 import type { AuthRequest } from '../types/common.types'
-import type { RegisterRequest, LoginRequest, UserRole } from '../types/auth.types'
+import type { RegisterRequest, LoginRequest } from '../types/auth.types'
+import { UserRole, UserStatus } from '../types/auth.types'
 import { createUser, getUserByAuthId, getUserByEmail, getUserById, signInWithPassword } from '../services/user.service'
 
 export async function register(req: Request, res: Response) {
@@ -23,7 +24,7 @@ export async function register(req: Request, res: Response) {
     if (name.length < 2) {
       return res.status(400).json({ success: false, error: 'El nombre es demasiado corto' })
     }
-    const allowedRoles: UserRole[] = ['student', 'teacher', 'admin'] as unknown as UserRole[]
+    const allowedRoles: UserRole[] = [UserRole.STUDENT, UserRole.TEACHER, UserRole.ADMIN]
     if (!allowedRoles.includes(role)) {
       return res.status(400).json({ success: false, error: 'Rol inválido' })
     }
@@ -94,7 +95,7 @@ export async function login(req: Request, res: Response) {
     }
 
     // Validar si el usuario está suspendido
-    if (profile.status === 'suspended') {
+    if (profile.status === UserStatus.SUSPENDED) {
       return res.status(403).json({ success: false, error: 'Usuario suspendido. Contacta al administrador.' })
     }
 
