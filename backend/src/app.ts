@@ -28,9 +28,15 @@ app.use((req: Request, _res: Response, next: NextFunction) => {
 // Rutas
 import authRoutes from './routes/auth.routes'
 import adminRoutes from './routes/admin.routes'
+import courseRoutes from './routes/course.routes'
+import adminCourseRoutes from './routes/admin.courses.routes'
+import uploadRoutes from './routes/upload.routes'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
+app.use('/api/courses', courseRoutes)
+app.use('/api/admin/courses', adminCourseRoutes)
+app.use('/api/upload', uploadRoutes)
 
 // Ruta de prueba
 app.get('/', (_req: Request, res: Response) => {
