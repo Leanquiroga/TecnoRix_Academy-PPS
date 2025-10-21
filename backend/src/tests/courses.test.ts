@@ -91,4 +91,85 @@ describe('Courses Endpoints - FASE 3 Epic 2', () => {
       expect(response.body.data.status).toBe('pending_approval')
     })
   })
+
+  describe('GET /api/courses/:id/materials (public)', () => {
+    let approvedCourseId: string
+
+    beforeAll(async () => {
+      // Crear curso con materiales
+      const courseResponse = await request(app)
+        .post('/api/courses')
+        .set('Authorization', `Bearer ${teacherActiveToken}`)
+        .send({
+          title: 'Curso con Materiales',
+          description: 'Curso de prueba con materiales',
+          price: 20,
+          materials: [
+            { title: 'Introducción', type: 'video', url: 'https://example.com/video1.mp4', order: 1 },
+            { title: 'Documentación', type: 'pdf', url: 'https://example.com/doc.pdf', order: 2 },
+            { title: 'Recursos externos', type: 'link', url: 'https://example.com', order: 3 },
+          ]
+        })
+
+      const courseId = courseResponse.body.data.id
+
+      // Aprobar el curso para que sea público
+      await request(app)
+        .put(`/api/admin/courses/${courseId}/approve`)
+        .set('Authorization', `Bearer ${adminToken}`)
+
+      approvedCourseId = courseId
+    })
+
+    it('Debe retornar los materiales de un curso aprobado', async () => {
+      const response = await request(app).get(`/api/courses/${approvedCourseId}/materials`)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+      expect(Array.isArray(response.body.data)).toBe(true)
+      expect(response.body.data.length).toBe(3)
+
+      // Verificar orden
+      const materials = response.body.data
+      expect(materials[0].title).toBe('Introducción')
+      expect(materials[0].type).toBe('video')
+      expect(materials[1].title).toBe('Documentación')
+      expect(materials[1].type).toBe('pdf')
+      expect(materials[2].title).toBe('Recursos externos')
+      expect(materials[2].type).toBe('link')
+    })
+
+    it('Debe retornar array vacío si el curso no tiene materiales', async () => {
+      // Crear curso sin materiales
+      const courseResponse = await request(app)
+        .post('/api/courses')
+        .set('Authorization', `Bearer ${teacherActiveToken}`)
+        .send({
+          title: 'Curso sin Materiales',
+          description: 'Curso vacío',
+          price: 0
+        })
+
+      const courseId = courseResponse.body.data.id
+
+      // Aprobar el curso
+      await request(app)
+        .put(`/api/admin/courses/${courseId}/approve`)
+        .set('Authorization', `Bearer ${adminToken}`)
+
+      const response = await request(app).get(`/api/courses/${courseId}/materials`)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+      expect(Array.isArray(response.body.data)).toBe(true)
+      expect(response.body.data.length).toBe(0)
+    })
+
+    it('Debe funcionar sin autenticación (endpoint público)', async () => {
+      const response = await request(app).get(`/api/courses/${approvedCourseId}/materials`)
+
+      expect(response.status).toBe(200)
+      expect(response.body.success).toBe(true)
+    })
+  })
 })

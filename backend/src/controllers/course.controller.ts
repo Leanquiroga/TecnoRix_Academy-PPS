@@ -1,4 +1,4 @@
-import { listPendingCourses, approveCourse, rejectCourse, getCoursePublicById, updateCourse, deleteCourse } from '../services/course.service'
+import { listPendingCourses, approveCourse, rejectCourse, getCoursePublicById, updateCourse, deleteCourse, getCourseMaterials } from '../services/course.service'
 
 // ADMIN: Listar cursos pendientes
 export async function getPendingCoursesController(_req: AuthRequest, res: Response) {
@@ -49,7 +49,7 @@ export async function createCourseController(req: AuthRequest, res: Response) {
   try {
     if (!req.user) return res.status(401).json({ success: false, error: 'Unauthorized' })
 
-    const { title, description, price, thumbnail_url, category, duration_hours, level, language, tags, metadata } = req.body || {}
+    const { title, description, price, thumbnail_url, category, duration_hours, level, language, tags, metadata, materials } = req.body || {}
     console.log('[Courses] Crear curso payload:', { title, teacher: req.user.userId })
 
     if (!title || !description) {
@@ -67,6 +67,7 @@ export async function createCourseController(req: AuthRequest, res: Response) {
       language,
       tags,
       metadata,
+      materials,
     })
 
     return res.status(201).json({ success: true, data: course, message: 'Curso creado y enviado a aprobación' })
@@ -101,6 +102,19 @@ export async function getCourseByIdController(req: AuthRequest, res: Response) {
     return res.json({ success: true, data: course })
   } catch (err: any) {
     const msg = err?.message || 'Error al obtener curso'
+    return res.status(400).json({ success: false, error: msg })
+  }
+}
+
+export async function getCourseMaterialsController(req: AuthRequest, res: Response) {
+  try {
+    const { id } = req.params
+    console.log('[Courses] Obtener materiales del curso:', id)
+    const materials = await getCourseMaterials(id)
+    return res.json({ success: true, data: materials })
+  } catch (err: any) {
+    const msg = err?.message || 'Error al obtener materiales'
+    console.error('[Courses] Error obteniendo materiales:', msg)
     return res.status(400).json({ success: false, error: msg })
   }
 }

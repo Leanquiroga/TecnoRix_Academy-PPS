@@ -1,6 +1,8 @@
 import axios from 'axios'
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig, AxiosRequestHeaders } from 'axios'
 
+// Si VITE_API_URL está definida, úsala tal cual (sin agregar /api).
+// Si no está definida, usa '/api' para aprovechar el proxy de Vite en dev.
 const baseURL = import.meta.env.VITE_API_URL || '/api'
 
 export const http = axios.create({

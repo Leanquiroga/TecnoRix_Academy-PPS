@@ -103,16 +103,22 @@ export async function listPublicCourses(): Promise<CoursePublic[]> {
 }
 
 export async function addCourseMaterials(courseId: string, materials: CourseMaterialInput[]) {
+  console.log('[CourseService] addCourseMaterials', courseId, 'materials:', materials?.length)
   if (!materials || materials.length === 0) return
   const payload = materials.map((m, idx) => ({
     course_id: courseId,
     title: m.title,
     type: m.type,
     url: m.url,
-    order: m.order ?? idx + 1,
+    order_index: m.order ?? idx + 1,
   }))
+  console.log('[CourseService] inserting materials payload:', JSON.stringify(payload, null, 2))
   const { error } = await supabaseAdmin.from('course_materials').insert(payload)
-  if (error) throw error
+  if (error) {
+    console.error('[CourseService] Error inserting materials:', error)
+    throw error
+  }
+  console.log('[CourseService] Materials inserted successfully')
 }
 
 export async function getCoursePublicById(id: string) {
@@ -124,6 +130,17 @@ export async function getCoursePublicById(id: string) {
     .maybeSingle()
   if (error) throw error
   return course
+}
+
+export async function getCourseMaterials(courseId: string) {
+  console.log('[CourseService] getCourseMaterials', courseId)
+  const { data, error } = await supabaseAdmin
+    .from('course_materials')
+    .select('*')
+    .eq('course_id', courseId)
+    .order('order_index', { ascending: true })
+  if (error) throw error
+  return data ?? []
 }
 
 export async function updateCourse(courseId: string, teacherId: string, input: Partial<CourseCreateInput>) {

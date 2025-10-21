@@ -5,12 +5,19 @@ import LoginPage from '../pages/Login'
 import RegisterPage from '../pages/Register'
 import DashboardPage from '../pages/Dashboard'
 import AdminPage from '../pages/AdminPage'
+import CreateCoursePage from '../pages/CreateCourse'
+import EditCoursePage from '../pages/EditCourse'
+import CourseApprovalPage from '../pages/CourseApproval'
+import { CoursesList } from '../pages/CoursesList'
+import { CourseDetail } from '../pages/CourseDetail'
 import { PrivateRoute, RoleRoute } from './guards'
 
 const router = createBrowserRouter([
   { path: '/', element: <Home /> },
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
+  { path: '/courses', element: <CoursesList /> },
+  { path: '/courses/:id', element: <CourseDetail /> },
   { 
     path: '/dashboard', 
     element: (
@@ -26,6 +33,30 @@ const router = createBrowserRouter([
         <AdminPage />
       </RoleRoute>
     ) 
+  },
+  {
+    path: '/admin/courses/approval',
+    element: (
+      <RoleRoute roles={['admin']}>
+        <CourseApprovalPage />
+      </RoleRoute>
+    )
+  },
+  {
+    path: '/courses/create',
+    element: (
+      <RoleRoute roles={['teacher']}>
+        <CreateCoursePage />
+      </RoleRoute>
+    )
+  },
+  {
+    path: '/courses/:id/edit',
+    element: (
+      <RoleRoute roles={['teacher']}>
+        <EditCoursePage />
+      </RoleRoute>
+    )
   },
   { path: '*', element: <NotFound /> },
 ])
