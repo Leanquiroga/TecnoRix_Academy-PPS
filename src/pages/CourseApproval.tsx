@@ -17,17 +17,18 @@ import {
   Chip,
 } from '@mui/material'
 import { CheckCircle, Cancel, Refresh } from '@mui/icons-material'
-import { listPendingCourses, approveCourse, rejectCourse } from '../api/course.service'
-import type { Course } from '../types/course'
-
-interface CourseWithTeacher extends Course {
-  instructor_name?: string
-}
+import { useCourse } from '../hooks/useCourse'
 
 export function CourseApproval() {
-  const [loading, setLoading] = useState(true)
-  const [courses, setCourses] = useState<CourseWithTeacher[]>([])
-  const [error, setError] = useState<string | null>(null)
+  const { 
+    pendingCourses: courses, 
+    loading, 
+    error, 
+    fetchPendingCourses, 
+    approveCourse: approveCourseStore, 
+    rejectCourse: rejectCourseStore 
+  } = useCourse()
+  
   const [success, setSuccess] = useState<string | null>(null)
   
   // Modal de rechazo
@@ -38,41 +39,22 @@ export function CourseApproval() {
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
-    loadPendingCourses()
-  }, [])
-
-  const loadPendingCourses = async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await listPendingCourses()
-      setCourses(data)
-    } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err)
-      setError(message || 'Error al cargar cursos pendientes')
-    } finally {
-      setLoading(false)
-    }
-  }
+    fetchPendingCourses()
+  }, [fetchPendingCourses])
 
   const handleApprove = async (courseId: string) => {
     try {
       setProcessing(true)
-      setError(null)
       setSuccess(null)
       
-      await approveCourse(courseId)
+      await approveCourseStore(courseId)
       
       setSuccess('Curso aprobado exitosamente')
-      
-      // Remover de la lista
-      setCourses(prev => prev.filter(c => c.id !== courseId))
       
       // Limpiar mensaje después de 3 segundos
       setTimeout(() => setSuccess(null), 3000)
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : String(err)
-      setError(message || 'Error al aprobar curso')
+      console.error('Error al aprobar curso:', err)
     } finally {
       setProcessing(false)
     }
@@ -96,15 +78,11 @@ export function CourseApproval() {
     try {
       setProcessing(true)
       setRejectError(null)
-      setError(null)
       setSuccess(null)
       
-      await rejectCourse(selectedCourseId, rejectReason.trim())
+      await rejectCourseStore(selectedCourseId, rejectReason.trim())
       
       setSuccess('Curso rechazado exitosamente')
-      
-      // Remover de la lista
-      setCourses(prev => prev.filter(c => c.id !== selectedCourseId))
       
       // Cerrar modal
       setRejectDialogOpen(false)
@@ -144,7 +122,7 @@ export function CourseApproval() {
         </Typography>
         <Button
           startIcon={<Refresh />}
-          onClick={loadPendingCourses}
+          onClick={fetchPendingCourses}
           disabled={loading}
         >
           Actualizar
@@ -152,7 +130,7 @@ export function CourseApproval() {
       </Box>
 
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }} onClose={() => setError(null)}>
+        <Alert severity="error" sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
@@ -201,11 +179,9 @@ export function CourseApproval() {
                   )}
                 </Box>
 
-                {course.instructor_name && (
-                  <Typography variant="caption" color="text.secondary">
-                    Profesor: {course.instructor_name}
-                  </Typography>
-                )}
+                <Typography variant="caption" color="text.secondary">
+                  ID del curso: {course.id}
+                </Typography>
               </CardContent>
 
               <CardActions sx={{ justifyContent: 'flex-end', gap: 1 }}>

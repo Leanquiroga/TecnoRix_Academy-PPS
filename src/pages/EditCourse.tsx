@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Container,
   Typography,
@@ -21,10 +21,12 @@ import {
 import { ArrowBack } from '@mui/icons-material'
 import { getCoursePublicById, getCourseMaterials, updateCourse } from '../api/course.service'
 import type { CoursePublic, CourseMaterial, CourseLevel } from '../types/course'
+import { useNavigation } from '../hooks/useNavigation'
+import { ROUTES } from '../routes/routes.config'
 
 export function EditCourse() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { goTo } = useNavigation()
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -103,7 +105,7 @@ export function EditCourse() {
 
       setSuccess('Curso actualizado correctamente')
       setTimeout(() => {
-        navigate('/teacher/courses')
+        goTo(ROUTES.TEACHER.COURSES)
       }, 2000)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err)
@@ -114,7 +116,7 @@ export function EditCourse() {
   }
 
   const handleCancel = () => {
-    navigate('/teacher/courses')
+    goTo(ROUTES.TEACHER.COURSES)
   }
 
   if (loading) {

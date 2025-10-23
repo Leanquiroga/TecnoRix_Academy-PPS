@@ -92,7 +92,7 @@ describe('CoursesList', () => {
     renderCoursesList();
 
     await waitFor(() => {
-      expect(screen.getByText(/error al cargar los cursos/i)).toBeInTheDocument();
+      expect(screen.getByText(/network error/i)).toBeInTheDocument();
     });
   });
 

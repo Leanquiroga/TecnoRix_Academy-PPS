@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import { Button, Container, TextField, Typography, Stack, Alert, MenuItem, Select, InputLabel, FormControl, Box, Link as MuiLink } from '@mui/material'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { useNavigation } from '../hooks/useNavigation'
+import { ROUTES } from '../routes/routes.config'
 import type { Role } from '../types/auth'
 
 export default function RegisterPage() {
   const { register, loading, error, isAuthenticated } = useAuth()
-  const navigate = useNavigate()
+  const { goToDashboard } = useNavigation()
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -15,9 +17,9 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard')
+      goToDashboard()
     }
-  }, [isAuthenticated, navigate])
+  }, [isAuthenticated, goToDashboard])
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,7 +56,7 @@ export default function RegisterPage() {
         <Box textAlign="center">
           <Typography variant="body2">
             ¿Ya tienes cuenta?{' '}
-            <MuiLink component={Link} to="/login">
+            <MuiLink component={Link} to={ROUTES.LOGIN}>
               Inicia sesión aquí
             </MuiLink>
           </Typography>

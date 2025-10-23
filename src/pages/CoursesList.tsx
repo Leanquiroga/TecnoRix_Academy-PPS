@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import {
   Container,
   Typography,
@@ -14,41 +14,20 @@ import {
   Alert,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import type { CoursePublic, CourseLevel } from '../types/course';
-import { listPublicCourses } from '../api/course.service';
+import type { CourseLevel } from '../types/course';
 import { CourseCard } from '../components/CourseCard';
+import { useCourse } from '../hooks/useCourse';
 
 export const CoursesList = () => {
-  const [courses, setCourses] = useState<CoursePublic[]>([]);
-  const [filteredCourses, setFilteredCourses] = useState<CoursePublic[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { courses, loading, error, fetchPublicCourses } = useCourse();
   const [searchTerm, setSearchTerm] = useState('');
   const [levelFilter, setLevelFilter] = useState<CourseLevel | 'all'>('all');
 
   useEffect(() => {
-    loadCourses();
-  }, []);
+    fetchPublicCourses();
+  }, [fetchPublicCourses]);
 
-  useEffect(() => {
-    applyFilters();
-  }, [courses, searchTerm, levelFilter]);
-
-  const loadCourses = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await listPublicCourses();
-      setCourses(data);
-    } catch (err) {
-      setError('Error al cargar los cursos. Por favor, intenta de nuevo.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const applyFilters = () => {
+  const filteredCourses = useMemo(() => {
     let filtered = [...courses];
 
     // Filtro de búsqueda
@@ -66,8 +45,8 @@ export const CoursesList = () => {
       filtered = filtered.filter((course) => course.level === levelFilter);
     }
 
-    setFilteredCourses(filtered);
-  };
+    return filtered;
+  }, [courses, searchTerm, levelFilter]);
 
   if (loading) {
     return (

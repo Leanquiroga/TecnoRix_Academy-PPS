@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   Box,
   Container,
@@ -28,10 +28,11 @@ import {
   PlayCircle,
   Link as LinkIcon,
 } from '@mui/icons-material'
-import { getCoursePublicById, getCourseMaterials } from '../api/course.service'
-import type { CoursePublic, CourseMaterial } from '../types/course'
+import type { CourseMaterial } from '../types/course'
 import { VideoPlayer } from '../components/VideoPlayer'
 import { PdfViewer } from '../components/PdfViewer'
+import { useNavigation } from '../hooks/useNavigation'
+import { useCourse } from '../hooks/useCourse'
 
 const levelColors = {
   beginner: 'success',
@@ -47,52 +48,52 @@ const levelLabels = {
 
 export function CourseDetail() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
-
-  const [course, setCourse] = useState<CoursePublic | null>(null)
-  const [materials, setMaterials] = useState<CourseMaterial[]>([])
+  const { goToCourses } = useNavigation()
+  const { 
+    currentCourse: course, 
+    materials, 
+    loading, 
+    error, 
+    fetchCourseById, 
+    fetchCourseMaterials, 
+    clearCurrentCourse 
+  } = useCourse()
+  
   const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) {
-      setError('ID de curso no válido')
-      setLoading(false)
       return
     }
 
-    const fetchCourseData = async () => {
+    const loadCourseData = async () => {
       try {
-        setLoading(true)
-        setError(null)
-
-        const [courseData, materialsData] = await Promise.all([
-          getCoursePublicById(id),
-          getCourseMaterials(id),
+        await Promise.all([
+          fetchCourseById(id),
+          fetchCourseMaterials(id),
         ])
-
-        setCourse(courseData)
-        setMaterials(materialsData)
-
-        // Seleccionar primer material por defecto
-        if (materialsData.length > 0) {
-          setSelectedMaterial(materialsData[0])
-        }
-      } catch (err: unknown) {
+      } catch (err) {
         console.error('Error al cargar curso:', err)
-        const message = err instanceof Error ? err.message : String(err)
-        setError(message || 'Error al cargar el curso')
-      } finally {
-        setLoading(false)
       }
     }
 
-    fetchCourseData()
-  }, [id])
+    loadCourseData()
+
+    // Cleanup al desmontar
+    return () => {
+      clearCurrentCourse()
+    }
+  }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse])
+
+  // Seleccionar primer material cuando se cargan
+  useEffect(() => {
+    if (materials.length > 0 && !selectedMaterial) {
+      setSelectedMaterial(materials[0])
+    }
+  }, [materials, selectedMaterial])
 
   const handleBack = () => {
-    navigate('/courses')
+    goToCourses()
   }
 
   const handleEnroll = () => {

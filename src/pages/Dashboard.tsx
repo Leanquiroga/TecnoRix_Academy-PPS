@@ -1,14 +1,14 @@
 import { Container, Typography, Box, Button, Paper, Stack, Chip } from '@mui/material'
 import { useAuth } from '../hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
+import { useNavigation } from '../hooks/useNavigation'
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
-  const navigate = useNavigate()
+  const { goToLogin } = useNavigation()
 
   const handleLogout = () => {
     logout()
-    navigate('/login')
+    goToLogin()
   }
 
   return (
