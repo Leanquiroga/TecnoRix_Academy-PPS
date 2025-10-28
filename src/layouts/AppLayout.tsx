@@ -4,6 +4,7 @@ import { Box, Container } from '@mui/material'
 import { useAuth } from '../hooks/useAuth'
 import { Navbar } from '../components/navigation/Navbar'
 import { Sidebar } from '../components/navigation/Sidebar'
+import { Breadcrumbs } from '../components/navigation/Breadcrumbs'
 
 interface AppLayoutProps {
   children: ReactNode
@@ -11,6 +12,7 @@ interface AppLayoutProps {
   disablePadding?: boolean
   showNavbar?: boolean
   showSidebar?: boolean
+  showBreadcrumbs?: boolean
 }
 
 /**
@@ -23,6 +25,7 @@ export function AppLayout({
   disablePadding = false,
   showNavbar = true,
   showSidebar = true,
+  showBreadcrumbs = true,
 }: AppLayoutProps) {
   const { isAuthenticated } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -110,7 +113,10 @@ export function AppLayout({
           }}
         >
           {disablePadding ? (
-            <Box sx={{ flex: 1 }}>{children}</Box>
+            <Box sx={{ flex: 1, p: 2 }}>
+              {showBreadcrumbs && <Breadcrumbs />}
+              {children}
+            </Box>
           ) : (
             <Container
               maxWidth={maxWidth}
@@ -121,6 +127,7 @@ export function AppLayout({
                 flexDirection: 'column',
               }}
             >
+              {showBreadcrumbs && <Breadcrumbs />}
               {children}
             </Container>
           )}

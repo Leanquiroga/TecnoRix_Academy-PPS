@@ -18,21 +18,26 @@ import {
   Card,
   CardContent,
   Stack,
+  LinearProgress,
 } from '@mui/material'
 import {
   ArrowBack,
-  Person,
-  AttachMoney,
+  CheckCircle,
   PictureAsPdf,
   PlayCircle,
   Link as LinkIcon,
+  NavigateBefore,
+  NavigateNext,
 } from '@mui/icons-material'
 import type { CourseMaterial } from '../types/course'
 import { VideoPlayer } from '../components/VideoPlayer'
 import { PdfViewer } from '../components/PdfViewer'
 import { useNavigation } from '../hooks/useNavigation'
 import { useCourse } from '../hooks/useCourse'
-import { EnrollButton } from '../components/EnrollButton'
+import { useEnrollmentStore } from '../store/enrollment.store'
+import { enrollmentService } from '../api/enrollment.service'
+import { useNotify } from '../hooks/useNotify'
+import { Breadcrumbs } from '../components/navigation/Breadcrumbs'
 
 const levelColors = {
   beginner: 'success',
@@ -46,20 +51,32 @@ const levelLabels = {
   advanced: 'Avanzado',
 } as const
 
-export function CourseDetail() {
+export function CourseView() {
+  // Breadcrumbs jerárquicos: Dashboard > Mis Cursos > [Nombre del Curso]
   const { id } = useParams<{ id: string }>()
-  const { goToCourses } = useNavigation()
+  const { goToMyCourses } = useNavigation()
   const { 
     currentCourse: course, 
     materials, 
-    loading, 
-    error, 
+    loading: courseLoading, 
+    error: courseError, 
     fetchCourseById, 
     fetchCourseMaterials, 
     clearCurrentCourse 
   } = useCourse()
-  
+  const { myCourses } = useEnrollmentStore()
   const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null)
+  const [enrollment, setEnrollment] = useState<any>(null)
+  const [updatingProgress, setUpdatingProgress] = useState(false)
+  const [progressError, setProgressError] = useState<string | null>(null)
+  const notify = useNotify()
+  const customBreadcrumbs = [
+    { label: 'Dashboard', path: '/student/dashboard' },
+    { label: 'Mis Cursos', path: '/student/my-courses' },
+  ] as { label: string; path?: string }[]
+  if (course) {
+    customBreadcrumbs.push({ label: course.title })
+  }
 
   useEffect(() => {
     if (!id) {
@@ -79,11 +96,18 @@ export function CourseDetail() {
 
     loadCourseData()
 
-    // Cleanup al desmontar
     return () => {
       clearCurrentCourse()
     }
   }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse])
+
+  // Encontrar la inscripción del curso actual
+  useEffect(() => {
+    if (id && myCourses.length > 0) {
+      const found = myCourses.find((e) => e.course_id === id)
+      setEnrollment(found || null)
+    }
+  }, [id, myCourses])
 
   // Seleccionar primer material cuando se cargan
   useEffect(() => {
@@ -93,9 +117,40 @@ export function CourseDetail() {
   }, [materials, selectedMaterial])
 
   const handleBack = () => {
-    goToCourses()
+    goToMyCourses()
   }
 
+  const handleMarkComplete = async () => {
+    if (!enrollment) return
+    try {
+      setUpdatingProgress(true)
+      setProgressError(null)
+  await enrollmentService.updateProgress(enrollment.id, 100)
+      // Actualizar enrollment local
+      setEnrollment({ ...enrollment, progress: 100, status: 'completed' })
+  notify({ title: 'Curso completado', message: '¡Buen trabajo! 🎉', severity: 'success' })
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || 'No se pudo actualizar el progreso'
+      setProgressError(msg)
+    } finally {
+      setUpdatingProgress(false)
+    }
+  }
+
+  const handleUpdateProgress = async (newProgress: number) => {
+    if (!enrollment) return
+    try {
+      setUpdatingProgress(true)
+      setProgressError(null)
+      await enrollmentService.updateProgress(enrollment.id, newProgress)
+      setEnrollment({ ...enrollment, progress: newProgress })
+    } catch (err: any) {
+      const msg = err?.response?.data?.error || 'No se pudo actualizar el progreso'
+      setProgressError(msg)
+    } finally {
+      setUpdatingProgress(false)
+    }
+  }
 
   const getMaterialIcon = (type: string) => {
     switch (type) {
@@ -156,7 +211,26 @@ export function CourseDetail() {
     }
   }
 
-  if (loading) {
+  const getCurrentMaterialIndex = () => {
+    if (!selectedMaterial) return -1
+    return materials.findIndex((m) => m.id === selectedMaterial.id)
+  }
+
+  const handlePreviousMaterial = () => {
+    const currentIndex = getCurrentMaterialIndex()
+    if (currentIndex > 0) {
+      setSelectedMaterial(materials[currentIndex - 1])
+    }
+  }
+
+  const handleNextMaterial = () => {
+    const currentIndex = getCurrentMaterialIndex()
+    if (currentIndex >= 0 && currentIndex < materials.length - 1) {
+      setSelectedMaterial(materials[currentIndex + 1])
+    }
+  }
+
+  if (courseLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
         <CircularProgress />
@@ -164,14 +238,28 @@ export function CourseDetail() {
     )
   }
 
-  if (error || !course) {
+  if (courseError || !course) {
     return (
       <Container maxWidth="md" sx={{ mt: 4 }}>
         <Alert severity="error" sx={{ mb: 2 }}>
-          {error || 'Curso no encontrado'}
+          {courseError || 'Curso no encontrado'}
         </Alert>
         <Button startIcon={<ArrowBack />} onClick={handleBack}>
-          Volver a cursos
+          Volver a Mis Cursos
+        </Button>
+      </Container>
+    )
+  }
+
+  // Verificar si el estudiante está inscrito
+  if (!enrollment) {
+    return (
+      <Container maxWidth="md" sx={{ mt: 4 }}>
+        <Alert severity="warning" sx={{ mb: 2 }}>
+          No estás inscrito en este curso.
+        </Alert>
+        <Button startIcon={<ArrowBack />} onClick={handleBack}>
+          Volver a Mis Cursos
         </Button>
       </Container>
     )
@@ -179,16 +267,17 @@ export function CourseDetail() {
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
+      <Breadcrumbs customItems={customBreadcrumbs} />
       {/* Header */}
       <Box sx={{ mb: 3 }}>
         <Button startIcon={<ArrowBack />} onClick={handleBack} sx={{ mb: 2 }}>
-          Volver a cursos
+          Volver a Mis Cursos
         </Button>
 
         <Card>
           <CardContent>
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="space-between">
-              <Box sx={{ flex: 1 }}>
+            <Stack spacing={2}>
+              <Box>
                 <Typography variant="h4" component="h1" gutterBottom>
                   {course.title}
                 </Typography>
@@ -204,26 +293,14 @@ export function CourseDetail() {
                   {course.category && (
                     <Chip label={course.category} variant="outlined" size="small" />
                   )}
-                </Stack>
-
-                <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
-                  {course.instructor_name && (
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Person fontSize="small" color="action" />
-                      <Typography variant="body2" color="text.secondary">
-                        {course.instructor_name}
-                      </Typography>
-                    </Box>
+                  {enrollment.status === 'completed' && (
+                    <Chip
+                      icon={<CheckCircle />}
+                      label="Completado"
+                      color="success"
+                      size="small"
+                    />
                   )}
-
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <AttachMoney fontSize="small" color="action" />
-                    <Typography variant="body2" color="text.secondary">
-                      {course.price === 0 || course.price === null
-                        ? 'Gratis'
-                        : `ARS ${course.price.toLocaleString('es-AR')}`}
-                    </Typography>
-                  </Box>
                 </Stack>
 
                 <Typography variant="body1" color="text.secondary" paragraph>
@@ -231,11 +308,50 @@ export function CourseDetail() {
                 </Typography>
               </Box>
 
-              <EnrollButton
-                courseId={course.id}
-                size="large"
-                sx={{ minWidth: 200 }}
-              />
+              {/* Progress Section */}
+              <Box>
+                <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                  <Typography variant="subtitle2" color="text.secondary">
+                    Progreso del curso
+                  </Typography>
+                  <Typography variant="subtitle2" fontWeight="bold">
+                    {enrollment.progress}%
+                  </Typography>
+                </Stack>
+                <LinearProgress
+                  variant="determinate"
+                  value={enrollment.progress}
+                  sx={{ height: 10, borderRadius: 1, mb: 2 }}
+                />
+                <Stack direction="row" spacing={2}>
+                  {enrollment.progress < 100 && (
+                    <>
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        onClick={() => handleUpdateProgress(Math.min(enrollment.progress + 10, 100))}
+                        disabled={updatingProgress}
+                      >
+                        +10% Progreso
+                      </Button>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        startIcon={<CheckCircle />}
+                        onClick={handleMarkComplete}
+                        disabled={updatingProgress}
+                      >
+                        Marcar como completado
+                      </Button>
+                    </>
+                  )}
+                </Stack>
+                {progressError && (
+                  <Alert severity="error" sx={{ mt: 1 }}>
+                    {progressError}
+                  </Alert>
+                )}
+              </Box>
             </Stack>
           </CardContent>
         </Card>
@@ -307,10 +423,39 @@ export function CourseDetail() {
         </Paper>
 
         {/* Material Viewer */}
-        <Box sx={{ flex: 1, minHeight: '600px' }}>{renderMaterialViewer()}</Box>
+        <Box sx={{ flex: 1, minHeight: '600px' }}>
+          {renderMaterialViewer()}
+          
+          {/* Navigation Buttons */}
+          {selectedMaterial && materials.length > 1 && (
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 3 }}>
+              <Button
+                variant="outlined"
+                startIcon={<NavigateBefore />}
+                onClick={handlePreviousMaterial}
+                disabled={getCurrentMaterialIndex() === 0}
+              >
+                Anterior
+              </Button>
+
+              <Typography variant="body2" color="text.secondary">
+                Material {getCurrentMaterialIndex() + 1} de {materials.length}
+              </Typography>
+
+              <Button
+                variant="outlined"
+                endIcon={<NavigateNext />}
+                onClick={handleNextMaterial}
+                disabled={getCurrentMaterialIndex() === materials.length - 1}
+              >
+                Siguiente
+              </Button>
+            </Stack>
+          )}
+        </Box>
       </Box>
     </Container>
   )
 }
 
-export default CourseDetail
+export default CourseView

@@ -392,7 +392,9 @@ export interface Breadcrumb {
 }
 
 export function getBreadcrumbs(currentPath: string): Breadcrumb[] {
-  const breadcrumbs: Breadcrumb[] = [{ label: 'Inicio', path: ROUTES.HOME }]
+  // Nota: El componente Breadcrumbs ya renderiza el link "Inicio".
+  // Aquí devolvemos SOLO los items posteriores para evitar duplicar "Inicio".
+  const breadcrumbs: Breadcrumb[] = []
 
   // Lógica básica de breadcrumbs según la ruta
   const segments = currentPath.split('/').filter(Boolean)
@@ -401,7 +403,7 @@ export function getBreadcrumbs(currentPath: string): Breadcrumb[] {
 
   // Admin routes
   if (segments[0] === 'admin') {
-    breadcrumbs.push({ label: 'Admin', path: ROUTES.ADMIN.ROOT })
+  breadcrumbs.push({ label: 'Admin', path: ROUTES.ADMIN.ROOT })
     if (segments[1] === 'courses') {
       breadcrumbs.push({ label: 'Cursos', path: ROUTES.ADMIN.COURSES })
       if (segments[2] === 'approval') {
@@ -415,7 +417,7 @@ export function getBreadcrumbs(currentPath: string): Breadcrumb[] {
 
   // Teacher routes
   if (segments[0] === 'teacher') {
-    breadcrumbs.push({ label: 'Profesor', path: ROUTES.TEACHER.ROOT })
+  breadcrumbs.push({ label: 'Profesor', path: ROUTES.TEACHER.ROOT })
     if (segments[1] === 'courses') {
       breadcrumbs.push({ label: 'Mis Cursos', path: ROUTES.TEACHER.COURSES })
     }
@@ -423,7 +425,7 @@ export function getBreadcrumbs(currentPath: string): Breadcrumb[] {
 
   // Student routes
   if (segments[0] === 'student') {
-    breadcrumbs.push({ label: 'Estudiante', path: ROUTES.STUDENT.ROOT })
+  breadcrumbs.push({ label: 'Estudiante', path: ROUTES.STUDENT.ROOT })
     if (segments[1] === 'courses') {
       breadcrumbs.push({ label: 'Mis Cursos', path: ROUTES.STUDENT.MY_COURSES })
     }
@@ -431,7 +433,7 @@ export function getBreadcrumbs(currentPath: string): Breadcrumb[] {
 
   // Courses routes
   if (segments[0] === 'courses') {
-    breadcrumbs.push({ label: 'Cursos', path: ROUTES.COURSES })
+  breadcrumbs.push({ label: 'Cursos', path: ROUTES.COURSES })
     if (segments[1] && segments[1] !== 'create') {
       breadcrumbs.push({
         label: 'Detalle del Curso',

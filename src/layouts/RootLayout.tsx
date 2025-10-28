@@ -18,6 +18,8 @@ export function RootLayout({ children }: RootLayoutProps) {
   const authRoutes = [ROUTES.LOGIN, ROUTES.REGISTER]
   const isAuthRoute = authRoutes.includes(location.pathname as typeof authRoutes[number])
 
+  const isHome = location.pathname === ROUTES.HOME
+
   // Rutas públicas que muestran navbar pero no sidebar
   const publicRoutes = [
     ROUTES.HOME, 
@@ -37,7 +39,7 @@ export function RootLayout({ children }: RootLayoutProps) {
   if (isPublicRoute) {
     // Navbar pero sin sidebar
     return (
-      <AppLayout showNavbar={true} showSidebar={false}>
+      <AppLayout showNavbar={true} showSidebar={false} showBreadcrumbs={!isHome}>
         {children}
       </AppLayout>
     )
@@ -45,7 +47,7 @@ export function RootLayout({ children }: RootLayoutProps) {
 
   // Layout completo con navbar y sidebar (rutas privadas)
   return (
-    <AppLayout showNavbar={true} showSidebar={true}>
+    <AppLayout showNavbar={true} showSidebar={true} showBreadcrumbs={!isHome}>
       {children}
     </AppLayout>
   )

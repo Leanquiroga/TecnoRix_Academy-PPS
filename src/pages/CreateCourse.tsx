@@ -5,6 +5,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { useFileUpload } from '../hooks/useFileUpload'
+import { useNotify } from '../hooks/useNotify'
 import { createCourse } from '../api/course.service'
 import type { CourseCreateInput, CourseMaterialInput, CourseMaterialType } from '../types/course'
 
@@ -16,6 +17,7 @@ export default function CreateCoursePage() {
   const [submitting, setSubmitting] = useState(false)
 
   const { uploading, error: uploadError, upload } = useFileUpload()
+  const notify = useNotify()
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -55,10 +57,14 @@ export default function CreateCoursePage() {
       setDescription('')
       setPrice('')
       setMaterials([])
-      alert('Curso creado y enviado para aprobación')
+      notify({
+        title: 'Curso creado',
+        message: 'Tu curso fue enviado para aprobación',
+        severity: 'success',
+      })
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Error al crear curso'
-      alert(msg)
+      notify({ message: msg, severity: 'error' })
     } finally {
       setSubmitting(false)
     }

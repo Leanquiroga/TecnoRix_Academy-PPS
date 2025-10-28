@@ -1,10 +1,31 @@
-import { Container, Typography, Box, Button, Paper, Stack, Chip } from '@mui/material'
+import { useEffect } from 'react'
+import { Container, Typography, Box, Button, Paper, Stack, Chip, CircularProgress } from '@mui/material'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigation } from '../hooks/useNavigation'
 
 export default function DashboardPage() {
   const { user, logout } = useAuth()
-  const { goToLogin } = useNavigation()
+  const { goToLogin, goTo } = useNavigation()
+
+  // Redirigir según el rol del usuario
+  useEffect(() => {
+    if (user?.role === 'student') {
+      goTo('/student/dashboard')
+    } else if (user?.role === 'teacher') {
+      goTo('/teacher/dashboard')
+    }
+  }, [user?.role, goTo])
+
+  // Mostrar loading mientras se redirige
+  if (user?.role === 'student' || user?.role === 'teacher') {
+    return (
+      <Container maxWidth="md" sx={{ py: 6 }}>
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+          <CircularProgress />
+        </Box>
+      </Container>
+    )
+  }
 
   const handleLogout = () => {
     logout()

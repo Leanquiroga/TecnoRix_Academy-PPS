@@ -4,12 +4,15 @@ import { ThemeProvider, CssBaseline } from '@mui/material'
 import theme from './theme/theme'
 import './index.css'
 import AppRoutes from './routes/AppRoutes'
+import { NotificationProvider } from './components/common/NotificationProvider'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AppRoutes />
+      <NotificationProvider>
+        <AppRoutes />
+      </NotificationProvider>
     </ThemeProvider>
   </StrictMode>,
 )
