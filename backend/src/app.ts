@@ -32,6 +32,7 @@ import courseRoutes from './routes/course.routes'
 import adminCourseRoutes from './routes/admin.courses.routes'
 import uploadRoutes from './routes/upload.routes'
 import enrollmentRoutes from './routes/enrollment.routes'
+import forumRoutes from './routes/forum.routes'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
@@ -39,6 +40,7 @@ app.use('/api/courses', courseRoutes)
 app.use('/api/admin/courses', adminCourseRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/enrollments', enrollmentRoutes)
+app.use('/api', forumRoutes)
 
 // Ruta de prueba
 app.get('/', (_req: Request, res: Response) => {
