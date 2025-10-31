@@ -22,8 +22,9 @@ export default function AdminPage() {
           status: 'pending_validation' as UserStatus,
         })
         setPendingTeachers(list.length)
-      } catch (err: any) {
-        setCountsError(err?.message ?? 'Error al cargar profesores pendientes')
+      } catch (err) {
+        const error = err as Error
+        setCountsError(error?.message ?? 'Error al cargar profesores pendientes')
       } finally {
         setLoadingCounts(false)
       }
@@ -42,8 +43,9 @@ export default function AdminPage() {
         // Estudiantes activos
         const studentsActive = await getUsers({ role: 'student' as Role, status: 'active' as UserStatus })
         setActiveStudents(studentsActive.length)
-      } catch (err: any) {
-        setCountsError(err?.message ?? 'Error al cargar estadísticas')
+      } catch (err) {
+        const error = err as Error
+        setCountsError(error?.message ?? 'Error al cargar estadísticas')
       }
     }
     loadStats()
@@ -60,9 +62,10 @@ export default function AdminPage() {
       setPendingTeachers(pending.length)
       setTotalUsers(all.length)
       setActiveStudents(studentsActive.length)
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as Error
       // Mantener stats actuales si falla
-      setCountsError(err?.message ?? 'Error al actualizar estadísticas')
+      setCountsError(error?.message ?? 'Error al actualizar estadísticas')
     }
   }
 

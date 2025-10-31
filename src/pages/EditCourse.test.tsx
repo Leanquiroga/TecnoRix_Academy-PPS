@@ -108,7 +108,14 @@ describe('EditCourse', () => {
   it('actualiza el curso correctamente cuando se envía el formulario', async () => {
     vi.spyOn(CourseAPI, 'getCoursePublicById').mockResolvedValue(mockCourse)
     vi.spyOn(CourseAPI, 'getCourseMaterials').mockResolvedValue([])
-    const updateSpy = vi.spyOn(CourseAPI, 'updateCourse').mockResolvedValue({ ...mockCourse, title: 'React Pro' } as any)
+    const updateSpy = vi.spyOn(CourseAPI, 'updateCourse').mockResolvedValue({ 
+      ...mockCourse, 
+      title: 'React Pro',
+      price: 15000,
+      status: 'draft' as const,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
 
     const user = userEvent.setup()
     renderEditCourse()
@@ -163,7 +170,16 @@ describe('EditCourse', () => {
   it('permite cambiar el nivel del curso', async () => {
     vi.spyOn(CourseAPI, 'getCoursePublicById').mockResolvedValue({ ...mockCourse, level: 'beginner' })
     vi.spyOn(CourseAPI, 'getCourseMaterials').mockResolvedValue([])
-    const updateSpy = vi.spyOn(CourseAPI, 'updateCourse').mockResolvedValue(mockCourse as any)
+    const updateSpy = vi.spyOn(CourseAPI, 'updateCourse').mockResolvedValue({ 
+      id: 'course-1',
+      title: 'React Avanzado',
+      description: 'Aprende React desde cero',
+      price: 15000,
+      teacher_id: 'teacher-1',
+      status: 'draft' as const,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    })
 
     const user = userEvent.setup()
     renderEditCourse()

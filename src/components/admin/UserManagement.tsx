@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Box,
   Paper,
@@ -68,11 +68,10 @@ export default function UserManagement({ onDataChanged }: Props) {
     action: () => {},
   })
 
-  useEffect(() => {
-    loadUsers()
-  }, [roleFilter, statusFilter])
+  // Nota: la carga depende de los filtros a través de loadUsers (memoizado con useCallback)
+  // Por ello, sólo necesitamos un useEffect que dependa de loadUsers.
 
-  const loadUsers = async () => {
+  const loadUsers = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -87,7 +86,11 @@ export default function UserManagement({ onDataChanged }: Props) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [roleFilter, statusFilter])
+
+  useEffect(() => {
+    loadUsers()
+  }, [loadUsers])
 
   const handleApprove = async (user: User) => {
     try {

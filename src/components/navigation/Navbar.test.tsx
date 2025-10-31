@@ -29,14 +29,14 @@ describe('Navbar', () => {
     vi.clearAllMocks()
     vi.mocked(useNavigation).mockReturnValue({
       goTo: mockGoTo,
-    } as any)
+    } as Partial<ReturnType<typeof useNavigation>> as ReturnType<typeof useNavigation>)
   })
 
   it('renderiza el logo de Tecnorix Academy', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
       isAuthenticated: false,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>
@@ -51,7 +51,7 @@ describe('Navbar', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
       isAuthenticated: false,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>
@@ -66,7 +66,7 @@ describe('Navbar', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
       isAuthenticated: false,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>
@@ -85,7 +85,7 @@ describe('Navbar', () => {
       user: mockUser,
       isAuthenticated: true,
       logout: mockLogout,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>
@@ -102,7 +102,7 @@ describe('Navbar', () => {
       user: mockUser,
       isAuthenticated: true,
       logout: mockLogout,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>
@@ -117,7 +117,7 @@ describe('Navbar', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: mockUser,
       isAuthenticated: true,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     const mockOnMenuToggle = vi.fn()
 
@@ -134,7 +134,7 @@ describe('Navbar', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: mockUser,
       isAuthenticated: true,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     const mockOnMenuToggle = vi.fn()
 
@@ -154,7 +154,7 @@ describe('Navbar', () => {
     vi.mocked(useAuth).mockReturnValue({
       user: null,
       isAuthenticated: false,
-    } as any)
+    } as Partial<ReturnType<typeof useAuth>> as ReturnType<typeof useAuth>)
 
     render(
       <BrowserRouter>

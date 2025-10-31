@@ -43,7 +43,7 @@ export function MyCourses() {
 
   const courses = useMemo(() => myCourses, [myCourses])
 
-  const handleFilter = (_: any, value: 'all' | EnrollmentStatus) => {
+  const handleFilter = (_: React.SyntheticEvent, value: 'all' | EnrollmentStatus) => {
     if (!value) return
     setLocalFilter(value)
     setFilter(value)

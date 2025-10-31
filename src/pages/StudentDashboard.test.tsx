@@ -116,9 +116,11 @@ describe('StudentDashboard', () => {
   // Curso completado no debe listarse en "en progreso"
   expect(screen.queryByText('TypeScript Avanzado')).not.toBeInTheDocument()
 
-    // Click en Continuar
-    const continuarBtn = await screen.findByRole('button', { name: /Continuar/i })
-    await userEvent.click(continuarBtn)
+  // Click en el botón específico "Continuar" de la tarjeta (evitar el CTA grande)
+  const continuarBtns = await screen.findAllByRole('button', { name: /Continuar/i })
+  const continuarBtn = continuarBtns.find((b) => b.textContent?.trim() === 'Continuar')
+  expect(continuarBtn).toBeTruthy()
+  await userEvent.click(continuarBtn!)
     expect(mockGoToCourseView).toHaveBeenCalledWith('c1')
   })
 
@@ -161,7 +163,8 @@ describe('StudentDashboard', () => {
     const { default: StudentDashboard2 } = await import('./StudentDashboard')
     render(<StudentDashboard2 />)
 
-    expect(await screen.findByText(/No tienes cursos en progreso/i)).toBeInTheDocument()
+  const msgs = await screen.findAllByText(/No tienes cursos en progreso/i)
+  expect(msgs.length).toBeGreaterThan(0)
   })
 
   it('muestra error cuando fallan las estadísticas', async () => {

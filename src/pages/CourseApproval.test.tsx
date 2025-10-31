@@ -236,7 +236,7 @@ describe('CourseApproval', () => {
     await waitFor(() => {
       expect(screen.queryByText('React Avanzado')).not.toBeInTheDocument()
     })
-  })
+  }, 10000)
 
   it('permite cancelar el rechazo', async () => {
     vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)

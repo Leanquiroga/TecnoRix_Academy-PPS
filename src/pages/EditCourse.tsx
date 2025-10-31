@@ -51,6 +51,9 @@ export function EditCourse() {
     }
 
     loadCourse()
+    // loadCourse depende de id pero se redefine cada vez, 
+    // así que llamarlo desde useEffect con [id] es seguro
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
   const loadCourse = async () => {

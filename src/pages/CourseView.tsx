@@ -30,6 +30,7 @@ import {
   NavigateNext,
 } from '@mui/icons-material'
 import type { CourseMaterial } from '../types/course'
+import type { Enrollment } from '../types/enrollment'
 import { VideoPlayer } from '../components/VideoPlayer'
 import { PdfViewer } from '../components/PdfViewer'
 import { useNavigation } from '../hooks/useNavigation'
@@ -66,7 +67,7 @@ export function CourseView() {
   } = useCourse()
   const { myCourses } = useEnrollmentStore()
   const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null)
-  const [enrollment, setEnrollment] = useState<any>(null)
+  const [enrollment, setEnrollment] = useState<Enrollment | null>(null)
   const [updatingProgress, setUpdatingProgress] = useState(false)
   const [progressError, setProgressError] = useState<string | null>(null)
   const notify = useNotify()
@@ -129,8 +130,9 @@ export function CourseView() {
       // Actualizar enrollment local
       setEnrollment({ ...enrollment, progress: 100, status: 'completed' })
   notify({ title: 'Curso completado', message: '¡Buen trabajo! 🎉', severity: 'success' })
-    } catch (err: any) {
-      const msg = err?.response?.data?.error || 'No se pudo actualizar el progreso'
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      const msg = error?.response?.data?.error || 'No se pudo actualizar el progreso'
       setProgressError(msg)
     } finally {
       setUpdatingProgress(false)
@@ -144,8 +146,9 @@ export function CourseView() {
       setProgressError(null)
       await enrollmentService.updateProgress(enrollment.id, newProgress)
       setEnrollment({ ...enrollment, progress: newProgress })
-    } catch (err: any) {
-      const msg = err?.response?.data?.error || 'No se pudo actualizar el progreso'
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      const msg = error?.response?.data?.error || 'No se pudo actualizar el progreso'
       setProgressError(msg)
     } finally {
       setUpdatingProgress(false)

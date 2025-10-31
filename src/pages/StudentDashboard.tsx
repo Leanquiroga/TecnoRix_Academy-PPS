@@ -45,8 +45,9 @@ export default function StudentDashboard() {
         setStatsError(null)
         const data = await enrollmentService.getStudentStats()
         setStats(data)
-      } catch (err: any) {
-        setStatsError(err?.response?.data?.error || 'Error al cargar estadísticas')
+      } catch (err) {
+        const error = err as { response?: { data?: { error?: string } } }
+        setStatsError(error?.response?.data?.error || 'Error al cargar estadísticas')
       } finally {
         setLoadingStats(false)
       }

@@ -54,8 +54,9 @@ export default function StudentsList() {
         ])
         setCourseTitle(course.title)
         setStudents(enrollments)
-      } catch (err: any) {
-        setError(err?.response?.data?.error || 'Error al cargar estudiantes')
+      } catch (err) {
+        const error = err as { response?: { data?: { error?: string } } }
+        setError(error?.response?.data?.error || 'Error al cargar estudiantes')
       } finally {
         setLoading(false)
       }
@@ -135,7 +136,7 @@ export default function StudentsList() {
                 labelId="status-label"
                 label="Estado"
                 value={status}
-                onChange={(e) => setStatus(e.target.value as any)}
+                onChange={(e) => setStatus(e.target.value as EnrollmentStatus | 'all')}
               >
                 <MenuItem value="all">Todos</MenuItem>
                 <MenuItem value="active">Activo</MenuItem>

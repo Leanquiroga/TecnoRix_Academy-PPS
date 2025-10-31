@@ -29,11 +29,13 @@ vi.mock('../api/course.service', () => ({
   ])
 }))
 
+import type { Enrollment } from '../types/enrollment'
+
 vi.mock('../api/enrollment.service', () => ({
   enrollmentService: {
     getCourseStudents: vi.fn((courseId: string) => {
-      if (courseId === 'c1') return Promise.resolve([{ id: 'e1' } as any, { id: 'e2' } as any])
-      if (courseId === 'c2') return Promise.resolve([{ id: 'e3' } as any])
+      if (courseId === 'c1') return Promise.resolve([{ id: 'e1' } as Enrollment, { id: 'e2' } as Enrollment])
+      if (courseId === 'c2') return Promise.resolve([{ id: 'e3' } as Enrollment])
       return Promise.resolve([])
     })
   }

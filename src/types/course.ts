@@ -15,7 +15,7 @@ export interface Course {
   level?: CourseLevel | null
   language?: string | null
   tags?: string[] | null
-  metadata?: Record<string, any> | null
+  metadata?: Record<string, unknown> | null
   created_at: string
   updated_at: string
   deleted_at?: string | null
@@ -31,7 +31,7 @@ export interface CourseCreateInput {
   level?: CourseLevel
   language?: string
   tags?: string[]
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   materials?: CourseMaterialInput[]
 }
 

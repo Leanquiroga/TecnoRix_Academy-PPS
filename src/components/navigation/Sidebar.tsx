@@ -70,7 +70,7 @@ export function Sidebar({
 
   const renderIcon = (iconName?: string) => {
     if (!iconName) return null
-    const IconComponent = Icons[iconName as keyof typeof Icons] as any
+    const IconComponent = Icons[iconName as keyof typeof Icons] as React.ComponentType
     return IconComponent ? <IconComponent /> : null
   }
 

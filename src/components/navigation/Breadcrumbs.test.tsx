@@ -19,7 +19,7 @@ describe('Breadcrumbs', () => {
     vi.mocked(useNavigation).mockReturnValue({
       currentPath: '/courses/123',
       goTo: mockGoTo,
-    } as any)
+    } as Partial<ReturnType<typeof useNavigation>> as ReturnType<typeof useNavigation>)
   })
 
   describe('Renderizado básico', () => {

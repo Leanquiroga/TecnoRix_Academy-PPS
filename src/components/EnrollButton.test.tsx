@@ -10,7 +10,15 @@ vi.mock('../api/enrollment.service', () => {
   }
 })
 
+// Mock de notificaciones para evitar requerir NotificationProvider
+const mockNotify = vi.fn()
+vi.mock('../hooks/useNotify', () => ({
+  useNotify: () => mockNotify
+}))
+
 const { enrollmentService } = await import('../api/enrollment.service')
+
+type MockedEnroll = ReturnType<typeof vi.fn>
 
 describe('EnrollButton', () => {
   beforeEach(() => {
@@ -19,7 +27,7 @@ describe('EnrollButton', () => {
 
   it('renderiza y realiza inscripción exitosa', async () => {
     const onEnrolled = vi.fn()
-    ;(enrollmentService.enroll as any).mockResolvedValue({
+    ;(enrollmentService.enroll as MockedEnroll).mockResolvedValue({
       requires_payment: false,
       enrollment: { id: 'enr1' },
     })
@@ -39,7 +47,7 @@ describe('EnrollButton', () => {
 
   it('maneja inscripción pendiente de pago', async () => {
     const onRequiresPayment = vi.fn()
-    ;(enrollmentService.enroll as any).mockResolvedValue({
+    ;(enrollmentService.enroll as MockedEnroll).mockResolvedValue({
       requires_payment: true,
       enrollment: { id: 'enr1' },
     })
@@ -52,16 +60,17 @@ describe('EnrollButton', () => {
     expect(enrollmentService.enroll).toHaveBeenCalledWith('course-2')
   })
 
-  it('muestra mensaje de error en fallo', async () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
-    ;(enrollmentService.enroll as any).mockRejectedValue({ response: { data: { error: 'Fallo' } } })
+  it('muestra mensaje de error en fallo (notifica error)', async () => {
+    mockNotify.mockReset()
+    ;(enrollmentService.enroll as MockedEnroll).mockRejectedValue({ response: { data: { error: 'Fallo' } } })
 
     render(<EnrollButton courseId="course-3" />)
 
     fireEvent.click(screen.getByRole('button', { name: /inscribirse/i }))
 
-    await waitFor(() => expect(alertSpy).toHaveBeenCalledWith('Fallo'))
-
-    alertSpy.mockRestore()
+    await waitFor(() => expect(mockNotify).toHaveBeenCalledWith(expect.objectContaining({
+      message: 'Fallo',
+      severity: 'error',
+    })))
   })
 })

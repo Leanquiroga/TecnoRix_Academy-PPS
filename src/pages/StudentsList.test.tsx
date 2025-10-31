@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
 
 vi.mock('react-router-dom', async () => {
-  const actual: any = await vi.importActual('react-router-dom')
+  const actual = await vi.importActual('react-router-dom')
   return {
     ...actual,
     useParams: () => ({ id: 'c1' }),

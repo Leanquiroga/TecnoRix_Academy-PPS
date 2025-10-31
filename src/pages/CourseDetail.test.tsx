@@ -7,6 +7,11 @@ import { CourseDetail } from './CourseDetail'
 
 vi.mock('../api/course.service')
 
+// Mock de notificaciones global para este test
+vi.mock('../hooks/useNotify', () => ({
+  useNotify: () => () => {},
+}))
+
 const mockCourse: CoursePublic = {
   id: 'course-1',
   title: 'React Avanzado',

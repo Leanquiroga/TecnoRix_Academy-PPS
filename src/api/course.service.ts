@@ -33,7 +33,7 @@ export async function updateCourse(id: string, payload: Partial<CourseCreateInpu
 }
 
 export async function deleteCourse(id: string) {
-  const { data } = await http.delete<ApiResponse<{}>>(`/courses/${id}`)
+  const { data } = await http.delete<ApiResponse<{ success: boolean }>>(`/courses/${id}`)
   if (!data.success) throw new Error(data.error || 'Error al eliminar curso')
   return true
 }

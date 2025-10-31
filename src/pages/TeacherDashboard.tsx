@@ -58,6 +58,8 @@ export default function TeacherDashboard() {
 
   useEffect(() => {
     loadTeacherData()
+    // loadTeacherData usa user?.id, que no cambia frecuentemente
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const loadTeacherData = async () => {
@@ -70,20 +72,20 @@ export default function TeacherDashboard() {
       
       // Filtrar cursos del profesor actual
       const teacherCourses = allCourses.filter(
-        (course: any) => course.teacher_id === user?.id
+        (course) => (course as { teacher_id?: string }).teacher_id === user?.id
       )
 
       // Calcular estadísticas
       const activeCourses = teacherCourses.filter(
-        (course: any) => course.status === 'approved'
+        (course) => (course as { status?: string }).status === 'approved'
       ).length
       const pendingCourses = teacherCourses.filter(
-        (course: any) => course.status === 'pending_approval'
+        (course) => (course as { status?: string }).status === 'pending_approval'
       ).length
 
       // Para cada curso, obtener el conteo de estudiantes
-      const coursesWithStudents: CourseWithStudents[] = await Promise.all(
-        teacherCourses.map(async (course: any) => {
+      const coursesWithStudents = await Promise.all(
+        teacherCourses.map(async (course) => {
           try {
             // Intentar obtener estudiantes, si falla usar 0
               const students = await enrollmentService.getCourseStudents(course.id)
@@ -106,15 +108,16 @@ export default function TeacherDashboard() {
         0
       )
 
-      setCourses(coursesWithStudents)
+      setCourses(coursesWithStudents as CourseWithStudents[])
       setStats({
         totalCourses: teacherCourses.length,
         activeCourses,
         pendingCourses,
         totalStudents,
       })
-    } catch (err: any) {
-      setError(err?.response?.data?.error || 'Error al cargar datos del profesor')
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      setError(error?.response?.data?.error || 'Error al cargar datos del profesor')
     } finally {
       setLoading(false)
     }

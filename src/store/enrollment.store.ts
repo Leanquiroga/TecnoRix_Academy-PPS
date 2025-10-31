@@ -29,8 +29,9 @@ export const useEnrollmentStore = create<EnrollmentState>((set, get) => ({
     try {
       const data = await enrollmentAPI.getMyCourses(status)
       set({ myCourses: data })
-    } catch (err: any) {
-      const msg = err?.response?.data?.error || 'Error al obtener tus cursos'
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      const msg = error?.response?.data?.error || 'Error al obtener tus cursos'
       set({ error: msg })
     } finally {
       set({ loading: false })
@@ -42,7 +43,9 @@ export const useEnrollmentStore = create<EnrollmentState>((set, get) => ({
     // Refrescar lista para reflejar nueva inscripción cuando sea gratuita
     try {
       await get().fetchMyCourses()
-    } catch {}
+    } catch {
+      // Ignorar error silenciosamente al refrescar
+    }
     return { requires_payment: res.requires_payment }
   },
 

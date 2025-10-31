@@ -48,8 +48,9 @@ export function EnrollButton({
           })
         }
       }
-    } catch (err: any) {
-      const msg = err?.response?.data?.error || 'No se pudo completar la inscripción'
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      const msg = error?.response?.data?.error || 'No se pudo completar la inscripción'
       notify({ message: msg, severity: 'error' })
     } finally {
       setLoading(false)

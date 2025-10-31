@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { useCourseStore } from './course.store'
 import * as CourseAPI from '../api/course.service'
+import type { CoursePublic, CourseMaterial, Course } from '../types/course'
 
 // Mock del API
 vi.mock('../api/course.service')
@@ -28,12 +29,26 @@ describe('course.store', () => {
 
   describe('fetchPublicCourses', () => {
     it('debe cargar cursos públicos exitosamente', async () => {
-      const mockCourses = [
-        { id: '1', title: 'Curso 1', description: 'Desc 1' },
-        { id: '2', title: 'Curso 2', description: 'Desc 2' },
+      const mockCourses: CoursePublic[] = [
+        { 
+          id: '1', 
+          title: 'Curso 1', 
+          description: 'Desc 1', 
+          price: 0, 
+          teacher_id: 't1',
+          instructor_name: 'Teacher 1'
+        },
+        { 
+          id: '2', 
+          title: 'Curso 2', 
+          description: 'Desc 2', 
+          price: 1000, 
+          teacher_id: 't2',
+          instructor_name: 'Teacher 2'
+        },
       ]
 
-      vi.mocked(CourseAPI.listPublicCourses).mockResolvedValue(mockCourses as any)
+      vi.mocked(CourseAPI.listPublicCourses).mockResolvedValue(mockCourses)
 
       const { fetchPublicCourses } = useCourseStore.getState()
       await fetchPublicCourses()
@@ -60,8 +75,15 @@ describe('course.store', () => {
 
   describe('fetchCourseById', () => {
     it('debe cargar un curso por ID', async () => {
-      const mockCourse = { id: '1', title: 'Curso Test', description: 'Descripción' }
-      vi.mocked(CourseAPI.getCoursePublicById).mockResolvedValue(mockCourse as any)
+      const mockCourse: CoursePublic = { 
+        id: '1', 
+        title: 'Curso Test', 
+        description: 'Descripción',
+        price: 5000,
+        teacher_id: 't1',
+        instructor_name: 'Teacher Test'
+      }
+      vi.mocked(CourseAPI.getCoursePublicById).mockResolvedValue(mockCourse)
 
       const { fetchCourseById } = useCourseStore.getState()
       await fetchCourseById('1')
@@ -78,8 +100,24 @@ describe('course.store', () => {
       
       // Simular que hay un curso actual
       useCourseStore.setState({ 
-        currentCourse: { id: '1', title: 'Test' } as any,
-        materials: [{ id: '1', title: 'Material 1' } as any]
+        currentCourse: { 
+          id: '1', 
+          title: 'Test',
+          description: 'Test desc',
+          price: 0,
+          teacher_id: 't1',
+          instructor_name: 'Test'
+        } as CoursePublic,
+        materials: [{ 
+          id: '1', 
+          title: 'Material 1',
+          course_id: '1',
+          type: 'video',
+          url: 'http://test.com',
+          order: 1,
+          created_at: '',
+          updated_at: ''
+        } as CourseMaterial]
       })
 
       clearCurrentCourse()
@@ -92,21 +130,26 @@ describe('course.store', () => {
 
   describe('createCourse', () => {
     it('debe crear un curso exitosamente', async () => {
-      const mockCourse = { 
+      const mockCourse: Course = { 
         id: '1', 
         title: 'Nuevo Curso',
         description: 'Descripción',
-        status: 'pending_approval'
+        price: 0,
+        teacher_id: 't1',
+        status: 'pending_approval' as const,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
       const payload = { 
         title: 'Nuevo Curso', 
-        description: 'Descripción' 
+        description: 'Descripción',
+        price: 0
       }
 
-      vi.mocked(CourseAPI.createCourse).mockResolvedValue(mockCourse as any)
+      vi.mocked(CourseAPI.createCourse).mockResolvedValue(mockCourse)
 
       const { createCourse } = useCourseStore.getState()
-      const result = await createCourse(payload as any)
+      const result = await createCourse(payload)
 
       expect(result).toEqual(mockCourse)
       expect(CourseAPI.createCourse).toHaveBeenCalledWith(payload)
@@ -115,13 +158,27 @@ describe('course.store', () => {
 
   describe('deleteCourse', () => {
     it('debe eliminar un curso y actualizar el estado', async () => {
-      vi.mocked(CourseAPI.deleteCourse).mockResolvedValue(true)
+  vi.mocked(CourseAPI.deleteCourse).mockResolvedValue(true)
 
       // Agregar cursos al estado
       useCourseStore.setState({ 
         courses: [
-          { id: '1', title: 'Curso 1' } as any,
-          { id: '2', title: 'Curso 2' } as any,
+          { 
+            id: '1', 
+            title: 'Curso 1',
+            description: 'Desc 1',
+            price: 0,
+            teacher_id: 't1',
+            instructor_name: 'Teacher 1'
+          } as CoursePublic,
+          { 
+            id: '2', 
+            title: 'Curso 2',
+            description: 'Desc 2',
+            price: 1000,
+            teacher_id: 't2',
+            instructor_name: 'Teacher 2'
+          } as CoursePublic,
         ]
       })
 
@@ -136,12 +193,30 @@ describe('course.store', () => {
 
   describe('fetchPendingCourses', () => {
     it('debe cargar cursos pendientes (admin)', async () => {
-      const mockPending = [
-        { id: '1', title: 'Pendiente 1', status: 'pending_approval' },
-        { id: '2', title: 'Pendiente 2', status: 'pending_approval' },
+      const mockPending: Course[] = [
+        { 
+          id: '1', 
+          title: 'Pendiente 1', 
+          description: 'Desc 1',
+          price: 0,
+          teacher_id: 't1',
+          status: 'pending_approval' as const,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
+        { 
+          id: '2', 
+          title: 'Pendiente 2', 
+          description: 'Desc 2',
+          price: 1000,
+          teacher_id: 't2',
+          status: 'pending_approval' as const,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        },
       ]
 
-      vi.mocked(CourseAPI.listPendingCourses).mockResolvedValue(mockPending as any)
+      vi.mocked(CourseAPI.listPendingCourses).mockResolvedValue(mockPending)
 
       const { fetchPendingCourses } = useCourseStore.getState()
       await fetchPendingCourses()
@@ -153,13 +228,41 @@ describe('course.store', () => {
 
   describe('approveCourse', () => {
     it('debe aprobar un curso y removerlo de pendientes', async () => {
-      vi.mocked(CourseAPI.approveCourse).mockResolvedValue({} as any)
+      const approvedCourse: Course = {
+        id: '1',
+        title: 'Aprobado',
+        description: 'Desc',
+        price: 0,
+        teacher_id: 't1',
+        status: 'approved' as const,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      vi.mocked(CourseAPI.approveCourse).mockResolvedValue(approvedCourse)
 
       // Agregar cursos pendientes
       useCourseStore.setState({
         pendingCourses: [
-          { id: '1', title: 'Pendiente 1' } as any,
-          { id: '2', title: 'Pendiente 2' } as any,
+          { 
+            id: '1', 
+            title: 'Pendiente 1',
+            description: 'Desc 1',
+            price: 0,
+            teacher_id: 't1',
+            status: 'pending_approval' as const,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          } as Course,
+          { 
+            id: '2', 
+            title: 'Pendiente 2',
+            description: 'Desc 2',
+            price: 1000,
+            teacher_id: 't2',
+            status: 'pending_approval' as const,
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          } as Course,
         ]
       })
 
