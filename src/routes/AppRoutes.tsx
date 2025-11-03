@@ -17,6 +17,8 @@ import TeacherDashboard from '../pages/TeacherDashboard'
 import StudentsList from '../pages/StudentsList'
 import { PrivateRoute, RoleRoute } from './guards'
 import { RootLayout } from '../layouts/RootLayout'
+import CourseForum from '../pages/CourseForum'
+import ForumPostDetail from '../pages/ForumPostDetail'
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,22 @@ const router = createBrowserRouter([
       { path: 'register', element: <RegisterPage /> },
       { path: 'courses', element: <CoursesList /> },
       { path: 'courses/:id', element: <CourseDetail /> },
+      {
+        path: 'courses/:id/forum',
+        element: (
+          <PrivateRoute>
+            <CourseForum />
+          </PrivateRoute>
+        )
+      },
+      {
+        path: 'courses/:id/forum/:postId',
+        element: (
+          <PrivateRoute>
+            <ForumPostDetail />
+          </PrivateRoute>
+        )
+      },
       {
         path: 'student/my-courses',
         element: (

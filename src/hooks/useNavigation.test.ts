@@ -198,6 +198,14 @@ describe('useNavigation', () => {
 
       expect(mockNavigate).toHaveBeenCalledWith('/courses/course123/forum/post456')
     })
+
+    it('goToForumPostReply navega al post y enfoca el formulario de respuesta (#reply)', () => {
+      const { result } = renderHook(() => useNavigation())
+
+      result.current.goToForumPostReply('course123', 'post456')
+
+      expect(mockNavigate).toHaveBeenCalledWith('/courses/course123/forum/post456#reply')
+    })
   })
 
   describe('Navegación de quizzes', () => {

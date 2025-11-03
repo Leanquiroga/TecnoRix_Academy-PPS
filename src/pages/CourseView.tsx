@@ -56,6 +56,7 @@ export function CourseView() {
   // Breadcrumbs jerárquicos: Dashboard > Mis Cursos > [Nombre del Curso]
   const { id } = useParams<{ id: string }>()
   const { goToMyCourses } = useNavigation()
+  const { goToCourseForum } = useNavigation()
   const { 
     currentCourse: course, 
     materials, 
@@ -347,6 +348,15 @@ export function CourseView() {
                         Marcar como completado
                       </Button>
                     </>
+                  )}
+                  {id && (
+                    <Button
+                      variant="text"
+                      size="small"
+                      onClick={() => goToCourseForum(id)}
+                    >
+                      Ir al Foro
+                    </Button>
                   )}
                 </Stack>
                 {progressError && (

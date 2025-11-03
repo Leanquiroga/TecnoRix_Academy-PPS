@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { CourseView } from './CourseView'
 import type { CourseMaterial } from '../types/course'
 
@@ -99,6 +98,72 @@ vi.mock('../components/PdfViewer', () => ({
   PdfViewer: ({ title }: { title: string }) => <div data-testid="pdf-viewer">{title}</div>,
 }))
 
+// Mock Breadcrumbs para aligerar render
+vi.mock('../components/navigation/Breadcrumbs', () => ({
+  Breadcrumbs: () => <nav data-testid="breadcrumbs" />,
+}))
+
+// Mock notify para evitar NotificationProvider
+vi.mock('../hooks/useNotify', () => ({
+  useNotify: vi.fn(() => vi.fn()),
+}))
+
+// Mock de @mui/material para bajar costo de render en este archivo
+vi.mock('@mui/material', () => {
+  const Passthrough = ({ children }: any) => <div>{children}</div>
+  const Button = ({ children, onClick, disabled }: any) => (
+    <button onClick={onClick} disabled={disabled}>{children}</button>
+  )
+  const List = ({ children }: any) => <ul>{children}</ul>
+  const ListItem = ({ children }: any) => <li>{children}</li>
+  const ListItemButton = ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>
+  const ListItemIcon = ({ children }: any) => <span>{children}</span>
+  const ListItemText = ({ primary, secondary }: any) => (
+    <div>
+      <span>{primary}</span>
+      <span>{secondary}</span>
+    </div>
+  )
+  const Typography = ({ children }: any) => <p>{children}</p>
+  const Chip = ({ label }: any) => <span>{label}</span>
+  const Divider = () => null
+  const LinearProgress = ({ value }: any) => <div data-testid="linear-progress" data-value={value} />
+  const Alert = ({ children }: any) => <div role="alert">{children}</div>
+  const CircularProgress = () => <div>loading</div>
+
+  return {
+    Container: Passthrough,
+    Box: Passthrough,
+    Paper: Passthrough,
+    Card: Passthrough,
+    CardContent: Passthrough,
+    Stack: Passthrough,
+    Button,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Typography,
+    Chip,
+    Divider,
+    LinearProgress,
+    Alert,
+    CircularProgress,
+  }
+})
+
+// Mock de @mui/icons-material para evitar cargar íconos pesados
+vi.mock('@mui/icons-material', () => ({
+  ArrowBack: () => null,
+  CheckCircle: () => null,
+  PictureAsPdf: () => null,
+  PlayCircle: () => null,
+  Link: () => null,
+  NavigateBefore: () => null,
+  NavigateNext: () => null,
+}))
+
 // Mock useParams
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -108,7 +173,9 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Nota: CourseView es pesado; saltamos estas pruebas temporalmente para acelerar la suite
+// NOTA: CourseView es demasiado pesado; causa OOM por importar MUI/íconos completos.
+// TODO: Refactorizar a hook useMaterialNavigator y tests unitarios del hook.
+// Saltado temporalmente para no bloquear la suite.
 describe.skip('CourseView - Navegación de Materiales', () => {
   beforeEach(() => {
     vi.clearAllMocks()
@@ -125,99 +192,56 @@ describe.skip('CourseView - Navegación de Materiales', () => {
 
   it('muestra botones de navegación entre materiales', async () => {
     render(<CourseView />)
-
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /anterior/i })).toBeInTheDocument()
-    })
-
-    expect(screen.getByRole('button', { name: /siguiente/i })).toBeInTheDocument()
+    // Esperar directamente por el botón Siguiente, que indica que el header se montó
+    await screen.findByRole('button', { name: /siguiente/i })
+    expect(screen.getByRole('button', { name: /anterior/i })).toBeInTheDocument()
     expect(screen.getByText(/material 1 de 3/i)).toBeInTheDocument()
   })
 
   it('deshabilita botón Anterior en el primer material', async () => {
     render(<CourseView />)
-
-    await waitFor(() => {
-      const anteriorBtn = screen.getByRole('button', { name: /anterior/i })
-      expect(anteriorBtn).toBeDisabled()
-    })
-
+    await screen.findByRole('button', { name: /siguiente/i })
+    const anteriorBtn = screen.getByRole('button', { name: /anterior/i })
+    expect(anteriorBtn).toBeDisabled()
     const siguienteBtn = screen.getByRole('button', { name: /siguiente/i })
     expect(siguienteBtn).not.toBeDisabled()
   })
 
   it('deshabilita botón Siguiente en el último material', async () => {
     render(<CourseView />)
-    const user = userEvent.setup()
-
-    // Navegar al último material
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /siguiente/i })).toBeInTheDocument()
-    })
-
+    await screen.findByRole('button', { name: /siguiente/i })
     const siguienteBtn = screen.getByRole('button', { name: /siguiente/i })
-    
     // Click 2 veces para llegar al último
-    await user.click(siguienteBtn)
-    await user.click(siguienteBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText(/material 3 de 3/i)).toBeInTheDocument()
-    })
-
+    fireEvent.click(siguienteBtn)
+    fireEvent.click(siguienteBtn)
+    await screen.findByText(/material 3 de 3/i)
     expect(siguienteBtn).toBeDisabled()
   })
 
   it('navega al siguiente material cuando se hace click en Siguiente', async () => {
     render(<CourseView />)
-    const user = userEvent.setup()
-
-    await waitFor(() => {
-      expect(screen.getByText(/material 1 de 3/i)).toBeInTheDocument()
-    })
-
+    await screen.findByText(/material 1 de 3/i)
     const siguienteBtn = screen.getByRole('button', { name: /siguiente/i })
-    await user.click(siguienteBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText(/material 2 de 3/i)).toBeInTheDocument()
-    })
+    fireEvent.click(siguienteBtn)
+    await screen.findByText(/material 2 de 3/i)
   })
 
   it('navega al material anterior cuando se hace click en Anterior', async () => {
     render(<CourseView />)
-    const user = userEvent.setup()
-
-    // Primero ir al segundo material
-    await waitFor(() => {
-      expect(screen.getByRole('button', { name: /siguiente/i })).toBeInTheDocument()
-    })
-
+    await screen.findByRole('button', { name: /siguiente/i })
     const siguienteBtn = screen.getByRole('button', { name: /siguiente/i })
-    await user.click(siguienteBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText(/material 2 de 3/i)).toBeInTheDocument()
-    })
-
-    // Ahora volver al anterior
+    fireEvent.click(siguienteBtn)
+    await screen.findByText(/material 2 de 3/i)
+    // Volver al anterior
     const anteriorBtn = screen.getByRole('button', { name: /anterior/i })
-    await user.click(anteriorBtn)
-
-    await waitFor(() => {
-      expect(screen.getByText(/material 1 de 3/i)).toBeInTheDocument()
-    })
+    fireEvent.click(anteriorBtn)
+    await screen.findByText(/material 1 de 3/i)
   })
 
   it('no muestra botones de navegación si solo hay 1 material', async () => {
     mockUseCourseReturn.materials = [mockMaterials[0]]
-    
     render(<CourseView />)
-
-    await waitFor(() => {
-      expect(screen.getByText(mockCourse.title)).toBeInTheDocument()
-    })
-
+    await screen.findByText(mockCourse.title)
     expect(screen.queryByRole('button', { name: /anterior/i })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /siguiente/i })).not.toBeInTheDocument()
   })

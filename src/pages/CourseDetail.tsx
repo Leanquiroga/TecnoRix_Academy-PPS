@@ -33,6 +33,7 @@ import { PdfViewer } from '../components/PdfViewer'
 import { useNavigation } from '../hooks/useNavigation'
 import { useCourse } from '../hooks/useCourse'
 import { EnrollButton } from '../components/EnrollButton'
+import { useAuthStore } from '../store/auth.store'
 
 const levelColors = {
   beginner: 'success',
@@ -48,7 +49,7 @@ const levelLabels = {
 
 export function CourseDetail() {
   const { id } = useParams<{ id: string }>()
-  const { goToCourses } = useNavigation()
+  const { goToCourses, goToCourseForum } = useNavigation()
   const { 
     currentCourse: course, 
     materials, 
@@ -60,6 +61,7 @@ export function CourseDetail() {
   } = useCourse()
   
   const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null)
+  const { user } = useAuthStore()
 
   useEffect(() => {
     if (!id) {
@@ -231,11 +233,18 @@ export function CourseDetail() {
                 </Typography>
               </Box>
 
-              <EnrollButton
-                courseId={course.id}
-                size="large"
-                sx={{ minWidth: 200 }}
-              />
+              <Stack spacing={1} alignItems="flex-end">
+                <EnrollButton
+                  courseId={course.id}
+                  size="large"
+                  sx={{ minWidth: 200 }}
+                />
+                {(user?.role === 'teacher' || user?.role === 'admin') && (
+                  <Button variant="text" size="small" onClick={() => goToCourseForum(course.id)}>
+                    Ir al Foro
+                  </Button>
+                )}
+              </Stack>
             </Stack>
           </CardContent>
         </Card>

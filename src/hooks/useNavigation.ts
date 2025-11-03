@@ -118,6 +118,17 @@ export function useNavigation() {
   )
 
   /**
+   * Navegar a un post del foro enfocando el formulario de respuesta
+   * Usa un hash (#reply) para permitir deep-linking desde notificaciones u otras vistas.
+   */
+  const goToForumPostReply = useCallback(
+    (courseId: string, postId: string) => {
+      navigate(`${ROUTES.FORUM.POST(courseId, postId)}#reply`)
+    },
+    [navigate]
+  )
+
+  /**
    * Navegar a la lista de quizzes de un curso
    */
   const goToQuizzes = useCallback(
@@ -273,7 +284,8 @@ export function useNavigation() {
 
     // Foros
     goToCourseForum,
-    goToForumPost,
+  goToForumPost,
+  goToForumPostReply,
 
     // Quizzes
     goToQuizzes,
