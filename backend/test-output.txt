@@ -1,0 +1,427 @@
+
+> tecnorix-academy-backend@1.0.0 test
+> node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config jest.config.mjs quiz.test.ts --verbose
+
+ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+transform: {
+    <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+},
+See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+  console.log
+    [Supabase] Diagn├│stico en tests:
+
+      at src/config/supabase.ts:12:11
+
+  console.log
+     - URL configurada: true
+
+      at src/config/supabase.ts:13:11
+
+  console.log
+     - Anon key configurada: true
+
+      at src/config/supabase.ts:14:11
+
+  console.log
+     - Service role key configurada: true
+
+      at src/config/supabase.ts:15:11
+
+(node:6264) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.log
+    2025-11-04T21:16:21.002Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:22.197Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:23.174Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:24.604Z - POST /api/enrollments
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:25.247Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    [beforeAll] Quiz creado exitosamente con ID: 89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:126:15)
+
+  console.time
+    [beforeAll] quiz setup: 6387 ms
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:131:13)
+
+  console.log
+    2025-11-04T21:16:27.372Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.378Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.383Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.389Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.394Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.399Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.403Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.407Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.412Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.416Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:27.420Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:29.682Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:30.818Z - GET /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:30.824Z - GET /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:31.266Z - GET /api/courses/bfa628c7-bffc-45aa-b402-35ba781462f5/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:31.710Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:31.714Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:32.418Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:33.098Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:33.758Z - GET /api/quizzes/00000000-0000-0000-0000-000000000000
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:33.983Z - PUT /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:33.986Z - PUT /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:33.989Z - PUT /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:34.440Z - PUT /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:34.655Z - POST /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/start
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:34.659Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:35.621Z - POST /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/start
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:36.269Z - POST /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/start
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:37.632Z - POST /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/start
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:39.221Z - POST /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:39.224Z - POST /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:39.229Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:40.192Z - POST /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:40.616Z - POST /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/start
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:41.949Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:42.597Z - POST /api/quiz-attempts/94d3dd94-3550-49e5-884b-5a8957f6db1e/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    ÔØî Error en submit quiz: { error: 'Este intento ya ha sido enviado' }
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:666:17)
+
+  console.log
+    2025-11-04T21:16:42.849Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:43.498Z - POST /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:43.731Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/attempts
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:43.736Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/attempts
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:44.220Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/attempts
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:44.702Z - GET /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:44.706Z - GET /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:45.184Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:46.242Z - GET /api/quiz-attempts/38d308fa-0f16-43a5-919c-844d2261070a
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:46.940Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/statistics
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:46.944Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/statistics
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:46.949Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/statistics
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:47.406Z - GET /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2/statistics
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:47.836Z - DELETE /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:47.840Z - DELETE /api/quizzes/89a20752-e48d-4523-a3df-619daf3f45f2
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:47.845Z - POST /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:49.025Z - DELETE /api/quizzes/a1f14298-0303-4ec0-8d5e-f5af9c2a37d8
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:16:49.478Z - GET /api/courses/8b9eae6d-350e-437f-9b1a-291705d5527c/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    [afterAll] Limpiando datos de prueba de quizzes...
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:135:13)
+
+FAIL src/tests/quiz.test.ts (32.826 s)
+  Quiz System
+    POST /api/courses/:courseId/quizzes
+      ÔêÜ debe requerir autenticaci├│n (6 ms)
+      ÔêÜ debe rechazar si el usuario es estudiante (5 ms)
+      ÔêÜ debe validar campos requeridos (5 ms)
+      ÔêÜ debe validar que el t├¡tulo tenga al menos 3 caracteres (6 ms)
+      ÔêÜ debe validar que passing_score est├® entre 0 y 100 (5 ms)
+      ÔêÜ debe validar que haya al menos una pregunta (4 ms)
+      ÔêÜ debe validar que cada pregunta tenga al menos 5 caracteres (4 ms)
+      ÔêÜ debe validar que cada pregunta tenga al menos 2 opciones (4 ms)
+      ÔêÜ debe validar que haya al menos una opci├│n correcta (5 ms)
+      ÔêÜ debe validar que multiple_choice tenga solo una respuesta correcta (4 ms)
+      ÔêÜ debe crear un quiz correctamente (profesor) (2262 ms)
+      ÔêÜ debe crear un quiz correctamente (admin) (1136 ms)
+    GET /api/courses/:courseId/quizzes
+      ÔêÜ debe requerir autenticaci├│n (5 ms)
+      ÔêÜ debe listar quizzes del curso (215 ms)
+      ÔêÜ debe retornar array vac├¡o si no hay quizzes (670 ms)
+    GET /api/quizzes/:quizId
+      ÔêÜ debe requerir autenticaci├│n (3 ms)
+      ÔêÜ debe obtener un quiz con sus preguntas (703 ms)
+      ÔêÜ debe ocultar respuestas correctas para estudiantes (681 ms)
+      ÔêÜ debe mostrar respuestas correctas para profesores (660 ms)
+      ÔêÜ debe retornar 404 si el quiz no existe (224 ms)
+    PUT /api/quizzes/:quizId
+      ÔêÜ debe requerir autenticaci├│n (3 ms)
+      ÔêÜ debe rechazar si el usuario es estudiante (3 ms)
+      ÔêÜ debe actualizar el quiz (profesor) (450 ms)
+      ÔêÜ debe validar passing_score en actualizaci├│n (215 ms)
+    POST /api/quizzes/:quizId/start
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe verificar que el usuario est├® inscrito (1609 ms)
+      ÔêÜ debe iniciar un nuevo intento correctamente (1362 ms)
+      ÔêÜ debe incrementar el n├║mero de intento (1590 ms)
+    POST /api/quiz-attempts/:attemptId/submit
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe validar que se env├¡en respuestas (4 ms)
+      ÔêÜ debe verificar que el intento pertenezca al usuario (1387 ms)
+      ├ù debe enviar el quiz y calcular puntaje correctamente (2205 ms)
+      ÔêÜ debe rechazar env├¡o de intento ya enviado (883 ms)
+    GET /api/quizzes/:quizId/attempts
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe listar intentos del estudiante actual (485 ms)
+      ÔêÜ debe listar todos los intentos para profesores (482 ms)
+    GET /api/quiz-attempts/:attemptId
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe obtener detalles del intento (477 ms)
+      ÔêÜ debe rechazar si el intento no pertenece al estudiante (1756 ms)
+    GET /api/quizzes/:quizId/statistics
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe rechazar si el usuario es estudiante (6 ms)
+      ÔêÜ debe obtener estad├¡sticas del quiz (profesor) (456 ms)
+      ÔêÜ debe obtener estad├¡sticas del quiz (admin) (430 ms)
+    DELETE /api/quizzes/:quizId
+      ÔêÜ debe requerir autenticaci├│n (4 ms)
+      ÔêÜ debe rechazar si el usuario es estudiante (4 ms)
+      ÔêÜ debe eliminar el quiz (soft delete) (1854 ms)
+
+  ÔùÅ Quiz System ÔÇ║ POST /api/quiz-attempts/:attemptId/submit ÔÇ║ debe enviar el quiz y calcular puntaje correctamente
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 400
+
+      667 |       }
+      668 |
+    > 669 |       expect(res.status).toBe(200)
+          |                          ^
+      670 |       expect(res.body.success).toBe(true)
+      671 |       expect(res.body.passed).toBe(true)
+      672 |       expect(res.body.data).toHaveProperty('score')
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:669:26)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 passed, 46 total
+Snapshots:   0 total
+Time:        33.066 s
+Ran all test suites matching quiz.test.ts.

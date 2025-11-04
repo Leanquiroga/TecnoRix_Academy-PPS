@@ -1,0 +1,242 @@
+
+> tecnorix-academy-backend@1.0.0 test
+> node --experimental-vm-modules ./node_modules/jest/bin/jest.js --config jest.config.mjs quiz.test.ts -t debe enviar el quiz y calcular puntaje correctamente
+
+ts-jest[ts-jest-transformer] (WARN) Define `ts-jest` config under `globals` is deprecated. Please do
+transform: {
+    <transform_regex>: ['ts-jest', { /* ts-jest config goes here in Jest */ }],
+},
+See more at https://kulshekhar.github.io/ts-jest/docs/getting-started/presets#advanced
+  console.log
+    [Supabase] Diagn├│stico en tests:
+
+      at src/config/supabase.ts:12:11
+
+  console.log
+     - URL configurada: true
+
+      at src/config/supabase.ts:13:11
+
+  console.log
+     - Anon key configurada: true
+
+      at src/config/supabase.ts:14:11
+
+  console.log
+     - Service role key configurada: true
+
+      at src/config/supabase.ts:15:11
+
+(node:13424) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  console.log
+    2025-11-04T21:18:35.429Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:18:36.574Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:18:37.631Z - POST /api/auth/register
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:18:39.082Z - POST /api/enrollments
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:18:39.740Z - POST /api/courses/c84fe5c6-bfcb-4d71-94f7-7803a65ed406/quizzes
+
+      at src/app.ts:24:11
+
+  console.log
+    [beforeAll] Quiz creado exitosamente con ID: 07ea049a-1304-4340-9903-4f785e29dd95
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:126:15)
+
+  console.time
+    [beforeAll] quiz setup: 6563 ms
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:131:13)
+
+  console.log
+    2025-11-04T21:18:41.976Z - POST /api/quizzes/07ea049a-1304-4340-9903-4f785e29dd95/start
+
+      at src/app.ts:24:11
+
+  console.log
+    ­ƒöì Start response: {
+      "success": true,
+      "data": {
+        "attempt": {
+          "id": "263f846b-b5da-4a19-a0ad-1a004cf3acd2",
+          "student_id": "95a41090-47f0-4915-af40-164a89e3d780",
+          "quiz_id": "07ea049a-1304-4340-9903-4f785e29dd95",
+          "score": 0,
+          "total_points": 0,
+          "percentage": 0,
+          "passed": false,
+          "time_taken_minutes": null,
+          "attempt_number": 1,
+          "submitted_at": "2025-11-04T21:18:43.079344+00:00"
+        },
+        "quiz": {
+          "id": "07ea049a-1304-4340-9903-4f785e29dd95",
+          "course_id": "c84fe5c6-bfcb-4d71-94f7-7803a65ed406",
+          "title": "JavaScript B├ísico",
+          "description": "Quiz de introducci├│n a JavaScript",
+          "passing_score": 70,
+          "time_limit_minutes": 30,
+          "max_attempts": 3,
+          "order_index": 0,
+          "created_at": "2025-11-04T21:18:40.567749+00:00",
+          "updated_at": "2025-11-04T21:18:40.567749+00:00",
+          "created_by": null,
+          "updated_by": null,
+          "questions": [
+            {
+              "id": "617a13fa-3ad4-440a-a48c-5c65f3d650e9",
+              "quiz_id": "07ea049a-1304-4340-9903-4f785e29dd95",
+              "question_text": "┬┐Qu├® es JavaScript?",
+              "type": "multiple_choice",
+              "points": 10,
+              "order_index": 0,
+              "explanation": "JavaScript es un lenguaje de programaci├│n interpretado",
+              "created_at": "2025-11-04T21:18:40.793433+00:00",
+              "options": []
+            },
+            {
+              "id": "6b48e6de-1144-4c81-ad24-c5fb6e881e20",
+              "quiz_id": "07ea049a-1304-4340-9903-4f785e29dd95",
+              "question_text": "┬┐JavaScript es tipado din├ímicamente?",
+              "type": "true_false",
+              "points": 5,
+              "order_index": 1,
+              "explanation": null,
+              "created_at": "2025-11-04T21:18:41.706692+00:00",
+              "options": []
+            }
+          ]
+        }
+      },
+      "message": "Intento iniciado exitosamente"
+    }
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:638:15)
+
+  console.log
+    ­ƒåö Test Attempt ID: 263f846b-b5da-4a19-a0ad-1a004cf3acd2
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:641:15)
+
+  console.log
+    ­ƒôØ Submitted at: 2025-11-04T21:18:43.079344+00:00
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:642:15)
+
+  console.log
+    2025-11-04T21:18:43.370Z - GET /api/quizzes/07ea049a-1304-4340-9903-4f785e29dd95
+
+      at src/app.ts:24:11
+
+  console.log
+    2025-11-04T21:18:44.120Z - POST /api/quiz-attempts/263f846b-b5da-4a19-a0ad-1a004cf3acd2/submit
+
+      at src/app.ts:24:11
+
+  console.log
+    ÔØî Error en submit quiz: { error: 'Este intento ya ha sido enviado' }
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:670:17)
+
+  console.log
+    [afterAll] Limpiando datos de prueba de quizzes...
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:135:13)
+
+FAIL src/tests/quiz.test.ts (13.011 s)
+  Quiz System
+    POST /api/courses/:courseId/quizzes
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe rechazar si el usuario es estudiante
+      Ôùï skipped debe validar campos requeridos
+      Ôùï skipped debe validar que el t├¡tulo tenga al menos 3 caracteres
+      Ôùï skipped debe validar que passing_score est├® entre 0 y 100
+      Ôùï skipped debe validar que haya al menos una pregunta
+      Ôùï skipped debe validar que cada pregunta tenga al menos 5 caracteres
+      Ôùï skipped debe validar que cada pregunta tenga al menos 2 opciones
+      Ôùï skipped debe validar que haya al menos una opci├│n correcta
+      Ôùï skipped debe validar que multiple_choice tenga solo una respuesta correcta
+      Ôùï skipped debe crear un quiz correctamente (profesor)
+      Ôùï skipped debe crear un quiz correctamente (admin)
+    GET /api/courses/:courseId/quizzes
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe listar quizzes del curso
+      Ôùï skipped debe retornar array vac├¡o si no hay quizzes
+    GET /api/quizzes/:quizId
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe obtener un quiz con sus preguntas
+      Ôùï skipped debe ocultar respuestas correctas para estudiantes
+      Ôùï skipped debe mostrar respuestas correctas para profesores
+      Ôùï skipped debe retornar 404 si el quiz no existe
+    PUT /api/quizzes/:quizId
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe rechazar si el usuario es estudiante
+      Ôùï skipped debe actualizar el quiz (profesor)
+      Ôùï skipped debe validar passing_score en actualizaci├│n
+    POST /api/quizzes/:quizId/start
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe verificar que el usuario est├® inscrito
+      Ôùï skipped debe iniciar un nuevo intento correctamente
+      Ôùï skipped debe incrementar el n├║mero de intento
+    POST /api/quiz-attempts/:attemptId/submit
+      ├ù debe enviar el quiz y calcular puntaje correctamente (2427 ms)
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe validar que se env├¡en respuestas
+      Ôùï skipped debe verificar que el intento pertenezca al usuario
+      Ôùï skipped debe rechazar env├¡o de intento ya enviado
+    GET /api/quizzes/:quizId/attempts
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe listar intentos del estudiante actual
+      Ôùï skipped debe listar todos los intentos para profesores
+    GET /api/quiz-attempts/:attemptId
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe obtener detalles del intento
+      Ôùï skipped debe rechazar si el intento no pertenece al estudiante
+    GET /api/quizzes/:quizId/statistics
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe rechazar si el usuario es estudiante
+      Ôùï skipped debe obtener estad├¡sticas del quiz (profesor)
+      Ôùï skipped debe obtener estad├¡sticas del quiz (admin)
+    DELETE /api/quizzes/:quizId
+      Ôùï skipped debe requerir autenticaci├│n
+      Ôùï skipped debe rechazar si el usuario es estudiante
+      Ôùï skipped debe eliminar el quiz (soft delete)
+
+  ÔùÅ Quiz System ÔÇ║ POST /api/quiz-attempts/:attemptId/submit ÔÇ║ debe enviar el quiz y calcular puntaje correctamente
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 200
+    Received: 400
+
+      671 |       }
+      672 |
+    > 673 |       expect(res.status).toBe(200)
+          |                          ^
+      674 |       expect(res.body.success).toBe(true)
+      675 |       expect(res.body.passed).toBe(true)
+      676 |       expect(res.body.data).toHaveProperty('score')
+
+      at Object.<anonymous> (src/tests/quiz.test.ts:673:26)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 45 skipped, 46 total
+Snapshots:   0 total
+Time:        13.255 s, estimated 14 s
+Ran all test suites matching quiz.test.ts with tests matching "debe enviar el quiz y calcular puntaje correctamente".
