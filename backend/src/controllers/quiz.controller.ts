@@ -518,10 +518,15 @@ export async function startQuizAttemptController(req: AuthRequest, res: Response
 
     const questionsWithOptions = await Promise.all(
       (questions || []).map(async (question) => {
-        const { data: options } = await supabaseAdmin.from('question_options')
-          .select('id, question_id, option_text, order_index, created_at, updated_at')
+        const { data: options, error: optionsError } = await supabaseAdmin.from('question_options')
+          .select('id, question_id, option_text, order_index, created_at')
           .eq('question_id', question.id)
           .order('order_index', { ascending: true })
+
+        if (optionsError) {
+          console.error('Error al obtener opciones:', optionsError)
+          return { ...question, options: [] }
+        }
 
         return { ...question, options: options || [] }
       })
@@ -912,11 +917,11 @@ async function getQuizAttemptDetails(attemptId: string) {
       return { data: null, error: attemptError }
     }
 
-    // Obtener respuestas
+    // Obtener respuestas (incluye la opción seleccionada y la pregunta)
     const { data: answers, error: answersError } = await supabaseAdmin.from('student_answers')
       .select(`
         *,
-        questions (
+        question:questions (
           id,
           question_text,
           type,
@@ -935,10 +940,46 @@ async function getQuizAttemptDetails(attemptId: string) {
       return { data: null, error: answersError }
     }
 
+    // Enriquecer con la opción correcta por pregunta
+    const questionIds = (answers || []).map((a: any) => a.question_id)
+    let correctOptionsMap: Record<string, any> = {}
+    if (questionIds.length > 0) {
+      const { data: correctOptions } = await supabaseAdmin
+        .from('question_options')
+        .select('id, question_id, option_text, is_correct')
+        .in('question_id', questionIds)
+        .eq('is_correct', true)
+
+      if (correctOptions) {
+        correctOptionsMap = correctOptions.reduce((acc: any, opt: any) => {
+          acc[opt.question_id] = opt
+          return acc
+        }, {})
+      }
+    }
+
+    const enrichedAnswers = (answers || []).map((a: any) => {
+      const selected = a.question_options
+      const correct = correctOptionsMap[a.question_id] || null
+      // Eliminar el alias crudo para no exponer 'question_options' en la respuesta
+      // y mapearlo a 'selected_option'
+      const { question_options, ...rest } = a
+      return {
+        ...rest,
+        selected_option: selected || null,
+        correct_option: correct ? { id: correct.id, option_text: correct.option_text, is_correct: true } : null,
+      }
+    })
+
+    // Mapear los nombres de las relaciones a los esperados por el frontend
+    const { profiles, quizzes, ...attemptData } = attempt as any
+
     return {
       data: {
-        ...attempt,
-        answers: answers || [],
+        ...attemptData,
+        student: profiles,
+        quiz: quizzes,
+        answers: enrichedAnswers,
       },
       error: null,
     }

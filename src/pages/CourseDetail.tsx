@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link as RouterLink } from 'react-router-dom'
 import {
   Box,
   Container,
@@ -18,6 +18,7 @@ import {
   Card,
   CardContent,
   Stack,
+  Link,
 } from '@mui/material'
 import {
   ArrowBack,
@@ -34,6 +35,8 @@ import { useNavigation } from '../hooks/useNavigation'
 import { useCourse } from '../hooks/useCourse'
 import { EnrollButton } from '../components/EnrollButton'
 import { useAuthStore } from '../store/auth.store'
+import { useQuizStore } from '../store/quiz.store'
+import QuizCard from '../components/quiz/QuizCard'
 
 const levelColors = {
   beginner: 'success',
@@ -62,6 +65,7 @@ export function CourseDetail() {
   
   const [selectedMaterial, setSelectedMaterial] = useState<CourseMaterial | null>(null)
   const { user } = useAuthStore()
+  const { loadQuizzesByCourse, quizzesByCourse } = useQuizStore()
 
   useEffect(() => {
     if (!id) {
@@ -70,12 +74,22 @@ export function CourseDetail() {
 
     const loadCourseData = async () => {
       try {
-        await Promise.all([
-          fetchCourseById(id),
-          fetchCourseMaterials(id),
-        ])
+        // Cargar datos básicos del curso primero
+        await fetchCourseById(id)
       } catch (err) {
         console.error('Error al cargar curso:', err)
+      }
+
+      // No bloquear la carga de quizzes si fallan los materiales (por ejemplo, usuario no inscrito)
+      fetchCourseMaterials(id).catch((err) => {
+        console.warn('Materiales no disponibles o error al cargar materiales:', err)
+      })
+
+      // Cargar quizzes siempre, independientemente del estado de materiales
+      try {
+        await loadQuizzesByCourse(id)
+      } catch (err) {
+        console.error('Error al cargar quizzes del curso:', err)
       }
     }
 
@@ -85,7 +99,7 @@ export function CourseDetail() {
     return () => {
       clearCurrentCourse()
     }
-  }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse])
+  }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse, loadQuizzesByCourse])
 
   // Seleccionar primer material cuando se cargan
   useEffect(() => {
@@ -166,18 +180,28 @@ export function CourseDetail() {
     )
   }
 
-  if (error || !course) {
+  // Si no hay curso, mostramos error bloqueante; los errores de materiales no deben bloquear la vista del curso/quizzes
+  if (!course) {
     return (
       <Container maxWidth="md" sx={{ mt: 4 }}>
-        <Alert severity="error" sx={{ mb: 2 }}>
-          {error || 'Curso no encontrado'}
-        </Alert>
+        {error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {error}
+          </Alert>
+        )}
+        {!error && (
+          <Alert severity="error" sx={{ mb: 2 }}>
+            {'Curso no encontrado'}
+          </Alert>
+        )}
         <Button startIcon={<ArrowBack />} onClick={handleBack}>
           Volver a cursos
         </Button>
       </Container>
     )
   }
+
+  const quizzes = id ? quizzesByCourse[id] ?? [] : []
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -242,6 +266,16 @@ export function CourseDetail() {
                 {(user?.role === 'teacher' || user?.role === 'admin') && (
                   <Button variant="text" size="small" onClick={() => goToCourseForum(course.id)}>
                     Ir al Foro
+                  </Button>
+                )}
+                {user?.role === 'teacher' && (
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    component={RouterLink}
+                    to={`/teacher/courses/${course.id}/quizzes/create`}
+                  >
+                    Crear Quiz
                   </Button>
                 )}
               </Stack>
@@ -315,8 +349,41 @@ export function CourseDetail() {
           )}
         </Paper>
 
-        {/* Material Viewer */}
-        <Box sx={{ flex: 1, minHeight: '600px' }}>{renderMaterialViewer()}</Box>
+        {/* Right Column: Viewer + Quizzes */}
+        <Box sx={{ flex: 1 }}>
+          <Stack spacing={3}>
+            <Box sx={{ minHeight: '400px' }}>{renderMaterialViewer()}</Box>
+            <Paper sx={{ p: 2 }}>
+              <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                <Typography variant="h6">Quizzes del curso</Typography>
+                {user?.role === 'teacher' && (
+                  <Link component={RouterLink} to={`/teacher/courses/${course.id}/quizzes/create`} underline="hover">
+                    Crear quiz
+                  </Link>
+                )}
+              </Stack>
+              {quizzes.length === 0 ? (
+                <Typography variant="body2" color="text.secondary">Aún no hay quizzes.</Typography>
+              ) : (
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    md: '1fr 1fr',
+                    lg: '1fr 1fr 1fr'
+                  },
+                  gap: 2,
+                }}>
+                  {quizzes.map(q => (
+                    <Box key={q.id}>
+                      <QuizCard quiz={q} showProgressLink={user?.role === 'student'} />
+                    </Box>
+                  ))}
+                </Box>
+              )}
+            </Paper>
+          </Stack>
+        </Box>
       </Box>
     </Container>
   )

@@ -30,6 +30,8 @@ import { ROUTES } from '../routes/routes.config'
 import { listPublicCourses } from '../api/course.service'
 import { enrollmentService } from '../api/enrollment.service'
 import type { Course } from '../types/course'
+import { useQuizStore } from '../store/quiz.store'
+import type { QuizStatistics } from '../types/quiz.types'
 
 interface TeacherStats {
   totalCourses: number
@@ -45,6 +47,7 @@ interface CourseWithStudents extends Course {
 export default function TeacherDashboard() {
   const { user } = useAuth()
   const { goToCreateCourse, goToCourses, goToCourse, goTo } = useNavigation()
+  const { loadQuizzesByCourse, quizzesByCourse, fetchStatistics } = useQuizStore()
   
   const [courses, setCourses] = useState<CourseWithStudents[]>([])
   const [stats, setStats] = useState<TeacherStats>({
@@ -55,6 +58,14 @@ export default function TeacherDashboard() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [loadingQuizStats, setLoadingQuizStats] = useState(false)
+  const [quizStatsRows, setQuizStatsRows] = useState<Array<{
+    courseId: string
+    courseTitle: string
+    quizId: string
+    quizTitle: string
+    stats: QuizStatistics
+  }>>([])
 
   useEffect(() => {
     loadTeacherData()
@@ -120,6 +131,38 @@ export default function TeacherDashboard() {
       setError(error?.response?.data?.error || 'Error al cargar datos del profesor')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadQuizStatistics = async () => {
+    try {
+      if (!user) return
+      setLoadingQuizStats(true)
+      setQuizStatsRows([])
+      // cargar quizzes por curso y luego estadísticas por quiz
+      for (const course of courses) {
+        try {
+          await loadQuizzesByCourse(course.id)
+          const quizzes = quizzesByCourse[course.id] || []
+          for (const q of quizzes) {
+            await fetchStatistics(q.id)
+            const stats = useQuizStore.getState().statistics[q.id]
+            if (stats) {
+              setQuizStatsRows(prev => ([...prev, {
+                courseId: course.id,
+                courseTitle: course.title,
+                quizId: q.id,
+                quizTitle: q.title,
+                stats,
+              }]))
+            }
+          }
+        } catch {
+          // continuar con el siguiente curso si falla uno
+        }
+      }
+    } finally {
+      setLoadingQuizStats(false)
     }
   }
 
@@ -372,6 +415,53 @@ export default function TeacherDashboard() {
                           </Button>
                         </Stack>
                       </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </Paper>
+
+        {/* Estadísticas de Quizzes */}
+        <Paper elevation={2} sx={{ p: 3 }}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 2 }}>
+            <Typography variant="h6" fontWeight="bold">Estadísticas de Quizzes</Typography>
+            <Button variant="outlined" startIcon={<BarChart />} onClick={loadQuizStatistics} disabled={loadingQuizStats}>
+              {loadingQuizStats ? 'Cargando…' : 'Cargar estadísticas'}
+            </Button>
+          </Stack>
+
+          {quizStatsRows.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              {loadingQuizStats ? 'Cargando estadísticas…' : 'No hay estadísticas para mostrar. Pulsa "Cargar estadísticas".'}
+            </Typography>
+          ) : (
+            <TableContainer>
+              <Table size="small">
+                <TableHead>
+                  <TableRow>
+                    <TableCell><strong>Curso</strong></TableCell>
+                    <TableCell><strong>Quiz</strong></TableCell>
+                    <TableCell align="right"><strong>Intentos</strong></TableCell>
+                    <TableCell align="right"><strong>Promedio</strong></TableCell>
+                    <TableCell align="right"><strong>Aprobación</strong></TableCell>
+                    <TableCell align="right"><strong>Máxima</strong></TableCell>
+                    <TableCell align="right"><strong>Mínima</strong></TableCell>
+                    <TableCell align="right"><strong>Tiempo prom. (min)</strong></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {quizStatsRows.map(r => (
+                    <TableRow key={`${r.courseId}-${r.quizId}`}>
+                      <TableCell>{r.courseTitle}</TableCell>
+                      <TableCell>{r.quizTitle}</TableCell>
+                      <TableCell align="right">{r.stats.total_attempts}</TableCell>
+                      <TableCell align="right">{r.stats.average_score.toFixed(1)}</TableCell>
+                      <TableCell align="right">{(r.stats.pass_rate * 100).toFixed(0)}%</TableCell>
+                      <TableCell align="right">{r.stats.highest_score.toFixed(1)}</TableCell>
+                      <TableCell align="right">{r.stats.lowest_score.toFixed(1)}</TableCell>
+                      <TableCell align="right">{r.stats.average_time_minutes.toFixed(1)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

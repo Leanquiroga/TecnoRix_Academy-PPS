@@ -19,6 +19,11 @@ import { PrivateRoute, RoleRoute } from './guards'
 import { RootLayout } from '../layouts/RootLayout'
 import CourseForum from '../pages/CourseForum'
 import ForumPostDetail from '../pages/ForumPostDetail'
+import QuizView from '../pages/QuizView'
+import QuizResults from '../pages/QuizResults'
+import RouteErrorElement from './RouteErrorElement'
+import CreateQuizPage from '../pages/CreateQuiz'
+import StudentProgressPage from '../pages/StudentProgress'
 
 const router = createBrowserRouter([
   {
@@ -28,6 +33,7 @@ const router = createBrowserRouter([
         <Outlet />
       </RootLayout>
     ),
+    errorElement: <RouteErrorElement />,
     children: [
       { index: true, element: <Home /> },
       { path: 'login', element: <LoginPage /> },
@@ -63,6 +69,30 @@ const router = createBrowserRouter([
         element: (
           <RoleRoute roles={['student']}>
             <CourseView />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'quizzes/:quizId',
+        element: (
+          <RoleRoute roles={['student']}>
+            <QuizView />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'quizzes/:quizId/progress',
+        element: (
+          <RoleRoute roles={['student']}>
+            <StudentProgressPage />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'quiz-attempts/:attemptId',
+        element: (
+          <RoleRoute roles={['student']}>
+            <QuizResults />
           </RoleRoute>
         )
       },
@@ -111,6 +141,14 @@ const router = createBrowserRouter([
         element: (
           <RoleRoute roles={['teacher']}>
             <CreateCoursePage />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'teacher/courses/:id/quizzes/create',
+        element: (
+          <RoleRoute roles={['teacher']}>
+            <CreateQuizPage />
           </RoleRoute>
         )
       },

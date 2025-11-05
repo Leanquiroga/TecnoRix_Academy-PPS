@@ -39,6 +39,8 @@ import { useEnrollmentStore } from '../store/enrollment.store'
 import { enrollmentService } from '../api/enrollment.service'
 import { useNotify } from '../hooks/useNotify'
 import { Breadcrumbs } from '../components/navigation/Breadcrumbs'
+import { useQuizStore } from '../store/quiz.store'
+import QuizCard from '../components/quiz/QuizCard'
 
 const levelColors = {
   beginner: 'success',
@@ -72,6 +74,7 @@ export function CourseView() {
   const [updatingProgress, setUpdatingProgress] = useState(false)
   const [progressError, setProgressError] = useState<string | null>(null)
   const notify = useNotify()
+  const { loadQuizzesByCourse, quizzesByCourse } = useQuizStore()
   const customBreadcrumbs = [
     { label: 'Dashboard', path: '/student/dashboard' },
     { label: 'Mis Cursos', path: '/student/my-courses' },
@@ -87,12 +90,22 @@ export function CourseView() {
 
     const loadCourseData = async () => {
       try {
-        await Promise.all([
-          fetchCourseById(id),
-          fetchCourseMaterials(id),
-        ])
+        // Cargar datos básicos del curso primero
+        await fetchCourseById(id)
       } catch (err) {
         console.error('Error al cargar curso:', err)
+      }
+
+      // Cargar materiales en segundo plano (si falla, no bloquear el resto)
+      fetchCourseMaterials(id).catch((err) => {
+        console.warn('Materiales no disponibles o error al cargar materiales:', err)
+      })
+
+      // Cargar quizzes siempre
+      try {
+        await loadQuizzesByCourse(id)
+      } catch (err) {
+        console.error('Error al cargar quizzes del curso:', err)
       }
     }
 
@@ -101,7 +114,7 @@ export function CourseView() {
     return () => {
       clearCurrentCourse()
     }
-  }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse])
+  }, [id, fetchCourseById, fetchCourseMaterials, clearCurrentCourse, loadQuizzesByCourse])
 
   // Encontrar la inscripción del curso actual
   useEffect(() => {
@@ -438,7 +451,7 @@ export function CourseView() {
         {/* Material Viewer */}
         <Box sx={{ flex: 1, minHeight: '600px' }}>
           {renderMaterialViewer()}
-          
+
           {/* Navigation Buttons */}
           {selectedMaterial && materials.length > 1 && (
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mt: 3 }}>
@@ -465,6 +478,44 @@ export function CourseView() {
               </Button>
             </Stack>
           )}
+
+          {/* Quizzes del curso */}
+          <Paper sx={{ p: 2, mt: 4 }}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+              <Typography variant="h6">Quizzes del curso</Typography>
+            </Stack>
+            {(() => {
+              const quizzes = id ? (quizzesByCourse[id] ?? []) : []
+              if (quizzes.length === 0) {
+                return (
+                  <Typography variant="body2" color="text.secondary">Aún no hay quizzes.</Typography>
+                )
+              }
+              return (
+                <Box sx={{
+                  display: 'grid',
+                  gridTemplateColumns: {
+                    xs: '1fr',
+                    md: '1fr 1fr',
+                    lg: '1fr 1fr 1fr'
+                  },
+                  gap: 2,
+                  mt: 1,
+                }}>
+                  {quizzes.map(q => (
+                    <Box key={q.id}>
+                      <QuizCard 
+                        quiz={q} 
+                        showProgressLink={true}
+                        disabled={!enrollment}
+                        disabledText={!enrollment ? 'Inscríbete en el curso para tomar este quiz' : undefined}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              )
+            })()}
+          </Paper>
         </Box>
       </Box>
     </Container>
