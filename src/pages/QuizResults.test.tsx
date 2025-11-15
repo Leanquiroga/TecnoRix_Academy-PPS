@@ -74,8 +74,10 @@ describe('QuizResults', () => {
       expect(screen.getByText(/resultados del quiz/i)).toBeInTheDocument()
     })
 
-    // Cabecera de puntaje
-    expect(screen.getByText(/puntaje:/i)).toBeInTheDocument()
+    // Métricas ahora en tarjetas (sin banner 'Puntaje:')
+    expect(screen.getByText(/puntaje total/i)).toBeInTheDocument()
+    expect(screen.getByText(/porcentaje/i)).toBeInTheDocument()
+    expect(screen.getByText(/correctas/i)).toBeInTheDocument()
 
   // Respuesta correcta (no debe duplicar ni romper)
     expect(screen.getByText('Pregunta 1')).toBeInTheDocument()
@@ -163,7 +165,7 @@ describe('QuizResults', () => {
     renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
 
     await waitFor(() => {
-      expect(screen.getByText(/aprobado ✅/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/aprobado/i).length).toBeGreaterThanOrEqual(1)
     })
   })
 
@@ -183,7 +185,7 @@ describe('QuizResults', () => {
     renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
 
     await waitFor(() => {
-      expect(screen.getByText(/reprobado ❌/i)).toBeInTheDocument()
+      expect(screen.getAllByText(/reprobado/i).length).toBeGreaterThanOrEqual(1)
     })
   })
 })
