@@ -95,7 +95,7 @@ export function MyCourses() {
                     {e.course.level && <Chip size="small" variant="outlined" label={e.course.level} />}
                     {e.course.category && <Chip size="small" variant="outlined" label={e.course.category} />}
                   </Stack>
-                  <LinearProgress variant="determinate" value={e.progress} sx={{ height: 8, borderRadius: 1 }} />
+                  <LinearProgress variant="determinate" value={e.progress ?? 0} sx={{ height: 8, borderRadius: 1 }} />
                   <Typography variant="caption" color="text.secondary">Progreso: {e.progress}%</Typography>
                 </Box>
                 <Stack direction="row" spacing={1}>

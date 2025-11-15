@@ -27,6 +27,7 @@ import {
   Brightness7,
 } from '@mui/icons-material'
 import { useAuth } from '../../hooks/useAuth'
+import { useThemeStore } from '../../store/theme.store'
 import { useNavigation } from '../../hooks/useNavigation'
 
 interface NavbarProps {
@@ -84,10 +85,10 @@ export function Navbar({ onMenuToggle, showMenuButton = true }: NavbarProps) {
     logout()
   }
 
-  // TODO: Implementar toggle de tema cuando se agregue theme provider
+  const { toggleMode } = useThemeStore()
   const handleThemeToggle = () => {
     handleUserMenuClose()
-    console.log('Theme toggle - To be implemented')
+    toggleMode()
   }
 
   // Mock notifications - TODO: Implementar sistema de notificaciones real

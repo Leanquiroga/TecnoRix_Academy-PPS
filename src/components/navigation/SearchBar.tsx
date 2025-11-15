@@ -122,6 +122,7 @@ export function SearchBar({ placeholder = 'Buscar cursos...', width = 300 }: Sea
                         )}
                       </Box>
                     }
+                    secondaryTypographyProps={{ component: 'div' }}
                   />
                 </ListItemButton>
               </ListItem>

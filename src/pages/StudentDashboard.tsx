@@ -256,7 +256,7 @@ export default function StudentDashboard() {
                       </Stack>
                       <LinearProgress
                         variant="determinate"
-                        value={enrollment.progress}
+                        value={enrollment.progress ?? 0}
                         sx={{ height: 8, borderRadius: 1 }}
                       />
                     </Box>

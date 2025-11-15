@@ -75,8 +75,23 @@ export default function DashboardPage() {
           </Box>
 
           {user?.status === 'pending_validation' && (
-            <Paper sx={{ p: 2, bgcolor: 'warning.light' }}>
-              <Typography variant="body2" color="warning.dark">
+            <Paper
+              sx={(theme) => ({
+                p: 2,
+                bgcolor: theme.palette.mode === 'dark'
+                  ? theme.palette.warning.main + '33'
+                  : theme.palette.warning.light,
+                border: '1px dashed',
+                borderColor: 'warning.main',
+              })}
+            >
+              <Typography
+                variant="body2"
+                sx={(theme) => ({
+                  color: theme.palette.mode === 'dark' ? theme.palette.warning.light : 'warning.dark',
+                  fontWeight: 500,
+                })}
+              >
                 ⚠️ Tu cuenta está pendiente de validación. Un administrador debe aprobarla antes de que puedas acceder a todas las funciones.
               </Typography>
             </Paper>

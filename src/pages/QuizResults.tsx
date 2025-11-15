@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo } from 'react'
 import { useParams, Link as RouterLink } from 'react-router-dom'
 import { Box, Card, CardContent, CircularProgress, Divider, Link, Typography, Chip, Stack, LinearProgress, Button, Alert } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'
@@ -95,7 +96,25 @@ const QuizResults: React.FC = () => {
         {a.answers.map((ans, idx) => {
           const question = getQuestionFromAnswer(ans)
           return (
-            <Card key={ans.id ?? idx} variant="outlined" sx={{ mb: 1.5, borderLeft: 6, borderLeftColor: ans.is_correct ? 'success.main' : 'error.main' }}>
+            <Card
+              key={ans.id ?? idx}
+              variant="outlined"
+              sx={{
+                mb: 1.5,
+                borderLeft: 6,
+                borderLeftColor: ans.is_correct ? 'success.main' : 'error.main',
+                backgroundColor: (theme) => ans.is_correct
+                  ? alpha(theme.palette.success.main, theme.palette.mode === 'dark' ? 0.25 : 0.15)
+                  : alpha(theme.palette.error.main, theme.palette.mode === 'dark' ? 0.25 : 0.15),
+                transition: 'background-color .2s',
+                '&:hover': {
+                  backgroundColor: (theme) => ans.is_correct
+                    ? alpha(theme.palette.success.main, theme.palette.mode === 'dark' ? 0.32 : 0.22)
+                    : alpha(theme.palette.error.main, theme.palette.mode === 'dark' ? 0.32 : 0.22),
+                  boxShadow: 3,
+                },
+              }}
+            >
               <CardContent sx={{ py: 1.5 }}>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 1 }}>
                   <Stack direction="row" spacing={1.25} alignItems="center">
@@ -115,7 +134,17 @@ const QuizResults: React.FC = () => {
                   </Stack>
                 </Stack>
 
-                <Typography variant="body2" sx={{ color: ans.is_correct ? 'success.main' : (ans.selected_option ? 'error.main' : 'text.secondary') }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: ans.is_correct
+                      ? 'success.main'
+                      : ans.selected_option
+                        ? 'error.main'
+                        : 'text.secondary',
+                    fontWeight: ans.selected_option ? 500 : 400,
+                  }}
+                >
                   Tu respuesta: {ans.selected_option ? ans.selected_option.option_text : 'Sin respuesta'}
                 </Typography>
                 {!ans.is_correct && ans.correct_option && (

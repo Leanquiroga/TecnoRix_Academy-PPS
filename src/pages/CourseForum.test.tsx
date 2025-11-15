@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor, fireEvent } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import CourseForum from './CourseForum'
 import * as ForumAPI from '../api/forum.service'
@@ -142,38 +143,19 @@ describe('CourseForum', () => {
     await waitFor(() => {
       expect(screen.getByText(/crear nuevo post/i)).toBeInTheDocument()
     })
-
-    // Completar campos (con espacios para validar trim en componente padre)
+    const user = userEvent.setup()
     const titleInput = screen.getByLabelText('Título') as HTMLInputElement
     const messageInput = screen.getByLabelText('Mensaje') as HTMLTextAreaElement
     const submitButton = screen.getByRole('button', { name: /publicar/i })
 
-    titleInput.focus()
-    titleInput.setSelectionRange(0, 0)
-    messageInput.focus()
-    messageInput.setSelectionRange(0, 0)
+    expect(submitButton).toBeDisabled()
 
-    // Usamos fireEvent para evitar timeouts de userEvent.type
-    // y verificamos que el botón se habilite
-    await waitFor(() => {
-      expect(submitButton).toBeDisabled()
-    })
+    await user.type(titleInput, '  Nuevo título  ')
+    await user.type(messageInput, '  Contenido del mensaje  ')
 
-    // Cambiar valores
-    // Nota: MUI TextField propaga el evento correctamente con fireEvent.change
-    ;(screen.getByLabelText('Título') as HTMLInputElement).value = ''
-    ;(screen.getByLabelText('Mensaje') as HTMLTextAreaElement).value = ''
-    
-  // Disparar eventos de cambio
-    fireEvent.change(titleInput, { target: { value: '  Nuevo título  ' } })
-    fireEvent.change(messageInput, { target: { value: '  Contenido del mensaje  ' } })
+    expect(submitButton).toBeEnabled()
 
-    await waitFor(() => {
-      expect(submitButton).toBeEnabled()
-    })
-
-    // Enviar
-    fireEvent.click(submitButton)
+    await user.click(submitButton)
 
     // Se debe llamar a createPost con courseId y datos recortados
     await waitFor(() => {
@@ -224,8 +206,9 @@ describe('CourseForum', () => {
     })
 
     // Click en Eliminar del post propio
+    const user = userEvent.setup()
     const deleteButton = screen.getByRole('button', { name: /Eliminar post Pregunta sobre hooks/i })
-    fireEvent.click(deleteButton)
+    await user.click(deleteButton)
 
     // Debe llamar a deletePost y desaparecer del DOM
     await waitFor(() => {

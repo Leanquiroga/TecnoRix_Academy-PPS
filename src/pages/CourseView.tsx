@@ -337,7 +337,7 @@ export function CourseView() {
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={enrollment.progress}
+                  value={enrollment.progress ?? 0}
                   sx={{ height: 10, borderRadius: 1, mb: 2 }}
                 />
                 <Stack direction="row" spacing={2}>

@@ -182,7 +182,7 @@ export default function StudentsList() {
                         <Stack direction="row" justifyContent="space-between" mb={0.5}>
                           <Typography variant="caption" color="text.secondary">{e.progress}%</Typography>
                         </Stack>
-                        <LinearProgress variant="determinate" value={e.progress} sx={{ height: 8, borderRadius: 1 }} />
+                        <LinearProgress variant="determinate" value={e.progress ?? 0} sx={{ height: 8, borderRadius: 1 }} />
                       </Stack>
                     </TableCell>
                     <TableCell>{new Date(e.enrolled_at).toLocaleDateString()}</TableCell>
