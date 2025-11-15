@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useParams, Link as RouterLink } from 'react-router-dom'
 import { Box, Card, CardContent, CircularProgress, Divider, Link, Typography, Chip, Stack } from '@mui/material'
 import { useQuizStore } from '../store/quiz.store'
+import type { QuizAttemptWithDetails } from '../types/quiz.types'
 
 const QuizResults: React.FC = () => {
   const { attemptId } = useParams<{ attemptId: string }>()
@@ -23,6 +24,17 @@ const QuizResults: React.FC = () => {
 
   const a = currentAttemptDetails
 
+  // Compatibilidad: a.answers puede venir con ans.question (nuevo) o ans.questions (antiguo)
+  type MinimalQ = { question_text?: string; explanation?: string | null }
+  const getQuestionFromAnswer = (ans: QuizAttemptWithDetails['answers'][number]): MinimalQ | undefined => {
+    const q = (ans as { question?: MinimalQ }).question
+    if (q) return q
+  const rec = ans as unknown as Record<string, unknown>
+    const qs = rec['questions']
+    if (qs && typeof qs === 'object') return qs as MinimalQ
+    return undefined
+  }
+
   return (
     <Card>
       <CardContent>
@@ -34,8 +46,7 @@ const QuizResults: React.FC = () => {
         <Typography variant="h6" sx={{ mb: 1 }}>{a.quiz.title}</Typography>
 
         {a.answers.map(ans => {
-          // El backend devuelve 'questions' (plural) en lugar de 'question' (singular)
-          const question = (ans as any).questions || ans.question
+          const question = getQuestionFromAnswer(ans)
           return (
             <Box key={ans.id} sx={{ mb: 2 }}>
               <Typography variant="subtitle1" sx={{ mb: 0.5 }}>{question?.question_text}</Typography>

@@ -3,10 +3,16 @@ import { useRouteError, isRouteErrorResponse, Link as RouterLink } from 'react-r
 import { Box, Button, Card, CardContent, Typography } from '@mui/material'
 
 const RouteErrorElement: React.FC = () => {
-  const error = useRouteError() as any
-  const message = isRouteErrorResponse(error)
-    ? `${error.status} ${error.statusText}`
-    : (error?.message || 'Ocurrió un error inesperado')
+  const error = useRouteError()
+  let message = 'Ocurrió un error inesperado'
+  const hasMessage = (e: unknown): e is { message: unknown } =>
+    typeof e === 'object' && e !== null && 'message' in (e as Record<string, unknown>)
+
+  if (isRouteErrorResponse(error)) {
+    message = `${error.status} ${error.statusText}`
+  } else if (hasMessage(error) && typeof error.message === 'string') {
+    message = error.message
+  }
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center', mt: 6 }}>

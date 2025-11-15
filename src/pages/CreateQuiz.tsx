@@ -131,8 +131,20 @@ const CreateQuizPage: React.FC = () => {
     try {
       const quiz = await createQuiz(payload)
       navigate(`/quizzes/${quiz.id}`)
-    } catch (err: any) {
-      const msg = err?.response?.data?.error || err?.message || 'No se pudo crear el quiz'
+    } catch (err: unknown) {
+      // Narrowing de error para evitar any
+      let msg = 'No se pudo crear el quiz'
+      const hasResponse = (e: unknown): e is { response?: { data?: { error?: unknown } } } =>
+        typeof e === 'object' && e !== null && 'response' in (e as Record<string, unknown>)
+      const hasMessage = (e: unknown): e is { message: unknown } =>
+        typeof e === 'object' && e !== null && 'message' in (e as Record<string, unknown>)
+
+      if (hasResponse(err)) {
+        const maybeError = err.response?.data && (err.response.data as Record<string, unknown>)?.error
+        if (maybeError != null) msg = String(maybeError)
+      } else if (hasMessage(err) && typeof err.message === 'string') {
+        msg = err.message
+      }
       setError(msg)
     }
   }
@@ -163,7 +175,7 @@ const CreateQuizPage: React.FC = () => {
                       <TextField fullWidth label={`Pregunta ${idx + 1}`} value={q.question_text} onChange={e => updateQuestion(idx, { question_text: e.target.value })} required />
                       <Stack direction="row" spacing={1} alignItems="center">
                         <TextField type="number" label="Puntos" value={q.points} onChange={e => updateQuestion(idx, { points: Number(e.target.value) })} sx={{ maxWidth: 160 }} />
-                        <IconButton color="error" onClick={() => removeQuestion(idx)} disabled={questions.length <= 1}>
+                        <IconButton aria-label="Eliminar pregunta" color="error" onClick={() => removeQuestion(idx)} disabled={questions.length <= 1}>
                           <Delete />
                         </IconButton>
                       </Stack>
@@ -175,7 +187,7 @@ const CreateQuizPage: React.FC = () => {
                           <Button variant={o.is_correct ? 'contained' : 'outlined'} color="success" onClick={() => updateOption(idx, j, { is_correct: true })}>
                             Correcta
                           </Button>
-                          <IconButton color="error" onClick={() => removeOption(idx, j)} disabled={q.options.length <= 2}>
+                          <IconButton aria-label="Eliminar opción" color="error" onClick={() => removeOption(idx, j)} disabled={q.options.length <= 2}>
                             <Delete />
                           </IconButton>
                         </Stack>

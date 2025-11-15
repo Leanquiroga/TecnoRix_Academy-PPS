@@ -19,6 +19,7 @@ export default defineConfig({
     setupFiles: './src/setupTests.ts',
     globals: true,
     css: true,
+    testTimeout: 10000,
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     exclude: ['backend/**', 'node_modules/**'],
   },

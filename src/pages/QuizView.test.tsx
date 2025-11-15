@@ -4,50 +4,35 @@ import userEvent from '@testing-library/user-event'
 import { createMemoryRouter, RouterProvider } from 'react-router-dom'
 import QuizView from './QuizView'
 
-// Mock inscripciones con estado mutable
+// Estado mutable para mocks
 let mockMyCourses: any[] = []
+let mockCurrentAttempt: any = null
+let mockCurrentQuiz: any = null
+let mockTempAnswers: any = {}
+
+const loadQuizMock = vi.fn().mockResolvedValue(undefined)
+const startAttemptMock = vi.fn().mockResolvedValue(undefined)
+const selectAnswerMock = vi.fn()
+const submitAttemptMock = vi.fn().mockResolvedValue(undefined)
+
 vi.mock('../store/enrollment.store', () => ({
   useEnrollmentStore: () => ({ myCourses: mockMyCourses }),
 }))
 
-const loadQuizMock = vi.fn().mockResolvedValue(undefined)
-const startAttemptMock = vi.fn().mockResolvedValue(undefined)
-
-vi.mock('../store/quiz.store', () => {
-  return {
-    useQuizStore: () => ({
-      currentQuiz: {
-        id: 'quiz-1',
-        course_id: 'course-1',
-        title: 'Quiz Demo',
-        description: null,
-        passing_score: 60,
-        time_limit_minutes: null,
-        max_attempts: null,
-        order_index: 0,
-        created_at: '',
-        updated_at: '',
-        questions: [
-          { id: 'q1', quiz_id: 'quiz-1', question_text: 'Pregunta 1', type: 'multiple_choice', points: 1, order_index: 1, explanation: null, created_at: '', updated_at: '', deleted_at: null,
-            options: [
-              { id: 'o1', question_id: 'q1', option_text: 'A', is_correct: false, order_index: 1, created_at: '', updated_at: '' },
-              { id: 'o2', question_id: 'q1', option_text: 'B', is_correct: true, order_index: 2, created_at: '', updated_at: '' },
-            ]
-          },
-        ],
-      },
-      currentAttempt: null,
-      currentAttemptDetails: null,
-      tempAnswers: {},
-      loading: false,
-      error: null,
-      loadQuiz: loadQuizMock,
-      startAttempt: startAttemptMock,
-      selectAnswer: vi.fn(),
-      submitAttempt: vi.fn(),
-    }),
-  }
-})
+vi.mock('../store/quiz.store', () => ({
+  useQuizStore: () => ({
+    currentQuiz: mockCurrentQuiz,
+    currentAttempt: mockCurrentAttempt,
+    currentAttemptDetails: null,
+    tempAnswers: mockTempAnswers,
+    loading: false,
+    error: null,
+    loadQuiz: loadQuizMock,
+    startAttempt: startAttemptMock,
+    selectAnswer: selectAnswerMock,
+    submitAttempt: submitAttemptMock,
+  }),
+}))
 
 function renderWithRoute(path: string, element: React.ReactNode) {
   const router = createMemoryRouter(
@@ -61,8 +46,40 @@ function renderWithRoute(path: string, element: React.ReactNode) {
 
 describe('QuizView', () => {
   beforeEach(() => {
-    vi.resetModules()
+    vi.clearAllMocks()
     mockMyCourses = []
+    mockCurrentAttempt = null
+    mockTempAnswers = {}
+    mockCurrentQuiz = {
+      id: 'quiz-1',
+      course_id: 'course-1',
+      title: 'Quiz Demo',
+      description: null,
+      passing_score: 60,
+      time_limit_minutes: null,
+      max_attempts: null,
+      order_index: 0,
+      created_at: '',
+      updated_at: '',
+      questions: [
+        { 
+          id: 'q1', 
+          quiz_id: 'quiz-1', 
+          question_text: 'Pregunta 1', 
+          type: 'multiple_choice', 
+          points: 1, 
+          order_index: 1, 
+          explanation: null, 
+          created_at: '', 
+          updated_at: '', 
+          deleted_at: null,
+          options: [
+            { id: 'o1', question_id: 'q1', option_text: 'A', order_index: 1, created_at: '' },
+            { id: 'o2', question_id: 'q1', option_text: 'B', order_index: 2, created_at: '' },
+          ]
+        },
+      ],
+    }
   })
 
   it('no inicia intento automáticamente y muestra botón Comenzar intento (no inscrito)', async () => {
@@ -113,31 +130,52 @@ describe('QuizView', () => {
 
   it('muestra navegación entre preguntas cuando hay intento activo', async () => {
     mockMyCourses = [{ id: 'enr1', course_id: 'course-1' }]
-
-    // Mock con intento activo y múltiples preguntas
-    vi.mock('../store/quiz.store', () => ({
-      useQuizStore: () => ({
-        currentQuiz: {
-          id: 'quiz-1',
-          course_id: 'course-1',
-          title: 'Quiz Demo',
-          passing_score: 60,
-          time_limit_minutes: null,
-          questions: [
-            { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', options: [{ id: 'o1', option_text: 'A' }] },
-            { id: 'q2', question_text: 'Pregunta 2', type: 'multiple_choice', options: [{ id: 'o2', option_text: 'B' }] },
-          ],
+    
+    // Configurar intento activo y múltiples preguntas
+    mockCurrentAttempt = { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' }
+    mockCurrentQuiz = {
+      id: 'quiz-1',
+      course_id: 'course-1',
+      title: 'Quiz Demo',
+      passing_score: 60,
+      time_limit_minutes: null,
+      max_attempts: null,
+      order_index: 0,
+      created_at: '',
+      updated_at: '',
+      questions: [
+        { 
+          id: 'q1', 
+          quiz_id: 'quiz-1',
+          question_text: 'Pregunta 1', 
+          type: 'multiple_choice',
+          points: 1,
+          order_index: 1,
+          explanation: null,
+          created_at: '',
+          updated_at: '',
+          deleted_at: null,
+          options: [
+            { id: 'o1', question_id: 'q1', option_text: 'A', order_index: 1, created_at: '' }
+          ]
         },
-        currentAttempt: { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' },
-        tempAnswers: {},
-        loading: false,
-        error: null,
-        loadQuiz: vi.fn(),
-        startAttempt: vi.fn(),
-        selectAnswer: vi.fn(),
-        submitAttempt: vi.fn(),
-      }),
-    }))
+        { 
+          id: 'q2', 
+          quiz_id: 'quiz-1',
+          question_text: 'Pregunta 2', 
+          type: 'multiple_choice',
+          points: 1,
+          order_index: 2,
+          explanation: null,
+          created_at: '',
+          updated_at: '',
+          deleted_at: null,
+          options: [
+            { id: 'o2', question_id: 'q2', option_text: 'B', order_index: 1, created_at: '' }
+          ]
+        },
+      ],
+    }
 
     renderWithRoute('/quizzes/:quizId', <QuizView />)
 
@@ -152,29 +190,11 @@ describe('QuizView', () => {
 
   it('muestra botón Enviar Quiz en última pregunta', async () => {
     mockMyCourses = [{ id: 'enr1', course_id: 'course-1' }]
-
-    vi.mock('../store/quiz.store', () => ({
-      useQuizStore: () => ({
-        currentQuiz: {
-          id: 'quiz-1',
-          course_id: 'course-1',
-          title: 'Quiz Demo',
-          passing_score: 60,
-          time_limit_minutes: null,
-          questions: [
-            { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', options: [{ id: 'o1', option_text: 'A' }] },
-          ],
-        },
-        currentAttempt: { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' },
-        tempAnswers: { q1: 'o1' },
-        loading: false,
-        error: null,
-        loadQuiz: vi.fn(),
-        startAttempt: vi.fn(),
-        selectAnswer: vi.fn(),
-        submitAttempt: vi.fn(),
-      }),
-    }))
+    
+    // Configurar intento activo en última pregunta
+    mockCurrentAttempt = { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' }
+    mockTempAnswers = { q1: 'o1' }
+    // currentQuiz ya tiene solo 1 pregunta del beforeEach, así que ya estamos en la última
 
     renderWithRoute('/quizzes/:quizId', <QuizView />)
 

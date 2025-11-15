@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useParams, useNavigate, Link as RouterLink } from 'react-router-dom'
 import { Box, Button, Card, CardContent, CircularProgress, Stack, Typography, Breadcrumbs, Link, Alert } from '@mui/material'
 import { useQuizStore } from '../store/quiz.store'
+import type { QuizAttempt } from '../types/quiz.types'
 import QuizQuestion from '../components/quiz/QuizQuestion'
 import QuizProgress from '../components/quiz/QuizProgress'
 import QuizTimer from '../components/quiz/QuizTimer'
@@ -27,7 +28,7 @@ const QuizView: React.FC = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [startError, setStartError] = useState<string | null>(null)
-  const [previousAttempts, setPreviousAttempts] = useState<any[]>([])
+  const [previousAttempts, setPreviousAttempts] = useState<QuizAttempt[]>([])
   const [showPreviousAttempts, setShowPreviousAttempts] = useState(false)
 
   // Determina si hay cambios no enviados
@@ -73,8 +74,20 @@ const QuizView: React.FC = () => {
     try {
       await startAttempt(quizId)
       setCurrentIndex(0)
-    } catch (e: any) {
-      const message = e?.response?.data?.error || e?.message || 'No se pudo iniciar el intento'
+    } catch (e: unknown) {
+      // Narrowing del error sin usar any
+      let message = 'No se pudo iniciar el intento'
+      const hasResponse = (err: unknown): err is { response?: { data?: { error?: unknown } } } =>
+        typeof err === 'object' && err !== null && 'response' in (err as Record<string, unknown>)
+      const hasMessage = (err: unknown): err is { message: unknown } =>
+        typeof err === 'object' && err !== null && 'message' in (err as Record<string, unknown>)
+
+      if (hasResponse(e)) {
+        const maybe = e.response?.data && (e.response.data as Record<string, unknown>)?.error
+        if (maybe != null) message = String(maybe)
+      } else if (hasMessage(e) && typeof e.message === 'string') {
+        message = e.message
+      }
       setStartError(message)
     }
   }

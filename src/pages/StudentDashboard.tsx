@@ -25,13 +25,11 @@ import {
 import { useEnrollmentStore } from '../store/enrollment.store'
 import { enrollmentService } from '../api/enrollment.service'
 import { useNavigation } from '../hooks/useNavigation'
-import { useNavigate } from 'react-router-dom'
 import type { StudentStats } from '../types/enrollment'
 
 export default function StudentDashboard() {
   const { myCourses, loading, error, fetchMyCourses } = useEnrollmentStore()
   const { goToCourseView, goToCourses, goToMyCourses } = useNavigation()
-  const navigate = useNavigate()
   
   const [stats, setStats] = useState<StudentStats | null>(null)
   const [loadingStats, setLoadingStats] = useState(false)
@@ -69,7 +67,7 @@ export default function StudentDashboard() {
     // Navegar a la primera página de quizzes disponible
     if (activeCourses.length > 0) {
       // Por ahora redirige a "Mis Cursos" donde puede ver sus quizzes
-      navigate('/student/my-courses')
+      goToMyCourses()
     }
   }
 

@@ -1,6 +1,16 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { vi } from 'vitest'
+import { BrowserRouter } from 'react-router'
+
+const mockNavigate = vi.fn()
+vi.mock('react-router', async () => {
+  const actual = await vi.importActual('react-router')
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  }
+})
 
 vi.mock('../api/enrollment.service', () => {
   return {
@@ -93,9 +103,13 @@ vi.mock('../store/enrollment.store', () => ({
 
 import StudentDashboard from './StudentDashboard'
 
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(<BrowserRouter>{component}</BrowserRouter>)
+}
+
 describe('StudentDashboard', () => {
   it('muestra el encabezado y estadísticas', async () => {
-    render(<StudentDashboard />)
+    renderWithRouter(<StudentDashboard />)
 
     expect(await screen.findByText('Mi Panel de Estudiante')).toBeInTheDocument()
 
@@ -109,7 +123,7 @@ describe('StudentDashboard', () => {
   })
 
   it('muestra cursos en progreso y permite continuar', async () => {
-    render(<StudentDashboard />)
+    renderWithRouter(<StudentDashboard />)
 
   // Curso con progreso < 100 debe aparecer
   expect(await screen.findByText('React Básico')).toBeInTheDocument()
@@ -161,7 +175,7 @@ describe('StudentDashboard', () => {
     }))
 
     const { default: StudentDashboard2 } = await import('./StudentDashboard')
-    render(<StudentDashboard2 />)
+    renderWithRouter(<StudentDashboard2 />)
 
   const msgs = await screen.findAllByText(/No tienes cursos en progreso/i)
   expect(msgs.length).toBeGreaterThan(0)
@@ -193,7 +207,7 @@ describe('StudentDashboard', () => {
     }))
 
     const { default: StudentDashboardErr } = await import('./StudentDashboard')
-    render(<StudentDashboardErr />)
+    renderWithRouter(<StudentDashboardErr />)
 
     const alert = await screen.findByText(/Error al cargar estadísticas|Fallo/i)
     expect(alert).toBeInTheDocument()

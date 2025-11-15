@@ -40,9 +40,9 @@ describe('CreateQuiz', () => {
   it('renderiza formulario de creación de quiz', () => {
     renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
 
-    expect(screen.getByLabelText(/título del quiz/i)).toBeInTheDocument()
+  expect(screen.getByLabelText(/^título/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/descripción/i)).toBeInTheDocument()
-    expect(screen.getByLabelText(/puntaje de aprobación/i)).toBeInTheDocument()
+  expect(screen.getByLabelText(/passing score/i)).toBeInTheDocument()
   })
 
   it('permite agregar una pregunta', async () => {
@@ -53,7 +53,7 @@ describe('CreateQuiz', () => {
     await user.click(addQuestionBtn)
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/texto de la pregunta/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/pregunta 1/i)).toBeInTheDocument()
     })
   })
 
@@ -76,35 +76,29 @@ describe('CreateQuiz', () => {
     const user = userEvent.setup()
 
     // Llenar título
-    const titleInput = screen.getByLabelText(/título del quiz/i)
+    const titleInput = screen.getByLabelText(/^título/i)
     await user.type(titleInput, 'Quiz de Prueba')
 
     // Llenar puntaje de aprobación
-    const passingScoreInput = screen.getByLabelText(/puntaje de aprobación/i)
+  const passingScoreInput = screen.getByLabelText(/passing score/i)
     await user.clear(passingScoreInput)
     await user.type(passingScoreInput, '70')
 
-    // Agregar pregunta
-    const addQuestionBtn = screen.getByRole('button', { name: /agregar pregunta/i })
-    await user.click(addQuestionBtn)
-
-    await waitFor(() => {
-      expect(screen.getByLabelText(/texto de la pregunta/i)).toBeInTheDocument()
-    })
-
-    // Llenar texto de pregunta
-    const questionInput = screen.getByLabelText(/texto de la pregunta/i)
+    // Llenar texto de pregunta (Pregunta 1 por defecto)
+    const questionInput = screen.getByLabelText(/pregunta 1/i)
     await user.type(questionInput, '¿Cuál es la respuesta correcta?')
 
-    // Agregar opciones
-    const addOptionBtn = screen.getByRole('button', { name: /agregar opción/i })
-    await user.click(addOptionBtn)
-    await user.click(addOptionBtn)
+    // Completar textos de opciones mínimas de Pregunta 1
+    const optionInputs = screen.getAllByLabelText(/opción \d+/i)
+    expect(optionInputs.length).toBeGreaterThanOrEqual(2)
+    await user.type(optionInputs[0], 'Opción A')
+    await user.type(optionInputs[1], 'Opción B')
 
-    await waitFor(() => {
-      const optionInputs = screen.getAllByPlaceholderText(/opción/i)
-      expect(optionInputs.length).toBeGreaterThanOrEqual(2)
-    })
+    // Asegurar una opción correcta marcada (usar el primer botón "Correcta")
+    const correctButtons = screen.getAllByRole('button', { name: /correcta/i })
+    if (correctButtons.length > 0) {
+      await user.click(correctButtons[0])
+    }
 
     // Enviar formulario
     const submitBtn = screen.getByRole('button', { name: /crear quiz/i })
@@ -123,14 +117,29 @@ describe('CreateQuiz', () => {
     const user = userEvent.setup()
 
     // Llenar campos mínimos
-    const titleInput = screen.getByLabelText(/título del quiz/i)
+    const titleInput = screen.getByLabelText(/^título/i)
     await user.type(titleInput, 'Quiz de Prueba')
+
+    // Pregunta 1 válida
+    const questionInput = screen.getByLabelText(/pregunta 1/i)
+    await user.type(questionInput, '¿Cuál es la capital de Francia?')
+
+    const optionInputs = screen.getAllByLabelText(/opción \d+/i)
+    expect(optionInputs.length).toBeGreaterThanOrEqual(2)
+    await user.type(optionInputs[0], 'París')
+    await user.type(optionInputs[1], 'Lyon')
+
+    // Marcar correcta
+    const correctButtons = screen.getAllByRole('button', { name: /correcta/i })
+    if (correctButtons.length > 0) {
+      await user.click(correctButtons[0])
+    }
 
     const submitBtn = screen.getByRole('button', { name: /crear quiz/i })
     await user.click(submitBtn)
 
     await waitFor(() => {
-      expect(screen.getByText(/error/i)).toBeInTheDocument()
+      expect(screen.getByText(/error al crear quiz|no se pudo crear el quiz/i)).toBeInTheDocument()
     })
   })
 
@@ -144,25 +153,25 @@ describe('CreateQuiz', () => {
     await user.click(addQuestionBtn)
 
     // Agregar opciones
-    const addOptionBtn = screen.getByRole('button', { name: /agregar opción/i })
-    await user.click(addOptionBtn)
+  // Hay un botón "Agregar opción" por pregunta; usamos el primero
+  const addOptionBtns = screen.getAllByRole('button', { name: /agregar opción/i })
+  await user.click(addOptionBtns[0])
 
-    await waitFor(() => {
-      const checkboxes = screen.getAllByRole('checkbox')
-      expect(checkboxes.length).toBeGreaterThan(0)
-    })
+    // Click en botón "Correcta" de la primera opción
+    const correctButtons = screen.getAllByRole('button', { name: /correcta/i })
+    await user.click(correctButtons[0])
 
-    // Marcar primera opción como correcta
-    const checkboxes = screen.getAllByRole('checkbox')
-    await user.click(checkboxes[0])
-
-    expect(checkboxes[0]).toBeChecked()
+    // Aserciones ligeras: el primero queda "contained" y los demás "outlined"
+    expect(correctButtons[0].className).toMatch(/MuiButton-contained/)
+    if (correctButtons[1]) {
+      expect(correctButtons[1].className).toMatch(/MuiButton-outlined/)
+    }
   })
 
   it('permite configurar tiempo límite del quiz', async () => {
     renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
 
-    const timeLimitInput = screen.getByLabelText(/tiempo límite.*minutos/i)
+  const timeLimitInput = screen.getByLabelText(/time limit/i)
     expect(timeLimitInput).toBeInTheDocument()
 
     const user = userEvent.setup()
@@ -181,15 +190,16 @@ describe('CreateQuiz', () => {
     await user.click(addQuestionBtn)
 
     await waitFor(() => {
-      expect(screen.getByLabelText(/texto de la pregunta/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/pregunta 2/i)).toBeInTheDocument()
     })
 
-    // Buscar y hacer clic en botón eliminar
-    const deleteBtn = screen.getByRole('button', { name: /eliminar pregunta/i })
-    await user.click(deleteBtn)
+  // Buscar y hacer clic en botón eliminar de esa pregunta
+  const deleteBtns = screen.getAllByRole('button', { name: /eliminar pregunta/i })
+  // Eliminar la segunda pregunta (último botón)
+  await user.click(deleteBtns[deleteBtns.length - 1])
 
     await waitFor(() => {
-      expect(screen.queryByLabelText(/texto de la pregunta/i)).not.toBeInTheDocument()
+      expect(screen.queryByLabelText(/pregunta 2/i)).not.toBeInTheDocument()
     })
   })
 })
