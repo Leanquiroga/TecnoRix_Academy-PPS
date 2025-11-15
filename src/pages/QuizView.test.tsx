@@ -110,4 +110,76 @@ describe('QuizView', () => {
       expect(screen.getByText(/debes estar inscrito en el curso/i)).toBeInTheDocument()
     })
   })
+
+  it('muestra navegación entre preguntas cuando hay intento activo', async () => {
+    mockMyCourses = [{ id: 'enr1', course_id: 'course-1' }]
+
+    // Mock con intento activo y múltiples preguntas
+    vi.mock('../store/quiz.store', () => ({
+      useQuizStore: () => ({
+        currentQuiz: {
+          id: 'quiz-1',
+          course_id: 'course-1',
+          title: 'Quiz Demo',
+          passing_score: 60,
+          time_limit_minutes: null,
+          questions: [
+            { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', options: [{ id: 'o1', option_text: 'A' }] },
+            { id: 'q2', question_text: 'Pregunta 2', type: 'multiple_choice', options: [{ id: 'o2', option_text: 'B' }] },
+          ],
+        },
+        currentAttempt: { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' },
+        tempAnswers: {},
+        loading: false,
+        error: null,
+        loadQuiz: vi.fn(),
+        startAttempt: vi.fn(),
+        selectAnswer: vi.fn(),
+        submitAttempt: vi.fn(),
+      }),
+    }))
+
+    renderWithRoute('/quizzes/:quizId', <QuizView />)
+
+    await waitFor(() => {
+      expect(screen.getByText('Pregunta 1')).toBeInTheDocument()
+    })
+
+    // Debe haber botones de navegación
+    expect(screen.getByRole('button', { name: /siguiente/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /anterior/i })).toBeDisabled() // Primera pregunta
+  })
+
+  it('muestra botón Enviar Quiz en última pregunta', async () => {
+    mockMyCourses = [{ id: 'enr1', course_id: 'course-1' }]
+
+    vi.mock('../store/quiz.store', () => ({
+      useQuizStore: () => ({
+        currentQuiz: {
+          id: 'quiz-1',
+          course_id: 'course-1',
+          title: 'Quiz Demo',
+          passing_score: 60,
+          time_limit_minutes: null,
+          questions: [
+            { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', options: [{ id: 'o1', option_text: 'A' }] },
+          ],
+        },
+        currentAttempt: { id: 'att-1', quiz_id: 'quiz-1', student_id: 's1' },
+        tempAnswers: { q1: 'o1' },
+        loading: false,
+        error: null,
+        loadQuiz: vi.fn(),
+        startAttempt: vi.fn(),
+        selectAnswer: vi.fn(),
+        submitAttempt: vi.fn(),
+      }),
+    }))
+
+    renderWithRoute('/quizzes/:quizId', <QuizView />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: /enviar quiz/i })).toBeInTheDocument()
+    })
+  })
 })

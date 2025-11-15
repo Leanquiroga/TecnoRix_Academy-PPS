@@ -21,11 +21,14 @@ const QuizView: React.FC = () => {
     selectAnswer,
     submitAttempt,
     currentAttemptDetails,
+    listAttempts,
   } = useQuizStore()
   const { myCourses } = useEnrollmentStore()
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [startError, setStartError] = useState<string | null>(null)
+  const [previousAttempts, setPreviousAttempts] = useState<any[]>([])
+  const [showPreviousAttempts, setShowPreviousAttempts] = useState(false)
 
   // Determina si hay cambios no enviados
   const hasChanges = useMemo(() => {
@@ -75,6 +78,18 @@ const QuizView: React.FC = () => {
       setStartError(message)
     }
   }
+
+  const handleViewPreviousAttempts = async () => {
+    if (!quizId) return
+    try {
+      const attempts = await listAttempts(quizId)
+      setPreviousAttempts(attempts)
+      setShowPreviousAttempts(true)
+    } catch (e) {
+      console.error('Error al cargar intentos previos:', e)
+    }
+  }
+
   const handleSubmit = async () => {
     await submitAttempt()
     // Redirigir a resultados usando el intento actual (actualizado por submit)
@@ -139,9 +154,57 @@ const QuizView: React.FC = () => {
                 {currentQuiz.questions.length} preguntas · Aprobación {currentQuiz.passing_score}% · {currentQuiz.time_limit_minutes ? `${currentQuiz.time_limit_minutes} min` : 'Sin límite de tiempo'}
               </Typography>
             </Stack>
-            <Stack direction="row" spacing={2} justifyContent="flex-end">
+
+            {/* Mostrar intentos previos si existen */}
+            {showPreviousAttempts && previousAttempts.length > 0 && (
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="h6" sx={{ mb: 1 }}>Intentos Anteriores</Typography>
+                <Stack spacing={1}>
+                  {previousAttempts.map((attempt) => (
+                    <Card key={attempt.id} variant="outlined" sx={{ p: 1 }}>
+                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                        <Box>
+                          <Typography variant="body2">
+                            Intento #{attempt.attempt_number} - {attempt.passed ? '✅ Aprobado' : '❌ Reprobado'}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Puntaje: {attempt.score}/{attempt.total_points} ({attempt.percentage}%)
+                          </Typography>
+                        </Box>
+                        <Button 
+                          size="small" 
+                          onClick={() => navigate(`/quiz-attempts/${attempt.id}`)}
+                        >
+                          Ver Detalles
+                        </Button>
+                      </Stack>
+                    </Card>
+                  ))}
+                </Stack>
+                <Button 
+                  variant="text" 
+                  size="small" 
+                  sx={{ mt: 1 }}
+                  onClick={() => setShowPreviousAttempts(false)}
+                >
+                  Ocultar Intentos
+                </Button>
+              </Box>
+            )}
+
+            <Stack direction="row" spacing={2} justifyContent="space-between">
               <Button variant="text" color="inherit" onClick={handleExit}>Volver</Button>
-              <Button variant="contained" onClick={handleStart} disabled={!isEnrolled}>Comenzar intento</Button>
+              <Stack direction="row" spacing={1}>
+                {isEnrolled && !showPreviousAttempts && (
+                  <Button 
+                    variant="outlined" 
+                    onClick={handleViewPreviousAttempts}
+                  >
+                    Ver Resultados Anteriores
+                  </Button>
+                )}
+                <Button variant="contained" onClick={handleStart} disabled={!isEnrolled}>Comenzar intento</Button>
+              </Stack>
             </Stack>
           </>
         ) : (

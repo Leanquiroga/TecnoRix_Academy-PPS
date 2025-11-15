@@ -20,15 +20,18 @@ import {
   CheckCircle,
   PlayArrow,
   Explore,
+  Quiz,
 } from '@mui/icons-material'
 import { useEnrollmentStore } from '../store/enrollment.store'
 import { enrollmentService } from '../api/enrollment.service'
 import { useNavigation } from '../hooks/useNavigation'
+import { useNavigate } from 'react-router-dom'
 import type { StudentStats } from '../types/enrollment'
 
 export default function StudentDashboard() {
   const { myCourses, loading, error, fetchMyCourses } = useEnrollmentStore()
   const { goToCourseView, goToCourses, goToMyCourses } = useNavigation()
+  const navigate = useNavigate()
   
   const [stats, setStats] = useState<StudentStats | null>(null)
   const [loadingStats, setLoadingStats] = useState(false)
@@ -61,6 +64,14 @@ export default function StudentDashboard() {
   const lastInProgress = activeCourses
     .filter((e) => e.progress < 100)
     .sort((a, b) => new Date(b.enrolled_at).getTime() - new Date(a.enrolled_at).getTime())[0]
+
+  const handleGoToProgress = () => {
+    // Navegar a la primera página de quizzes disponible
+    if (activeCourses.length > 0) {
+      // Por ahora redirige a "Mis Cursos" donde puede ver sus quizzes
+      navigate('/student/my-courses')
+    }
+  }
 
   return (
     <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
@@ -290,6 +301,14 @@ export default function StudentDashboard() {
             fullWidth
           >
             Ver todos mis cursos
+          </Button>
+          <Button
+            variant="outlined"
+            startIcon={<Quiz />}
+            onClick={handleGoToProgress}
+            fullWidth
+          >
+            Mis Evaluaciones
           </Button>
         </Stack>
       </Paper>

@@ -86,4 +86,104 @@ describe('QuizResults', () => {
     expect(screen.getByText(/tu respuesta: opción c/i)).toBeInTheDocument()
     expect(screen.getByText(/respuesta correcta: opción b/i)).toBeInTheDocument()
   })
+
+  it('maneja respuesta sin selected_option (pregunta no respondida)', async () => {
+    const details = {
+      id: 'attempt-1',
+      score: 0,
+      total_points: 1,
+      percentage: 0,
+      passed: false,
+      quiz: { id: 'quiz-1', title: 'Quiz Demo', passing_score: 70 },
+      answers: [
+        {
+          id: 'ans-1',
+          question_id: 'q1',
+          is_correct: false,
+          points_earned: 0,
+          question: { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', points: 1, explanation: null },
+          selected_option: null,
+          correct_option: { id: 'o1', option_text: 'Opción A', is_correct: true },
+        },
+      ],
+    }
+
+    setAttemptDetails(details)
+
+    renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/tu respuesta: sin respuesta/i)).toBeInTheDocument()
+    })
+  })
+
+  it('muestra explicación cuando existe', async () => {
+    const details = {
+      id: 'attempt-1',
+      score: 1,
+      total_points: 1,
+      percentage: 100,
+      passed: true,
+      quiz: { id: 'quiz-1', title: 'Quiz Demo', passing_score: 70 },
+      answers: [
+        {
+          id: 'ans-1',
+          question_id: 'q1',
+          is_correct: true,
+          points_earned: 1,
+          question: { id: 'q1', question_text: 'Pregunta 1', type: 'multiple_choice', points: 1, explanation: 'Esta es la explicación' },
+          selected_option: { id: 'o1', option_text: 'Opción A', is_correct: true },
+          correct_option: { id: 'o1', option_text: 'Opción A', is_correct: true },
+        },
+      ],
+    }
+
+    setAttemptDetails(details)
+
+    renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/explicación: esta es la explicación/i)).toBeInTheDocument()
+    })
+  })
+
+  it('muestra estado aprobado cuando passed es true', async () => {
+    const details = {
+      id: 'attempt-1',
+      score: 80,
+      total_points: 100,
+      percentage: 80,
+      passed: true,
+      quiz: { id: 'quiz-1', title: 'Quiz Demo', passing_score: 70 },
+      answers: [],
+    }
+
+    setAttemptDetails(details)
+
+    renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/aprobado ✅/i)).toBeInTheDocument()
+    })
+  })
+
+  it('muestra estado reprobado cuando passed es false', async () => {
+    const details = {
+      id: 'attempt-1',
+      score: 50,
+      total_points: 100,
+      percentage: 50,
+      passed: false,
+      quiz: { id: 'quiz-1', title: 'Quiz Demo', passing_score: 70 },
+      answers: [],
+    }
+
+    setAttemptDetails(details)
+
+    renderWithRoute('/quiz-attempts/:attemptId', <QuizResults />)
+
+    await waitFor(() => {
+      expect(screen.getByText(/reprobado ❌/i)).toBeInTheDocument()
+    })
+  })
 })
