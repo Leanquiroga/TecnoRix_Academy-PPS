@@ -38,16 +38,6 @@ describe('Quiz System', () => {
         password: 'password123',
         role: UserRole.STUDENT,
       })
-    
-    if (studentRegister.status !== 201) {
-      console.error('❌ Error al registrar estudiante:', {
-        status: studentRegister.status,
-        body: studentRegister.body,
-        email: studentEmail
-      })
-      throw new Error(`Failed to register student: ${JSON.stringify(studentRegister.body)}`)
-    }
-    
     studentUserId = studentRegister.body.data.user.id
     studentToken = studentRegister.body.data.token
 

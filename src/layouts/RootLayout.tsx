@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
+import { Box } from '@mui/material'
 import { AppLayout } from './AppLayout'
 import { ROUTES } from '../routes/routes.config'
 
@@ -32,8 +33,19 @@ export function RootLayout({ children }: RootLayoutProps) {
   )
 
   if (isAuthRoute) {
-    // Solo el contenido, sin navbar ni sidebar
-    return <>{children}</>
+    // Solo el contenido, sin navbar ni sidebar, pero con contenedor de altura completa
+    return (
+      <Box 
+        sx={{ 
+          minHeight: '100vh',
+          width: '100%',
+          display: 'flex',
+          bgcolor: 'background.default'
+        }}
+      >
+        {children}
+      </Box>
+    )
   }
 
   if (isPublicRoute) {

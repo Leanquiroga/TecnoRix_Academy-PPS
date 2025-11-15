@@ -18,9 +18,6 @@ export default function Home() {
             <Typography variant="h6" gutterBottom>
               Bienvenido, {user?.name}!
             </Typography>
-            <Typography variant="body2" color="text.secondary" gutterBottom>
-              Rol: {user?.role} | Estado: {user?.status}
-            </Typography>
             <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
               <Button variant="contained" component={Link} to={ROUTES.DASHBOARD}>
                 Ir al Dashboard

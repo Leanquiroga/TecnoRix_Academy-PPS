@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Stack, Alert, Box, Link as MuiLink } from '@mui/material'
+import { Button, TextField, Typography, Stack, Alert, Box, Link as MuiLink, Card, CardContent } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigation } from '../hooks/useNavigation'
@@ -34,23 +34,37 @@ export default function LoginPage() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 6 }}>
-      <Typography variant="h4" gutterBottom>Iniciar sesión</Typography>
-      <Stack component="form" spacing={2} onSubmit={onSubmit}>
-        {localError && <Alert severity="error">{localError}</Alert>}
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth />
-        <TextField label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth />
-        <Button type="submit" variant="contained" disabled={loading}>Entrar</Button>
-        <Box textAlign="center">
-          <Typography variant="body2">
-            ¿No tienes cuenta?{' '}
-            <MuiLink component={Link} to={ROUTES.REGISTER}>
-              Regístrate aquí
-            </MuiLink>
-          </Typography>
-        </Box>
-      </Stack>
-    </Container>
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        width: '100%',
+        flex: 1,
+        px: 2
+      }}
+    >
+      <Card sx={{ width: '100%', maxWidth: 450 }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h4" gutterBottom align="center">Iniciar sesión</Typography>
+          <Stack component="form" spacing={2} onSubmit={onSubmit}>
+            {localError && <Alert severity="error">{localError}</Alert>}
+            {error && <Alert severity="error">{error}</Alert>}
+            <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth />
+            <TextField label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth />
+            <Button type="submit" variant="contained" disabled={loading}>Entrar</Button>
+            <Box textAlign="center">
+              <Typography variant="body2">
+                ¿No tienes cuenta?{' '}
+                <MuiLink component={Link} to={ROUTES.REGISTER}>
+                  Regístrate aquí
+                </MuiLink>
+              </Typography>
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }

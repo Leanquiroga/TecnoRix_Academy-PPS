@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Button, Container, TextField, Typography, Stack, Alert, MenuItem, Select, InputLabel, FormControl, Box, Link as MuiLink } from '@mui/material'
+import { Button, TextField, Typography, Stack, Alert, MenuItem, Select, InputLabel, FormControl, Box, Link as MuiLink, Card, CardContent } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigation } from '../hooks/useNavigation'
@@ -37,31 +37,45 @@ export default function RegisterPage() {
   }
 
   return (
-    <Container maxWidth="sm" sx={{ py: 6 }}>
-      <Typography variant="h4" gutterBottom>Crear cuenta</Typography>
-      <Stack component="form" spacing={2} onSubmit={onSubmit}>
-        {localError && <Alert severity="error">{localError}</Alert>}
-        {error && <Alert severity="error">{error}</Alert>}
-        <TextField label="Nombre" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
-        <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth />
-        <TextField label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth />
-        <FormControl fullWidth>
-          <InputLabel id="role-label">Rol</InputLabel>
-          <Select labelId="role-label" value={role} label="Rol" onChange={(e) => setRole(e.target.value as Role)}>
-            <MenuItem value="student">Estudiante</MenuItem>
-            <MenuItem value="teacher">Profesor</MenuItem>
-          </Select>
-        </FormControl>
-        <Button type="submit" variant="contained" disabled={loading}>Registrarse</Button>
-        <Box textAlign="center">
-          <Typography variant="body2">
-            ¿Ya tienes cuenta?{' '}
-            <MuiLink component={Link} to={ROUTES.LOGIN}>
-              Inicia sesión aquí
-            </MuiLink>
-          </Typography>
-        </Box>
-      </Stack>
-    </Container>
+    <Box 
+      sx={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '100vh',
+        width: '100%',
+        flex: 1,
+        px: 2
+      }}
+    >
+      <Card sx={{ width: '100%', maxWidth: 450 }}>
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h4" gutterBottom align="center">Crear cuenta</Typography>
+          <Stack component="form" spacing={2} onSubmit={onSubmit}>
+            {localError && <Alert severity="error">{localError}</Alert>}
+            {error && <Alert severity="error">{error}</Alert>}
+            <TextField label="Nombre" value={name} onChange={(e) => setName(e.target.value)} fullWidth />
+            <TextField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} fullWidth />
+            <TextField label="Contraseña" type="password" value={password} onChange={(e) => setPassword(e.target.value)} fullWidth />
+            <FormControl fullWidth>
+              <InputLabel id="role-label">Rol</InputLabel>
+              <Select labelId="role-label" value={role} label="Rol" onChange={(e) => setRole(e.target.value as Role)}>
+                <MenuItem value="student">Estudiante</MenuItem>
+                <MenuItem value="teacher">Profesor</MenuItem>
+              </Select>
+            </FormControl>
+            <Button type="submit" variant="contained" disabled={loading}>Registrarse</Button>
+            <Box textAlign="center">
+              <Typography variant="body2">
+                ¿Ya tienes cuenta?{' '}
+                <MuiLink component={Link} to={ROUTES.LOGIN}>
+                  Inicia sesión aquí
+                </MuiLink>
+              </Typography>
+            </Box>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Box>
   )
 }
