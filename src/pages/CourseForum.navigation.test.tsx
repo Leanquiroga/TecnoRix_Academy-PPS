@@ -115,7 +115,7 @@ const mockCourse = {
 }
 
 const mockMaterials = [
-  { id: 'm1', course_id: 'c1', title: 'Intro', type: 'video', url: 'https://v', order: 1, created_at: '', updated_at: '' },
+  { id: 'm1', course_id: 'c1', title: 'Intro', type: 'video', url: 'https://v', order_index: 1, created_at: '', updated_at: '' },
 ]
 
 describe('Navegación Curso ↔ Foro', () => {

@@ -55,7 +55,7 @@ export interface CourseMaterial {
   title: string
   type: CourseMaterialType
   url: string
-  order: number
+  order_index: number
   created_at: string
   updated_at: string
 }
@@ -64,5 +64,5 @@ export interface CourseMaterialInput {
   title: string
   type: CourseMaterialType
   url: string
-  order?: number
+  order_index?: number
 }

@@ -110,7 +110,7 @@ export async function addCourseMaterials(courseId: string, materials: CourseMate
     title: m.title,
     type: m.type,
     url: m.url,
-    order_index: m.order ?? idx + 1,
+    order_index: m.order_index ?? idx + 1,
   }))
   console.log('[CourseService] inserting materials payload:', JSON.stringify(payload, null, 2))
   const { error } = await supabaseAdmin.from('course_materials').insert(payload)

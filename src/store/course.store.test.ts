@@ -114,7 +114,7 @@ describe('course.store', () => {
           course_id: '1',
           type: 'video',
           url: 'http://test.com',
-          order: 1,
+          order_index: 1,
           created_at: '',
           updated_at: ''
         } as CourseMaterial]

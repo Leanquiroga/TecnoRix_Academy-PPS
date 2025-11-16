@@ -21,8 +21,8 @@ const mockCourse: CoursePublic = {
 }
 
 const mockMaterials: CourseMaterial[] = [
-  { id: 'm1', course_id: 'course-1', title: 'Intro', type: 'video', url: 'https://example.com/video.mp4', order: 1, created_at: '', updated_at: '' },
-  { id: 'm2', course_id: 'course-1', title: 'Guía PDF', type: 'pdf', url: 'https://example.com/doc.pdf', order: 2, created_at: '', updated_at: '' },
+  { id: 'm1', course_id: 'course-1', title: 'Intro', type: 'video', url: 'https://example.com/video.mp4', order_index: 1, created_at: '', updated_at: '' },
+  { id: 'm2', course_id: 'course-1', title: 'Guía PDF', type: 'pdf', url: 'https://example.com/doc.pdf', order_index: 2, created_at: '', updated_at: '' },
 ]
 
 function renderEditCourse(initialPath = '/courses/course-1/edit') {

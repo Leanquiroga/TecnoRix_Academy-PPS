@@ -105,9 +105,9 @@ describe('Courses Endpoints - FASE 3 Epic 2', () => {
           description: 'Curso de prueba con materiales',
           price: 20,
           materials: [
-            { title: 'Introducción', type: 'video', url: 'https://example.com/video1.mp4', order: 1 },
-            { title: 'Documentación', type: 'pdf', url: 'https://example.com/doc.pdf', order: 2 },
-            { title: 'Recursos externos', type: 'link', url: 'https://example.com', order: 3 },
+            { title: 'Introducción', type: 'video', url: 'https://example.com/video1.mp4', order_index: 1 },
+            { title: 'Documentación', type: 'pdf', url: 'https://example.com/doc.pdf', order_index: 2 },
+            { title: 'Recursos externos', type: 'link', url: 'https://example.com', order_index: 3 },
           ]
         })
 
