@@ -43,3 +43,8 @@ uploads/
 !uploads/.gitkeep
 tmp/
 temp/
+
+## Test artifacts
+test-*.txt
+*.tap
+jest-*.json

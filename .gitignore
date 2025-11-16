@@ -57,5 +57,7 @@ desktop.ini
 .eslintcache
 *.tsbuildinfo
 
-# Ignorar solo archivos .md dentro de notes y sus subcarpetas
+# Notas: ignorar por defecto los .md en notes y todas sus subcarpetas
+# (mantiene visible la carpeta notes raíz, pero oculta cualquier subdirectorio y .md)
+notes/**/
 notes/**/*.md
