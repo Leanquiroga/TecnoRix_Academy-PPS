@@ -51,19 +51,11 @@ describe('Forum System', () => {
     teacherUserId = teacherRegister.body.data.user.id
     teacherToken = teacherRegister.body.data.token
 
-    // Aprobar al profesor
-    const { data: adminUser } = await supabaseAdmin
+    // Activar al profesor directamente (evita dependencia de usuario admin existente)
+    await supabaseAdmin
       .from('users')
-      .select('id')
-      .eq('email', 'admin@tecnorx.com')
-      .single()
-
-    if (adminUser) {
-      await supabaseAdmin
-        .from('users')
-        .update({ status: 'active' })
-        .eq('id', teacherUserId)
-    }
+      .update({ status: 'active' })
+      .eq('id', teacherUserId)
 
     // Crear curso
     const course = await createTestCourse({

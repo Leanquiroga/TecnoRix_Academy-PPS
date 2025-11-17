@@ -13,6 +13,25 @@ let testEmail: string
 let token: string
 
 describe('Auth endpoints', () => {
+  it('muestra mensaje informativo al login de teacher pendiente', async () => {
+    const pendingTeacherEmail = randomEmail()
+    // Registrar profesor (queda en pending_validation)
+    const resRegisterTeacher = await request(app)
+      .post('/api/auth/register')
+      .send({ email: pendingTeacherEmail, password: testPassword, name: 'Pending Teacher', role: 'teacher' })
+    expect(resRegisterTeacher.status).toBe(201)
+    expect(resRegisterTeacher.body.data.user.status).toBe('pending_validation')
+
+    // Realizar login explícito para disparar mensaje condicional
+    const resLoginTeacher = await request(app)
+      .post('/api/auth/login')
+      .send({ email: pendingTeacherEmail, password: testPassword })
+    expect(resLoginTeacher.status).toBe(200)
+    expect(resLoginTeacher.body.success).toBe(true)
+    // Verificar presencia de mensaje explicativo
+    expect(resLoginTeacher.body.message).toMatch(/pendiente de aprobación/i)
+    expect(resLoginTeacher.body.data.user.status).toBe('pending_validation')
+  })
   it('rechaza login de usuario suspendido', async () => {
     // 1. Registrar usuario
     const suspendedEmail = randomEmail()

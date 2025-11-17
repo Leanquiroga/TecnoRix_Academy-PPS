@@ -100,7 +100,10 @@ export async function login(req: Request, res: Response) {
     }
 
     const token = signToken({ userId: profile.id, email: profile.email, role: profile.role })
-    return res.json({ success: true, data: { user: profile, token } })
+    const message = profile.role === UserRole.TEACHER && profile.status === UserStatus.PENDING_VALIDATION
+      ? 'Tu cuenta de profesor está pendiente de aprobación. El acceso a creación y gestión de cursos se habilitará tras la validación.'
+      : undefined
+    return res.json({ success: true, data: { user: profile, token }, message })
   } catch (err: any) {
     const msg = err?.message || 'Error en el login'
     return res.status(400).json({ success: false, error: msg })

@@ -189,7 +189,7 @@ export function CourseView() {
           sx={{
             p: 6,
             textAlign: 'center',
-            bgcolor: 'grey.50',
+            bgcolor: 'background.paper',
             borderRadius: 2,
           }}
         >
@@ -387,9 +387,9 @@ export function CourseView() {
       <Box display="flex" gap={3}>
         {/* Materials List */}
         <Paper sx={{ width: 300, flexShrink: 0 }}>
-          <Box sx={{ p: 2, bgcolor: 'primary.main', color: 'white' }}>
-            <Typography variant="h6">Contenido del curso</Typography>
-            <Typography variant="caption">
+          <Box sx={{ p: 2, bgcolor: 'primary.main' }}>
+            <Typography variant="h6" color="primary.contrastText">Contenido del curso</Typography>
+            <Typography variant="caption" color="primary.contrastText">
               {materials.length} {materials.length === 1 ? 'material' : 'materiales'}
             </Typography>
           </Box>

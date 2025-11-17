@@ -5,7 +5,7 @@
  * Ejecutar con: npm run test
  */
 
-import { describe, it, expect, beforeAll } from '@jest/globals'
+import { describe, it, expect, beforeAll, jest } from '@jest/globals'
 import request from 'supertest'
 import app from '../app'
 import { UserRole, UserStatus } from '../types/auth.types'
@@ -15,6 +15,9 @@ describe('Admin Endpoints - FASE 2', () => {
   let studentToken: string
   let studentId: string
   let teacherId: string
+
+  // Ampliar timeout para operaciones de creación de usuarios en Supabase (admin API)
+  jest.setTimeout(20000)
 
   beforeAll(async () => {
     // Registrar un admin para los tests
