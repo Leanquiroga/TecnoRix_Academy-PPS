@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Box, Button, Container, TextField, Typography, Chip, Stack, Paper, IconButton, Divider } from '@mui/material'
+import { Box, Container, TextField, Typography, Stack, Paper, IconButton, Divider } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
-import UploadFileIcon from '@mui/icons-material/UploadFile'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
 import { useFileUpload } from '../hooks/useFileUpload'
 import { useNotify } from '../hooks/useNotify'
 import { createCourse } from '../api/course.service'
+import FileUploadZone from '../components/common/FileUploadZone'
 import type { CourseCreateInput, CourseMaterialInput, CourseMaterialType } from '../types/course'
 
 export default function CreateCoursePage() {
@@ -19,9 +19,7 @@ export default function CreateCoursePage() {
   const { uploading, error: uploadError, upload } = useFileUpload()
   const notify = useNotify()
 
-  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+  const handleFileUpload = async (file: File) => {
     const uploaded = await upload(file)
     if (!uploaded) return
 
@@ -33,8 +31,6 @@ export default function CreateCoursePage() {
       order: materials.length + 1,
     }
     setMaterials((prev) => [...prev, item])
-    // Reset input value to allow re-uploading same file name
-    e.currentTarget.value = ''
   }
 
   const removeMaterial = (index: number) => {
@@ -108,49 +104,46 @@ export default function CreateCoursePage() {
             />
           </Box>
           <Box>
-            <Stack direction="row" spacing={2} alignItems="center">
-              <Button
-                variant="contained"
-                component="label"
-                startIcon={<UploadFileIcon />}
-                disabled={uploading}
-              >
-                {uploading ? 'Subiendo…' : 'Agregar material (PDF/Video)'}
-                <input hidden type="file" onChange={handleFileSelect} accept="application/pdf,video/*" />
-              </Button>
-              {uploadError && <Chip color="error" label={uploadError} />}
-            </Stack>
-          </Box>
-          <Box>
             <Typography variant="h6" gutterBottom>
-              Materiales ({materials.length})
+              Materiales del curso
             </Typography>
-            <Stack spacing={1}>
-              {materials.map((m, idx) => (
-                <Paper key={`${m.url}-${idx}`} variant="outlined" sx={{ p: 1.5 }}>
-                  <Stack direction="row" alignItems="center" spacing={1}>
-                    {m.type === 'pdf' ? (
-                      <PictureAsPdfIcon color="action" />
-                    ) : (
-                      <PlayCircleOutlineIcon color="action" />
-                    )}
-                    <Typography sx={{ flex: 1 }} noWrap title={m.title}>
-                      {idx + 1}. {m.title}
-                    </Typography>
-                    <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-                    <IconButton aria-label="eliminar" onClick={() => removeMaterial(idx)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Stack>
-                </Paper>
-              ))}
-              {materials.length === 0 && (
-                <Typography variant="body2" color="text.secondary">
-                  No hay materiales cargados aún.
-                </Typography>
-              )}
-            </Stack>
+            <FileUploadZone
+              onUpload={handleFileUpload}
+              loading={uploading}
+              error={uploadError}
+              accept="application/pdf,video/*"
+              maxSize={100 * 1024 * 1024}
+              showPreview={true}
+              helperText="Acepta archivos PDF y videos (MP4, WebM, etc.) hasta 100MB"
+            />
           </Box>
+          {materials.length > 0 && (
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                Materiales agregados ({materials.length})
+              </Typography>
+              <Stack spacing={1}>
+                {materials.map((m, idx) => (
+                  <Paper key={`${m.url}-${idx}`} variant="outlined" sx={{ p: 1.5 }}>
+                    <Stack direction="row" alignItems="center" spacing={1}>
+                      {m.type === 'pdf' ? (
+                        <PictureAsPdfIcon color="action" />
+                      ) : (
+                        <PlayCircleOutlineIcon color="action" />
+                      )}
+                      <Typography sx={{ flex: 1 }} noWrap title={m.title}>
+                        {idx + 1}. {m.title}
+                      </Typography>
+                      <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                      <IconButton aria-label="eliminar" onClick={() => removeMaterial(idx)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </Stack>
+                  </Paper>
+                ))}
+              </Stack>
+            </Box>
+          )}
           <Box>
             <Stack direction="row" spacing={2}>
               <Button type="submit" variant="contained" disabled={submitting || !title || !description}>

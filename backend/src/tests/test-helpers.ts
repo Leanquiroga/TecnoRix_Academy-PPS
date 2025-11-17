@@ -3,6 +3,59 @@ import { Express } from 'express'
 import { supabaseAdmin } from '../config/supabase'
 
 /**
+ * Genera email aleatorio para tests
+ */
+export function randomEmail(prefix = 'test') {
+  return `${prefix}_${Math.floor(Math.random() * 1e8)}@mail.com`
+}
+
+/**
+ * Crea un teacher directamente en BD (bypassing el nuevo flujo de aplicación)
+ * Útil para tests que necesitan un teacher activo
+ */
+export async function createTestTeacher(input?: {
+  email?: string
+  name?: string
+  password?: string
+  status?: 'active' | 'pending_validation' | 'suspended'
+}) {
+  const email = input?.email || randomEmail('teacher')
+  const password = input?.password || 'test1234'
+  const name = input?.name || 'Test Teacher'
+  const status = input?.status || 'active'
+
+  // Crear en Supabase Auth
+  const { data: authUser, error: authError } = await supabaseAdmin.auth.admin.createUser({
+    email,
+    password,
+    email_confirm: true,
+  })
+
+  if (authError || !authUser.user) {
+    throw new Error(`Failed to create auth user: ${authError?.message}`)
+  }
+
+  // Crear perfil en users
+  const { data: user, error: userError } = await supabaseAdmin
+    .from('users')
+    .insert({
+      auth_user_id: authUser.user.id,
+      email,
+      name,
+      role: 'teacher',
+      status,
+    })
+    .select()
+    .single()
+
+  if (userError || !user) {
+    throw new Error(`Failed to create user profile: ${userError?.message}`)
+  }
+
+  return { user, password }
+}
+
+/**
  * Helper para hacer requests autenticados
  * Crea un agente de supertest con el header de autorización preconfigurado
  */

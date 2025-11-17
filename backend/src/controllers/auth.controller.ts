@@ -29,6 +29,14 @@ export async function register(req: Request, res: Response) {
       return res.status(400).json({ success: false, error: 'Rol inválido' })
     }
 
+    // FASE 6.5: Rechazar registro directo como teacher (debe usar /api/teacher/application)
+    if (role === UserRole.TEACHER) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Para registrarte como profesor, usa el formulario de aplicación en /register/teacher' 
+      })
+    }
+
     // Evitar duplicados en la tabla de perfiles
     const existing = await getUserByEmail(email)
     if (existing) {

@@ -9,6 +9,7 @@ import { describe, it, expect, beforeAll, jest } from '@jest/globals'
 import request from 'supertest'
 import app from '../app'
 import { UserRole, UserStatus } from '../types/auth.types'
+import { createTestTeacher } from './test-helpers'
 
 describe('Admin Endpoints - FASE 2', () => {
   let adminToken: string
@@ -49,17 +50,12 @@ describe('Admin Endpoints - FASE 2', () => {
     studentId = studentRegister.body.data.user.id
     studentToken = studentRegister.body.data.token
 
-    // Registrar un teacher (quedará pendiente)
-    const teacherRegister = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Teacher Test',
-        email: `teacher-${Date.now()}@test.com`,
-        password: 'password123',
-        role: UserRole.TEACHER,
-      })
+    // Crear teacher directamente en BD (bypassing nuevo flujo de aplicación)
+    const { user: teacherUser } = await createTestTeacher({
+      status: 'pending_validation'
+    })
 
-    teacherId = teacherRegister.body.data.user.id
+    teacherId = teacherUser.id
   })
 
   describe('GET /api/admin/users', () => {

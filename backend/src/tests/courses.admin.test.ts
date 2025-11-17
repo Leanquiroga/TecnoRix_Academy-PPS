@@ -2,13 +2,13 @@ import { describe, it, expect, beforeAll, jest } from '@jest/globals'
 import request from 'supertest'
 import app from '../app'
 import { UserRole } from '../types/auth.types'
+import { createTestTeacher } from './test-helpers'
 
 describe('Admin Courses Endpoints - FASE 3 Epic 2', () => {
   jest.setTimeout(20000)
 
   let adminToken: string
   let teacherActiveToken: string
-  let teacherActiveId: string
   let courseId: string
 
   beforeAll(async () => {
@@ -21,19 +21,21 @@ describe('Admin Courses Endpoints - FASE 3 Epic 2', () => {
     console.log('[beforeAll] admin register status:', adminRegister.status)
     adminToken = adminRegister.body.data.token
 
-    // Teacher active: Registrar y aprobar
-    const teacherActiveRegister = await request(app)
-      .post('/api/auth/register')
-      .send({ name: 'Teacher Course Admin', email: `teacher-course-admin-${Date.now()}@test.com`, password: 'password123', role: UserRole.TEACHER })
-    teacherActiveId = teacherActiveRegister.body.data.user.id
-    console.log('[beforeAll] teacher active register status:', teacherActiveRegister.status)
+    // Teacher active - usar createTestTeacher
+    const teacherEmail = `teacher-course-admin-${Date.now()}@test.com`
+    const { password: teacherPassword } = await createTestTeacher({
+      email: teacherEmail,
+      name: 'Teacher Course Admin',
+      status: 'active'
+    })
+    console.log('[beforeAll] teacher active created via helper')
     
-    await request(app)
-      .put(`/api/admin/users/${teacherActiveId}/approve`)
-      .set('Authorization', `Bearer ${adminToken}`)
-    console.log('[beforeAll] teacher active approved')
-    
-    teacherActiveToken = teacherActiveRegister.body.data.token
+    // Login para obtener token
+    const teacherLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherEmail, password: teacherPassword })
+    teacherActiveToken = teacherLogin.body.data.token
+    console.log('[beforeAll] teacher active logged in')
 
     // Crear un curso pendiente
     const courseCreate = await request(app)

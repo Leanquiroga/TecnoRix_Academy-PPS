@@ -3,6 +3,7 @@ import request from 'supertest'
 import app from '../app'
 import { UserRole } from '../types/auth.types'
 import { deleteFromCloudinary } from '../services/upload.service'
+import { createTestTeacher } from './test-helpers'
 
 /**
  * Tests de integración REAL con Cloudinary
@@ -21,35 +22,17 @@ describe('Upload Integration Tests - Real Cloudinary Upload', () => {
   beforeAll(async () => {
     console.time('[Integration] setup upload')
 
-    // Crear un teacher activo
-    const teacherRegister = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Teacher Integration',
-        email: `teacher-int-${Date.now()}@test.com`,
-        password: 'password123',
-        role: UserRole.TEACHER,
-      })
-
-    // Crear admin para aprobar teacher
-    const adminRegister = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Admin Integration',
-        email: `admin-int-${Date.now()}@test.com`,
-        password: 'admin123',
-        role: UserRole.ADMIN,
-      })
-
-    const adminToken = adminRegister.body.data.token
-    const teacherId = teacherRegister.body.data.user.id
-
-    // Aprobar teacher
-    await request(app)
-      .put(`/api/admin/users/${teacherId}/approve`)
-      .set('Authorization', `Bearer ${adminToken}`)
-
-    teacherToken = teacherRegister.body.data.token
+    // Crear un teacher activo usando helper
+    const teacherEmail = `teacher-int-${Date.now()}@test.com`
+    await createTestTeacher({
+      email: teacherEmail,
+      name: 'Teacher Integration',
+      status: 'active',
+    })
+    const teacherLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherEmail, password: 'test1234' })
+    teacherToken = teacherLogin.body.data.token
 
     // Crear un estudiante
     const studentRegister = await request(app)

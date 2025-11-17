@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach } from '@jest/globals'
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, jest } from '@jest/globals'
 import request from 'supertest'
 import express, { Express } from 'express'
 import enrollmentRoutes from '../routes/enrollment.routes'
@@ -9,6 +9,7 @@ import {
   authenticatedRequest,
   createTestCourse,
   createTestEnrollment,
+  createTestTeacher,
   type EnrollmentWithCourseResponse,
 } from './test-helpers'
 
@@ -26,6 +27,9 @@ let studentUserId: string
 let teacherUserId: string
 let testCourseId: string
 let paidCourseId: string // Para tests de cursos pagos
+
+// Aumentar timeout global del suite
+jest.setTimeout(30000)
 
 describe('Enrollment Endpoints', () => {
   // Setup: Crear usuarios y cursos de prueba
@@ -48,25 +52,27 @@ describe('Enrollment Endpoints', () => {
     studentToken = studentRes.body.data.token
     studentUserId = studentRes.body.data.user.id
 
-    // Registrar teacher
-    const teacherRes = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Test Teacher',
-        email: `teacher-${Date.now()}@test.com`,
-        password: 'Password123!',
-        role: 'teacher',
-      })
+    // Crear teacher usando helper (bypassing application flow)
+    const { user: teacherUser, password: teacherPassword } = await createTestTeacher({
+      email: `teacher-${Date.now()}@test.com`,
+      name: 'Test Teacher',
+      status: 'active'
+    })
 
-    // Validar registro exitoso
-    if (!teacherRes.body.data?.token || !teacherRes.body.data?.user?.id) {
-      throw new Error(`Failed to register teacher: ${JSON.stringify(teacherRes.body)}`)
+    teacherUserId = teacherUser.id
+
+    // Login teacher para obtener token
+    const teacherLoginRes = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherUser.email, password: teacherPassword })
+
+    if (!teacherLoginRes.body.data?.token) {
+      throw new Error(`Failed to login teacher: ${JSON.stringify(teacherLoginRes.body)}`)
     }
 
-    teacherToken = teacherRes.body.data.token
-    teacherUserId = teacherRes.body.data.user.id
+    teacherToken = teacherLoginRes.body.data.token
 
-    // Aprobar teacher manualmente en BD
+    // Ya no necesitamos aprobar manualmente, createTestTeacher() ya lo hace con status='active'
     const { error: approveError } = await supabaseAdmin
       .from('users')
       .update({ status: 'active' })

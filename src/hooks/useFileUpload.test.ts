@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { useFileUpload } from './useFileUpload';
 import * as UploadAPI from '../api/upload.service';
 
@@ -23,7 +23,9 @@ describe('useFileUpload', () => {
 
     const invalidFile = new File(['content'], 'test.txt', { type: '' });
 
-    await result.current.upload(invalidFile);
+    await act(async () => {
+      await result.current.upload(invalidFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBe('Por favor, selecciona un archivo.');
@@ -37,7 +39,9 @@ describe('useFileUpload', () => {
 
     const invalidFile = new File(['content'], 'test.txt', { type: 'text/plain' });
 
-    await result.current.upload(invalidFile);
+    await act(async () => {
+      await result.current.upload(invalidFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBe(
@@ -65,7 +69,9 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
 
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.result).toEqual(mockResponse);
@@ -92,7 +98,9 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.mp4', { type: 'video/mp4' });
 
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.result).toEqual(mockResponse);
@@ -119,7 +127,9 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.mpeg', { type: 'video/mpeg' });
 
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.result).toEqual(mockResponse);
@@ -146,7 +156,9 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.mov', { type: 'video/quicktime' });
 
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.result).toEqual(mockResponse);
@@ -164,7 +176,9 @@ describe('useFileUpload', () => {
       type: 'application/pdf',
     });
 
-    await result.current.upload(largeFile);
+    await act(async () => {
+      await result.current.upload(largeFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBe('El archivo es demasiado grande. Tamaño máximo: 100MB.');
@@ -193,7 +207,9 @@ describe('useFileUpload', () => {
       type: 'application/pdf',
     });
 
-    await result.current.upload(exactFile);
+    await act(async () => {
+      await result.current.upload(exactFile);
+    });
 
     await waitFor(() => {
       expect(result.current.result).toEqual(mockResponse);
@@ -210,7 +226,9 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
 
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBe('Network error');
@@ -243,14 +261,19 @@ describe('useFileUpload', () => {
 
     const validFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
 
-    const uploadPromise = result.current.upload(validFile);
+    let uploadPromise: Promise<any>;
+    await act(async () => {
+      uploadPromise = result.current.upload(validFile);
+    });
 
     // Durante la carga, uploading debe ser true
     await waitFor(() => {
       expect(result.current.uploading).toBe(true);
     });
 
-    await uploadPromise;
+    await act(async () => {
+      await uploadPromise!;
+    });
 
     // Después de la carga, uploading debe ser false
     await waitFor(() => {
@@ -263,7 +286,9 @@ describe('useFileUpload', () => {
 
     // Primera carga con error
     const invalidFile = new File(['content'], 'test.txt', { type: 'text/plain' });
-    await result.current.upload(invalidFile);
+    await act(async () => {
+      await result.current.upload(invalidFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBeTruthy();
@@ -283,7 +308,9 @@ describe('useFileUpload', () => {
     vi.spyOn(UploadAPI, 'uploadFile').mockResolvedValue(mockResponse);
 
     const validFile = new File(['content'], 'test.pdf', { type: 'application/pdf' });
-    await result.current.upload(validFile);
+    await act(async () => {
+      await result.current.upload(validFile);
+    });
 
     await waitFor(() => {
       expect(result.current.error).toBeNull();

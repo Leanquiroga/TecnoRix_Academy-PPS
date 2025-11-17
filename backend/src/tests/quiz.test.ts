@@ -8,7 +8,7 @@ import app from '../app'
 import { supabaseAdmin } from '../config/supabase'
 import { UserRole } from '../types/auth.types'
 import { QuestionType } from '../types/quiz.types'
-import { authenticatedRequest, createTestCourse } from './test-helpers'
+import { authenticatedRequest, createTestCourse, createTestTeacher } from './test-helpers'
 
 // Variables globales para los tests
 let studentToken: string
@@ -41,18 +41,18 @@ describe('Quiz System', () => {
     studentUserId = studentRegister.body.data.user.id
     studentToken = studentRegister.body.data.token
 
-    // Crear profesor
+    // Crear profesor usando helper
     const teacherEmail = `quiz-teacher-${Date.now()}@test.com`
-    const teacherRegister = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Quiz Teacher',
-        email: teacherEmail,
-        password: 'password123',
-        role: UserRole.TEACHER,
-      })
-    teacherUserId = teacherRegister.body.data.user.id
-    teacherToken = teacherRegister.body.data.token
+    const teacher = await createTestTeacher({
+      email: teacherEmail,
+      name: 'Quiz Teacher',
+      status: 'active',
+    })
+    teacherUserId = teacher.user.id
+    const teacherLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherEmail, password: 'test1234' })
+    teacherToken = teacherLogin.body.data.token
 
     // Crear admin
     const adminEmail = `quiz-admin-${Date.now()}@test.com`

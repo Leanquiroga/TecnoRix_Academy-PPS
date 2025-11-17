@@ -7,7 +7,7 @@ import { describe, it, expect, beforeAll, afterAll, jest } from '@jest/globals'
 import app from '../app'
 import { supabaseAdmin } from '../config/supabase'
 import { UserRole } from '../types/auth.types'
-import { authenticatedRequest, createTestCourse } from './test-helpers'
+import { authenticatedRequest, createTestCourse, createTestTeacher } from './test-helpers'
 
 // Variables globales para los tests
 let studentToken: string
@@ -38,24 +38,18 @@ describe('Forum System', () => {
     studentUserId = studentRegister.body.data.user.id
     studentToken = studentRegister.body.data.token
 
-    // Crear profesor
+    // Crear profesor usando helper
     const teacherEmail = `forum-teacher-${Date.now()}@test.com`
-    const teacherRegister = await request(app)
-      .post('/api/auth/register')
-      .send({
-        name: 'Forum Teacher',
-        email: teacherEmail,
-        password: 'password123',
-        role: UserRole.TEACHER,
-      })
-    teacherUserId = teacherRegister.body.data.user.id
-    teacherToken = teacherRegister.body.data.token
-
-    // Activar al profesor directamente (evita dependencia de usuario admin existente)
-    await supabaseAdmin
-      .from('users')
-      .update({ status: 'active' })
-      .eq('id', teacherUserId)
+    const teacher = await createTestTeacher({
+      email: teacherEmail,
+      name: 'Forum Teacher',
+      status: 'active',
+    })
+    teacherUserId = teacher.user.id
+    const teacherLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherEmail, password: 'test1234' })
+    teacherToken = teacherLogin.body.data.token
 
     // Crear curso
     const course = await createTestCourse({

@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, jest } from '@jest/globals'
 import request from 'supertest'
 import app from '../app'
 import { UserRole } from '../types/auth.types'
+import { createTestTeacher } from './test-helpers'
 
 describe('Courses Endpoints - FASE 3 Epic 2', () => {
   // Aumentar timeout porque los registros en Supabase pueden tardar >5s
@@ -27,24 +28,29 @@ describe('Courses Endpoints - FASE 3 Epic 2', () => {
     console.log('[beforeAll] student register status:', studentRegister.status)
     studentToken = studentRegister.body.data.token
 
-    // Teacher (pending)
-    const teacherPendingRegister = await request(app)
-      .post('/api/auth/register')
-      .send({ name: 'Teacher Pending', email: `teacher-p-${Date.now()}@test.com`, password: 'password123', role: UserRole.TEACHER })
-    console.log('[beforeAll] teacher pending register status:', teacherPendingRegister.status)
-    teacherPendingToken = teacherPendingRegister.body.data.token
+    // Teacher (pending) - usar createTestTeacher con status pending
+    const { user: teacherPending, password: teacherPendingPassword } = await createTestTeacher({
+      email: `teacher-p-${Date.now()}@test.com`,
+      name: 'Teacher Pending',
+      status: 'pending_validation'
+    })
+    const teacherPendingLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherPending.email, password: teacherPendingPassword })
+    teacherPendingToken = teacherPendingLogin.body.data.token
+    console.log('[beforeAll] teacher pending created and logged in')
 
-    // Teacher active: Registrar y aprobar vía admin endpoint
-    const teacherActiveRegister = await request(app)
-      .post('/api/auth/register')
-      .send({ name: 'Teacher Active', email: `teacher-a-${Date.now()}@test.com`, password: 'password123', role: UserRole.TEACHER })
-    const teacherActiveId = teacherActiveRegister.body.data.user.id
-    console.log('[beforeAll] teacher active register status:', teacherActiveRegister.status)
-    await request(app)
-      .put(`/api/admin/users/${teacherActiveId}/approve`)
-      .set('Authorization', `Bearer ${adminToken}`)
-    console.log('[beforeAll] teacher active approved via admin')
-    teacherActiveToken = teacherActiveRegister.body.data.token
+    // Teacher active - usar createTestTeacher con status active
+    const { user: teacherActive, password: teacherActivePassword } = await createTestTeacher({
+      email: `teacher-a-${Date.now()}@test.com`,
+      name: 'Teacher Active',
+      status: 'active'
+    })
+    const teacherActiveLogin = await request(app)
+      .post('/api/auth/login')
+      .send({ email: teacherActive.email, password: teacherActivePassword })
+    teacherActiveToken = teacherActiveLogin.body.data.token
+    console.log('[beforeAll] teacher active created and logged in')
     console.timeEnd('[beforeAll] setup cursos')
   })
 

@@ -1,0 +1,903 @@
+
+> tecnorix-academy-pps@0.0.0 test
+> vitest --run --reporter=verbose
+
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mC:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS[39m
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > rechaza archivo sin tipo MIME
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mestado inicial es correcto[32m 25[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > rechaza archivo de tipo no permitido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo PDF v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo PDF v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mrechaza archivo sin tipo MIME[32m 81[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mrechaza archivo de tipo no permitido[32m 71[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video MP4 v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video MP4 v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video MPEG v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video MPEG v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22macepta archivo PDF v├ílido[32m 81[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22macepta archivo de video MP4 v├ílido[32m 77[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video QuickTime v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de video QuickTime v├ílido
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22macepta archivo de video MPEG v├ílido[32m 78[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizView.test.tsx[2m > [22mQuizView[2m > [22mno inicia intento autom├íticamente y muestra bot├│n Comenzar intento (no inscrito)[33m 650[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPostForm.test.tsx[2m > [22mForumPostForm[2m > [22mdeshabilita el bot├│n si faltan campos[33m 605[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizView.test.tsx[2m > [22mQuizView[2m > [22minicia intento al hacer clic cuando est├í inscrito[33m 310[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizView.test.tsx[2m > [22mQuizView[2m > [22mmuestra error si startAttempt falla (403, no inscrito)[32m 236[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPostForm.test.tsx[2m > [22mForumPostForm[2m > [22mhabilita el bot├│n cuando t├¡tulo y mensaje est├ín completos[33m 571[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizView.test.tsx[2m > [22mQuizView[2m > [22mmuestra navegaci├│n entre preguntas cuando hay intento activo[32m 264[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizView.test.tsx[2m > [22mQuizView[2m > [22mmuestra bot├│n Enviar Quiz en ├║ltima pregunta[32m 167[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPostForm.test.tsx[2m > [22mForumPostForm[2m > [22menv├¡a datos recortados y limpia el formulario[33m 538[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPostForm.test.tsx[2m > [22mForumPostForm[2m > [22mpermanece deshabilitado cuando submitting=true[33m 397[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > rechaza archivo que excede 100MB
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22macepta archivo de video QuickTime v├ílido[32m 80[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de exactamente 100MB
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > acepta archivo de exactamente 100MB
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mrechaza archivo que excede 100MB[33m 5476[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > maneja errores de API correctamente
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > maneja errores de API correctamente
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22macepta archivo de exactamente 100MB[33m 4141[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > establece estado uploading durante la carga
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mmaneja errores de API correctamente[32m 78[2mms[22m[39m
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > establece estado uploading durante la carga
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > limpia error anterior en nueva carga exitosa
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > limpia error anterior en nueva carga exitosa
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+stderr | src/hooks/useFileUpload.test.ts > useFileUpload > limpia error anterior en nueva carga exitosa
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mestablece estado uploading durante la carga[32m 190[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useFileUpload.test.ts[2m > [22museFileUpload[2m > [22mlimpia error anterior en nueva carga exitosa[32m 157[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mredirige a login si no autenticado (CourseForum)[32m 90[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mmuestra loading mientras carga los cursos[33m 447[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mcarga y muestra la lista de cursos pendientes[32m 176[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mmuestra error cuando falla la carga de cursos[32m 107[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mmuestra mensaje cuando no hay cursos pendientes[32m 68[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/TeacherDashboard.test.tsx[2m > [22mTeacherDashboard[2m > [22mmuestra encabezado y estad├¡sticas calculadas[33m 507[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mmuestra loading mientras carga el curso[33m 331[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mcarga y muestra el formulario prellenado con los datos del curso[33m 703[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mredirige a login si no autenticado (ForumPostDetail)[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumNestedReplies.test.tsx[2m > [22mForumPostDetail - Respuestas anidadas[2m > [22mrenderiza respuestas anidadas (padre -> hija)[33m 958[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mmuestra advertencia si estudiante no inscrito (CourseForum)[33m 1130[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mrenderiza formulario de creaci├│n de quiz[33m 495[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mmuestra error cuando falla la carga del curso[33m 329[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22maprueba un curso correctamente[33m 959[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumPostDetail.test.tsx[2m > [22mForumPostDetail[2m > [22mrenderiza el post y sus respuestas[33m 1108[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra loading mientras carga los posts[33m 1048[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mmuestra advertencia si estudiante no inscrito (ForumPostDetail)[33m 302[2mms[22m[39m
+stderr | src/pages/CourseApproval.test.tsx > CourseApproval > muestra error al aprobar curso cuando falla
+Error al aprobar curso: Error: Error al aprobar
+    at C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseApproval.test.tsx:148:60
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runSuite (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runSuite (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+    at runFiles (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1787:3)
+
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mvalida que t├¡tulo y descripci├│n sean obligatorios[33m 818[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mmuestra error al aprobar curso cuando falla[33m 798[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra lista de posts del foro[33m 823[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mpermite acceso sin advertencia a teacher[33m 647[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumAccess.test.tsx[2m > [22mRestricci├│n de acceso al foro[2m > [22mpermite acceso sin advertencia a estudiante inscrito[33m 487[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/TeacherDashboard.test.tsx[2m > [22mTeacherDashboard[2m > [22mlista cursos y permite ver detalles[33m 1397[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mpermite agregar una pregunta[33m 1689[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/TeacherDashboard.test.tsx[2m > [22mTeacherDashboard[2m > [22mbot├│n crear curso navega a creaci├│n[33m 850[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mvalida campos requeridos antes de enviar[33m 841[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mordena los posts por fecha (m├ís recientes primero)[33m 566[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumPostDetail.test.tsx[2m > [22mForumPostDetail[2m > [22mpermite enviar una respuesta y limpia el formulario[33m 1652[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumNestedReplies.test.tsx[2m > [22mForumPostDetail - Respuestas anidadas[2m > [22mpermite responder a una respuesta (crea hija con parent_reply_id)[33m 2125[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mmuestra loading mientras carga[33m 355[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mmuestra informaci├│n del curso y materiales al cargar[33m 850[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra mensaje cuando no hay posts[33m 583[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumPostDetail.test.tsx[2m > [22mForumPostDetail[2m > [22menfoca el formulario cuando la URL incluye #reply[33m 353[2mms[22m[39m
+stderr | src/pages/CourseDetail.test.tsx > CourseDetail > muestra error cuando la carga falla
+Error al cargar curso: Error: Curso no encontrado
+    at C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.test.tsx:91:66
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:155:11
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:752:26
+    at file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1897:20
+    at new Promise (<anonymous>)
+    at runWithTimeout (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1863:10)
+    at runTest (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1574:12)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at processTimers (node:internal/timers:520:9)
+    at runSuite (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/@vitest/runner/dist/chunk-hooks.js:1729:8)
+
+ [32mÔ£ô[39m src/pages/StudentsList.test.tsx[2m > [22mStudentsList[2m > [22mrenderiza t├¡tulo de curso y estudiantes[33m 428[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mmuestra mensaje cuando no hay materiales[32m 105[2mms[22m[39m
+stderr | src/pages/CourseDetail.test.tsx > CourseDetail > renderiza visor de PDF cuando el material es PDF
+Error al cargar quizzes del curso: AxiosError: Network Error
+    at XMLHttpRequest.handleError (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/adapters/xhr.js:112:20)
+    at XMLHttpRequest.invokeTheCallbackFunction (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\generated\EventHandlerNonNull.js:14:28)
+    at XMLHttpRequest.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\create-event-accessor.js:36:32)
+    at innerInvokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at XMLHttpRequestImpl._dispatch (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at fireAnEvent (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at requestErrorSteps (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:123:3)
+    at Object.dispatchError (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:59:3)
+    at Request.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Axios.request (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at getQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\api\quiz.service.ts:24:20)
+    at loadQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\store\quiz.store.ts:67:19)
+    at loadCourseData (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.tsx:90:9) {
+  code: 'ERR_NETWORK',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function [FormData]], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    baseURL: '/api',
+    withCredentials: true,
+    method: 'get',
+    url: '/courses/course-1/quizzes',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: XMLHttpRequest {},
+  event: ProgressEvent { isTrusted: [Getter] }
+}
+
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra error cuando falla la carga[33m 508[2mms[22m[39m
+stderr | src/pages/CourseDetail.test.tsx > CourseDetail > renderiza visor de PDF cuando el material es PDF
+Error al cargar quizzes del curso: AxiosError: Network Error
+    at XMLHttpRequest.handleError (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/adapters/xhr.js:112:20)
+    at XMLHttpRequest.invokeTheCallbackFunction (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\generated\EventHandlerNonNull.js:14:28)
+    at XMLHttpRequest.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\create-event-accessor.js:36:32)
+    at innerInvokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at XMLHttpRequestImpl._dispatch (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at fireAnEvent (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at requestErrorSteps (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:123:3)
+    at Object.dispatchError (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:59:3)
+    at Request.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Axios.request (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at getQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\api\quiz.service.ts:24:20)
+    at loadQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\store\quiz.store.ts:67:19)
+    at loadCourseData (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.tsx:90:9) {
+  code: 'ERR_NETWORK',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function [FormData]], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    baseURL: '/api',
+    withCredentials: true,
+    method: 'get',
+    url: '/courses/course-1/quizzes',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: XMLHttpRequest {},
+  event: ProgressEvent { isTrusted: [Getter] }
+}
+
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mmuestra error cuando la carga falla[32m 231[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumPostDetail.test.tsx[2m > [22mForumPostDetail[2m > [22mpermite eliminar un post propio y navega al foro[33m 597[2mms[22m[39m
+stderr | src/pages/CourseDetail.test.tsx > CourseDetail > renderiza bot├│n para enlaces externos
+Error al cargar quizzes del curso: AxiosError: Network Error
+    at XMLHttpRequest.handleError (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/adapters/xhr.js:112:20)
+    at XMLHttpRequest.invokeTheCallbackFunction (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\generated\EventHandlerNonNull.js:14:28)
+    at XMLHttpRequest.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\create-event-accessor.js:36:32)
+    at innerInvokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at XMLHttpRequestImpl._dispatch (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at fireAnEvent (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at requestErrorSteps (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:123:3)
+    at Object.dispatchError (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:59:3)
+    at Request.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Axios.request (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at getQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\api\quiz.service.ts:24:20)
+    at loadQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\store\quiz.store.ts:67:19)
+    at loadCourseData (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.tsx:90:9) {
+  code: 'ERR_NETWORK',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function [FormData]], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    baseURL: '/api',
+    withCredentials: true,
+    method: 'get',
+    url: '/courses/course-1/quizzes',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: XMLHttpRequest {},
+  event: ProgressEvent { isTrusted: [Getter] }
+}
+
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mrenderiza visor de PDF cuando el material es PDF[32m 239[2mms[22m[39m
+stderr | src/pages/CourseDetail.test.tsx
+Error al cargar quizzes del curso: AxiosError: Network Error
+    at XMLHttpRequest.handleError (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/adapters/xhr.js:112:20)
+    at XMLHttpRequest.invokeTheCallbackFunction (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\generated\EventHandlerNonNull.js:14:28)
+    at XMLHttpRequest.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\create-event-accessor.js:36:32)
+    at innerInvokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at XMLHttpRequestImpl._dispatch (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at fireAnEvent (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at requestErrorSteps (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:123:3)
+    at Object.dispatchError (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:59:3)
+    at Request.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Axios.request (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at getQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\api\quiz.service.ts:24:20)
+    at loadQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\store\quiz.store.ts:67:19)
+    at loadCourseData (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.tsx:90:9) {
+  code: 'ERR_NETWORK',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function [FormData]], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    baseURL: '/api',
+    withCredentials: true,
+    method: 'get',
+    url: '/courses/course-1/quizzes',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: XMLHttpRequest {},
+  event: ProgressEvent { isTrusted: [Getter] }
+}
+
+stderr | src/pages/CourseDetail.test.tsx
+Error al cargar quizzes del curso: AxiosError: Network Error
+    at XMLHttpRequest.handleError (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/adapters/xhr.js:112:20)
+    at XMLHttpRequest.invokeTheCallbackFunction (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\generated\EventHandlerNonNull.js:14:28)
+    at XMLHttpRequest.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\create-event-accessor.js:36:32)
+    at innerInvokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:360:16)
+    at invokeEventListeners (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:296:3)
+    at XMLHttpRequestImpl._dispatch (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\events\EventTarget-impl.js:243:9)
+    at fireAnEvent (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\helpers\events.js:18:36)
+    at requestErrorSteps (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:123:3)
+    at Object.dispatchError (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\xhr-utils.js:59:3)
+    at Request.<anonymous> (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\node_modules\jsdom\lib\jsdom\living\xhr\XMLHttpRequest-impl.js:655:18)
+    at Axios.request (file:///C:/Users/quiro/Documents/GitHub/TecnoRix_Academy-PPS/node_modules/axios/lib/core/Axios.js:45:41)
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at getQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\api\quiz.service.ts:24:20)
+    at loadQuizzesByCourse (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\store\quiz.store.ts:67:19)
+    at loadCourseData (C:\Users\quiro\Documents\GitHub\TecnoRix_Academy-PPS\src\pages\CourseDetail.tsx:90:9) {
+  code: 'ERR_NETWORK',
+  config: {
+    transitional: {
+      silentJSONParsing: true,
+      forcedJSONParsing: true,
+      clarifyTimeoutError: false
+    },
+    adapter: [ 'xhr', 'http', 'fetch' ],
+    transformRequest: [ [Function: transformRequest] ],
+    transformResponse: [ [Function: transformResponse] ],
+    timeout: 0,
+    xsrfCookieName: 'XSRF-TOKEN',
+    xsrfHeaderName: 'X-XSRF-TOKEN',
+    maxContentLength: -1,
+    maxBodyLength: -1,
+    env: { FormData: [Function [FormData]], Blob: [class Blob] },
+    validateStatus: [Function: validateStatus],
+    headers: Object [AxiosHeaders] {
+      Accept: 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    baseURL: '/api',
+    withCredentials: true,
+    method: 'get',
+    url: '/courses/course-1/quizzes',
+    allowAbsoluteUrls: true,
+    data: undefined
+  },
+  request: XMLHttpRequest {},
+  event: ProgressEvent { isTrusted: [Getter] }
+}
+
+ [32mÔ£ô[39m src/pages/CourseDetail.test.tsx[2m > [22mCourseDetail[2m > [22mrenderiza bot├│n para enlaces externos[33m 353[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/ForumPostDetail.test.tsx[2m > [22mForumPostDetail[2m > [22mpermite eliminar una respuesta propia y la remueve del listado[33m 752[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mabre modal de rechazo y valida raz├│n requerida[33m 2084[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mactualiza el curso correctamente cuando se env├¡a el formulario[33m 3266[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentsList.test.tsx[2m > [22mStudentsList[2m > [22mfiltra por texto y por estado[33m 1943[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentsList.test.tsx[2m > [22mStudentsList[2m > [22mmuestra error si falla la carga[32m 44[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mmuestra error cuando falla la actualizaci├│n[33m 848[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mpermite cambiar el nivel del curso[33m 1902[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mmuestra mensaje informativo sobre edici├│n de materiales[32m 244[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/EditCourse.test.tsx[2m > [22mEditCourse[2m > [22mnavega de vuelta cuando se hace click en cancelar[33m 529[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mmuestra loading spinner mientras carga[33m 458[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mmuestra lista de cursos cuando carga exitosamente[32m 173[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mmuestra mensaje de error cuando falla la carga[32m 172[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mmuestra mensaje cuando no hay cursos[32m 128[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mrenderiza el input con placeholder por defecto[32m 122[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mrenderiza con placeholder personalizado[32m 18[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mfiltra cursos por b├║squeda en t├¡tulo[32m 176[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mrechaza un curso con raz├│n correctamente[33m 5072[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mfiltra cursos por b├║squeda en descripci├│n[32m 194[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mpermite crear un quiz con preguntas y opciones[33m 6835[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mmuestra mensaje cuando no hay resultados con filtros[32m 173[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mmuestra resultados cuando el usuario escribe (min 2 caracteres)[33m 607[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CoursesList.test.tsx[2m > [22mCoursesList[2m > [22mresetea filtros mostrando "Todos" por defecto[33m 409[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mrenderiza el estado inicial correctamente[33m 489[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mfiltra resultados por t├¡tulo, descripci├│n y categor├¡a[33m 433[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mmuestra estado de loading[32m 169[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mmuestra mensaje de error[32m 28[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mmuestra helper text cuando se proporciona[32m 12[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mllama a onUpload cuando se selecciona un archivo v├ílido[32m 184[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mdeshabilita el componente cuando disabled=true[32m 170[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mmaneja drag and drop correctamente[32m 45[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mmuestra preview para archivos PDF[32m 25[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mformatea correctamente el tama├▒o del archivo[32m 85[2mms[22m[39m
+ [32mÔ£ô[39m src/components/common/FileUploadZone.test.tsx[2m > [22mFileUploadZone[2m > [22mlimpia el archivo seleccionado al hacer click en eliminar[32m 40[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/Register.test.tsx[2m > [22mRegisterPage[2m > [22mvalida campos requeridos[33m 688[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/Register.test.tsx[2m > [22mRegisterPage[2m > [22mregistra y autentica[33m 359[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mnavega al curso cuando se selecciona un resultado[33m 696[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mmuestra mensaje cuando no hay resultados[32m 188[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mpermite crear un nuevo post[33m 7177[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mno busca si el texto tiene menos de 2 caracteres[32m 176[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mpermite cancelar el rechazo[33m 1709[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/SearchBar.test.tsx[2m > [22mSearchBar[2m > [22mmuestra indicador de carga mientras busca[33m 335[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseApproval.test.tsx[2m > [22mCourseApproval[2m > [22mpermite actualizar la lista de cursos[33m 440[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mvalida campos requeridos en formulario de post[33m 508[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra advertencia de acceso denegado si no est├í inscrito[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.test.tsx[2m > [22mCourseForum[2m > [22mmuestra bot├│n Eliminar en posts propios y elimina tras confirmar[33m 1025[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/Login.test.tsx[2m > [22mLoginPage[2m > [22mvalida campos requeridos[33m 615[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/Login.test.tsx[2m > [22mLoginPage[2m > [22mhace login exitoso[33m 362[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mrenderiza informaci├│n b├ísica del curso[32m 184[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra precio formateado en ARS[32m 19[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra chip "Gratis" cuando precio es null[32m 20[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra nivel Principiante con color correcto[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra nivel Intermedio con color correcto[32m 16[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra nivel Avanzado con color correcto[32m 22[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mno muestra chip de nivel cuando level es null[32m 20[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mmuestra "No especificado" cuando instructor_name es null[32m 21[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mnavega a la p├ígina de detalles al hacer click en "Ver Detalles"[33m 373[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22maplica hover effect correctamente[32m 192[2mms[22m[39m
+ [32mÔ£ô[39m src/components/CourseCard.test.tsx[2m > [22mCourseCard[2m > [22mtrunca descripciones largas[32m 15[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mmuestra error si la creaci├│n falla[33m 5811[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizResults.test.tsx[2m > [22mQuizResults[2m > [22mmuestra respuestas seleccionadas y correctas cuando corresponde[32m 247[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizResults.test.tsx[2m > [22mQuizResults[2m > [22mmaneja respuesta sin selected_option (pregunta no respondida)[32m 54[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizResults.test.tsx[2m > [22mQuizResults[2m > [22mmuestra explicaci├│n cuando existe[32m 47[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizResults.test.tsx[2m > [22mQuizResults[2m > [22mmuestra estado aprobado cuando passed es true[32m 30[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/QuizResults.test.tsx[2m > [22mQuizResults[2m > [22mmuestra estado reprobado cuando passed es false[32m 32[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mpermite marcar una opci├│n como correcta[33m 2609[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mpermite configurar tiempo l├¡mite del quiz[33m 390[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CreateQuiz.test.tsx[2m > [22mCreateQuiz[2m > [22mpermite eliminar una pregunta agregada[33m 1483[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPost.test.tsx[2m > [22mForumPost[2m > [22mrenderiza t├¡tulo, mensaje, autor y cantidad de respuestas[32m 105[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumPost.test.tsx[2m > [22mForumPost[2m > [22mllama a onClick cuando se hace click (clickeable)[33m 305[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.navigation.test.tsx[2m > [22mNavegaci├│n Curso Ôåö Foro[2m > [22mCourseView: click en "Ir al Foro" navega al foro del curso[32m 238[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseForum.navigation.test.tsx[2m > [22mNavegaci├│n Curso Ôåö Foro[2m > [22mCourseForum: click en "Volver al curso" navega al detalle del curso[32m 67[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant text[2m > [22mrenderiza el progreso en formato texto[32m 70[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant text[2m > [22mmuestra correctamente el primer item[32m 9[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant text[2m > [22mmuestra correctamente el ├║ltimo item[32m 9[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant text[2m > [22mno renderiza nada si total es 0[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant stepper[2m > [22mrenderiza stepper con cantidad correcta de pasos[32m 45[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant stepper[2m > [22mrenderiza stepper con labels personalizados[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant stepper[2m > [22mmarca pasos anteriores como completados[32m 29[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mvariant stepper[2m > [22msoporta orientaci├│n vertical[32m 19[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mcasos edge[2m > [22mmaneja total=1 correctamente[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/NavigationProgress.test.tsx[2m > [22mNavigationProgress[2m > [22mcasos edge[2m > [22musa variant text como default[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentDashboard.test.tsx[2m > [22mStudentDashboard[2m > [22mmuestra el encabezado y estad├¡sticas[33m 337[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentDashboard.test.tsx[2m > [22mStudentDashboard[2m > [22mmuestra cursos en progreso y permite continuar[33m 898[2mms[22m[39m
+ [32mÔ£ô[39m src/routes/guards.test.tsx[2m > [22mRoute Guards[2m > [22mPrivateRoute redirige si no autenticado[32m 88[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mRenderizado b├ísico[2m > [22mrenderiza sidebar para estudiante[32m 170[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mRenderizado b├ísico[2m > [22mrenderiza sidebar para profesor[32m 45[2mms[22m[39m
+ [32mÔ£ô[39m src/routes/guards.test.tsx[2m > [22mRoute Guards[2m > [22mPrivateRoute permite acceso si autenticado[32m 13[2mms[22m[39m
+ [32mÔ£ô[39m src/routes/guards.test.tsx[2m > [22mRoute Guards[2m > [22mRoleRoute redirige si rol no permitido[32m 11[2mms[22m[39m
+ [32mÔ£ô[39m src/routes/guards.test.tsx[2m > [22mRoute Guards[2m > [22mRoleRoute permite acceso si rol permitido[32m 8[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentDashboard.test.tsx[2m > [22mStudentDashboard[2m > [22mmuestra alerta informativa cuando no hay cursos en progreso[32m 117[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/StudentDashboard.test.tsx[2m > [22mStudentDashboard[2m > [22mmuestra error cuando fallan las estad├¡sticas[32m 120[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mRenderizado b├ísico[2m > [22mmuestra bot├│n de toggle en modo permanent[33m 1082[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mNavegaci├│n[2m > [22mnavega al hacer click en un item del men├║[32m 54[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mToggle collapse[2m > [22mllama a onToggle al hacer click en bot├│n de toggle[33m 674[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mMobile drawer[2m > [22mrenderiza como drawer temporal en mobile[32m 82[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mSidebar colapsado[2m > [22mrenderiza en modo colapsado[32m 70[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Sidebar.test.tsx[2m > [22mSidebar[2m > [22mUsuario info en footer (collapsed)[2m > [22mmuestra avatar del usuario cuando est├í colapsado[32m 50[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.theme.test.tsx[2m > [22mNavbar theme toggle[2m > [22mcambia de Modo Oscuro a Modo Claro al hacer toggle[33m 1599[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n b├ísica[2m > [22mgoHome navega a la ruta home[32m 29[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n b├ísica[2m > [22mgoBack navega al home cuando no hay historial[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n b├ísica[2m > [22mgoTo navega a una ruta espec├¡fica[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n b├ísica[2m > [22mgoToReplace navega reemplazando la ruta actual[32m 11[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n por Dashboard[2m > [22mgoToDashboard sin rol navega al dashboard gen├®rico[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n por Dashboard[2m > [22mgoToDashboard con rol admin navega a ruta de admin[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n por Dashboard[2m > [22mgoToDashboard con rol teacher navega a ruta de teacher[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n por Dashboard[2m > [22mgoToDashboard con rol student navega a ruta de student[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToCourses navega a lista de cursos[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToCourse navega al detalle de un curso[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToCourseView navega a la vista del curso para estudiantes[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToCreateCourse navega a crear curso[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToEditCourse navega a editar curso espec├¡fico[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de cursos[2m > [22mgoToMyCourses navega a mis cursos[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de usuario[2m > [22mgoToProfile navega al perfil[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de usuario[2m > [22mgoToSettings navega a configuraci├│n[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de autenticaci├│n[2m > [22mgoToLogin navega al login[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de autenticaci├│n[2m > [22mgoToRegister navega al registro[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de foro[2m > [22mgoToCourseForum navega al foro de un curso[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de foro[2m > [22mgoToForumPost navega a un post espec├¡fico[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de foro[2m > [22mgoToForumPostReply navega al post y enfoca el formulario de respuesta (#reply)[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de quizzes[2m > [22mgoToQuizzes navega a la lista de quizzes[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de quizzes[2m > [22mgoToTakeQuiz navega a tomar un quiz[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de quizzes[2m > [22mgoToQuizResults navega a resultados del quiz[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de pagos[2m > [22mgoToCheckout navega al checkout de un curso[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n de pagos[2m > [22mgoToPaymentHistory navega al historial de pagos[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22misRouteActive retorna true si la ruta coincide[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22misRouteActive retorna false si la ruta no coincide[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22misCurrentRoute retorna true para ruta exacta[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22misCurrentRoute retorna false para ruta diferente[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22mcurrentPath retorna la ruta actual[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mUtilidades de navegaci├│n[2m > [22msearchParams retorna los par├ímetros de query[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/hooks/useNavigation.test.ts[2m > [22museNavigation[2m > [22mNavegaci├│n por roles[2m > [22mnavigateByRole navega seg├║n el rol proporcionado[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mEstado inicial[2m > [22mdebe tener el estado inicial correcto[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mfetchPublicCourses[2m > [22mdebe cargar cursos p├║blicos exitosamente[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mfetchPublicCourses[2m > [22mdebe manejar errores al cargar cursos[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mfetchCourseById[2m > [22mdebe cargar un curso por ID[32m 0[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mclearCurrentCourse[2m > [22mdebe limpiar el curso actual y materiales[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mcreateCourse[2m > [22mdebe crear un curso exitosamente[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mdeleteCourse[2m > [22mdebe eliminar un curso y actualizar el estado[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mfetchPendingCourses[2m > [22mdebe cargar cursos pendientes (admin)[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mapproveCourse[2m > [22mdebe aprobar un curso y removerlo de pendientes[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mUtilidades[2m > [22mclearError debe limpiar el error[32m 0[2mms[22m[39m
+ [32mÔ£ô[39m src/store/course.store.test.ts[2m > [22mcourse.store[2m > [22mUtilidades[2m > [22msetLoading debe actualizar el estado de carga[32m 0[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mlogin establece user y token[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mregister establece user y token[32m 2[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mregister de teacher deja estado pending_validation[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mlogout limpia estado y token[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mvalidateToken sin token desautentica[32m 0[2mms[22m[39m
+ [32mÔ£ô[39m src/store/auth.store.test.ts[2m > [22mauth.store[2m > [22mvalidateToken con token obtiene perfil[32m 1[2mms[22m[39m
+ [32mÔ£ô[39m src/components/forum/ForumReply.test.tsx[2m > [22mForumReply[2m > [22mrenderiza mensaje y autor[32m 113[2mms[22m[39m
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mmuestra botones de navegaci├│n entre materiales
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mdeshabilita bot├│n Anterior en el primer material
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mdeshabilita bot├│n Siguiente en el ├║ltimo material
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mnavega al siguiente material cuando se hace click en Siguiente
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mnavega al material anterior cuando se hace click en Anterior
+ [2m[90mÔåô[39m[22m src/pages/CourseView.navigation.test.tsx[2m > [22mCourseView - Navegaci├│n de Materiales[2m > [22mno muestra botones de navegaci├│n si solo hay 1 material
+ [32mÔ£ô[39m src/pages/CourseView.quizzes.test.tsx[2m > [22mCourseView - Quizzes del curso[2m > [22mdeshabilita Tomar Quiz si no est├í inscrito[32m 118[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/BackButton.test.tsx[2m > [22mBackButton[2m > [22mrenderiza con label por defecto[32m 266[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/BackButton.test.tsx[2m > [22mBackButton[2m > [22mrenderiza con label personalizado[32m 84[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/BackButton.test.tsx[2m > [22mBackButton[2m > [22mllama a goBack cuando se hace click sin onBack personalizado[32m 134[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a renderizar el visor de PDF con URL v├ílida[32m 112[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a mostrar el t├¡tulo cuando se proporciona[32m 31[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a usar el t├¡tulo en el atributo title del iframe[32m 20[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a aceptar URL con .pdf en min├║sculas[32m 25[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/BackButton.test.tsx[2m > [22mBackButton[2m > [22mllama a onBack personalizado en lugar de goBack[32m 108[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/BackButton.test.tsx[2m > [22mBackButton[2m > [22macepta props adicionales de Button[32m 63[2mms[22m[39m
+ [32mÔ£ô[39m src/pages/CourseView.quizzes.test.tsx[2m > [22mCourseView - Quizzes del curso[2m > [22mhabilita Tomar Quiz si est├í inscrito[33m 619[2mms[22m[39m
+ [32mÔ£ô[39m src/components/EnrollButton.test.tsx[2m > [22mEnrollButton[2m > [22mrenderiza y realiza inscripci├│n exitosa[33m 347[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a aceptar URL con .PDF en may├║sculas[32m 28[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a aceptar URL con .pdf en el medio de la URL[32m 25[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a mostrar mensaje de error para archivos no PDF[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a mostrar ├¡cono de error para formatos no v├ílidos[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/components/EnrollButton.test.tsx[2m > [22mEnrollButton[2m > [22mmaneja inscripci├│n pendiente de pago[32m 126[2mms[22m[39m
+ [32mÔ£ô[39m src/components/EnrollButton.test.tsx[2m > [22mEnrollButton[2m > [22mmuestra mensaje de error en fallo (notifica error)[32m 125[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a mostrar mensaje informativo con link de descarga[32m 208[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a configurar el iframe con par├ímetros de visualizaci├│n[32m 32[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a tener dimensiones del iframe al 100% del contenedor[32m 23[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mno deber├¡a mostrar t├¡tulo cuando no se proporciona[32m 28[2mms[22m[39m
+ [32mÔ£ô[39m src/components/PdfViewer.test.tsx[2m > [22mPdfViewer[2m > [22mdeber├¡a usar "PDF Viewer" como t├¡tulo por defecto del iframe[32m 34[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mRenderizado b├ísico[2m > [22mrenderiza breadcrumbs con home por defecto[32m 84[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mRenderizado b├ísico[2m > [22mrenderiza sin home cuando showHome es false[32m 8[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mRenderizado b├ísico[2m > [22mrenderiza breadcrumbs custom cuando se proporcionan[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mNavegaci├│n[2m > [22mnavega al hacer click en "Inicio"[32m 16[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mNavegaci├│n[2m > [22mnavega al hacer click en breadcrumb intermedio[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mNavegaci├│n[2m > [22mno navega al hacer click en el ├║ltimo breadcrumb[32m 11[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mEstilos y apariencia[2m > [22mel ├║ltimo breadcrumb tiene peso de fuente 600[32m 155[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mEstilos y apariencia[2m > [22mmuestra icono de Home[32m 8[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mCasos edge[2m > [22mmaneja breadcrumbs vac├¡os[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mCasos edge[2m > [22mmaneja breadcrumb sin path[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mCasos edge[2m > [22musa customItems en lugar de generar desde ruta[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Breadcrumbs.test.tsx[2m > [22mBreadcrumbs[2m > [22mAccesibilidad[2m > [22mtiene aria-label correcto[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a renderizar el reproductor de video con URL v├ílida[32m 43[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a mostrar el t├¡tulo cuando se proporciona[32m 15[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a aceptar formato .mp4[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a aceptar formato .mpeg[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a aceptar formato .mov[32m 7[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a aceptar formato .avi[32m 3[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a aceptar formato .webm[32m 10[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a mostrar mensaje de error para formatos no soportados[32m 11[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a mostrar ├¡cono de error para formatos no v├ílidos[32m 6[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a incluir atributos de accesibilidad en el video[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mno deber├¡a mostrar t├¡tulo cuando no se proporciona[32m 5[2mms[22m[39m
+ [32mÔ£ô[39m src/components/VideoPlayer.test.tsx[2m > [22mVideoPlayer[2m > [22mdeber├¡a validar URL independiente de may├║sculas/min├║sculas[32m 4[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mrenderiza el logo de Tecnorix Academy[32m 87[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mmuestra bot├│n de login para usuario no autenticado[32m 12[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mnavega a login al hacer click en bot├│n[32m 14[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mmuestra avatar del usuario autenticado[32m 25[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mmuestra icono de notificaciones para usuario autenticado[32m 13[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mmuestra bot├│n de men├║ cuando showMenuButton es true[32m 17[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mllama a onMenuToggle al hacer click en bot├│n de men├║[32m 16[2mms[22m[39m
+ [32mÔ£ô[39m src/components/navigation/Navbar.test.tsx[2m > [22mNavbar[2m > [22mnavega a home al hacer click en el logo[32m 12[2mms[22m[39m
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra loading spinner mientras carga
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra informaci├│n del curso y progreso
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra materiales del curso
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra error cuando el curso no existe
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra botones de progreso
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mmuestra botones de navegaci├│n entre materiales
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mdeshabilita bot├│n Anterior en primer material
+ [2m[90mÔåô[39m[22m src/pages/CourseView.test.tsx[2m > [22mCourseView[2m > [22mnavega al siguiente material cuando se hace click en Siguiente
+
+[2m Test Files [22m [1m[32m38 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (40)[39m
+[2m      Tests [22m [1m[32m265 passed[39m[22m[2m | [22m[33m14 skipped[39m[90m (279)[39m
+[2m   Start at [22m 10:49:28
+[2m   Duration [22m 72.74s[2m (transform 3.00s, setup 9.10s, collect 502.47s, tests 104.00s, environment 62.25s, prepare 9.00s)[22m
+

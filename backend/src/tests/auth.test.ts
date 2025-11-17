@@ -13,14 +13,36 @@ let testEmail: string
 let token: string
 
 describe('Auth endpoints', () => {
-  it('muestra mensaje informativo al login de teacher pendiente', async () => {
-    const pendingTeacherEmail = randomEmail()
-    // Registrar profesor (queda en pending_validation)
-    const resRegisterTeacher = await request(app)
+  it('rechaza registro directo como teacher (debe usar /api/teacher/application)', async () => {
+    const teacherEmail = randomEmail()
+    const res = await request(app)
       .post('/api/auth/register')
-      .send({ email: pendingTeacherEmail, password: testPassword, name: 'Pending Teacher', role: 'teacher' })
-    expect(resRegisterTeacher.status).toBe(201)
-    expect(resRegisterTeacher.body.data.user.status).toBe('pending_validation')
+      .send({ email: teacherEmail, password: testPassword, name: 'Teacher Attempt', role: 'teacher' })
+    expect(res.status).toBe(400)
+    expect(res.body.success).toBe(false)
+    expect(res.body.error).toMatch(/formulario de aplicación/i)
+  })
+
+  it('muestra mensaje informativo al login de teacher pendiente', async () => {
+    // NOTA: Este test ahora usa supabaseAdmin para crear teacher directamente
+    // ya que el endpoint de registro rechaza role='teacher'
+    const { supabaseAdmin } = await import('../config/supabase')
+    const pendingTeacherEmail = randomEmail()
+    
+    // Crear usuario directamente en BD (simulando aplicación aprobada parcialmente)
+    const { data: authUser } = await supabaseAdmin.auth.admin.createUser({
+      email: pendingTeacherEmail,
+      password: testPassword,
+      email_confirm: true
+    })
+    
+    await supabaseAdmin.from('users').insert({
+      auth_user_id: authUser.user!.id,
+      email: pendingTeacherEmail,
+      name: 'Pending Teacher',
+      role: 'teacher',
+      status: 'pending_validation'
+    })
 
     // Realizar login explícito para disparar mensaje condicional
     const resLoginTeacher = await request(app)

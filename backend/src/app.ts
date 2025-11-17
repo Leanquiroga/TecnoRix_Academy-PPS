@@ -34,6 +34,7 @@ import uploadRoutes from './routes/upload.routes'
 import enrollmentRoutes from './routes/enrollment.routes'
 import forumRoutes from './routes/forum.routes'
 import quizRoutes from './routes/quiz.routes'
+import teacherRoutes from './routes/teacher.routes'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/admin', adminRoutes)
@@ -41,6 +42,7 @@ app.use('/api/courses', courseRoutes)
 app.use('/api/admin/courses', adminCourseRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/enrollments', enrollmentRoutes)
+app.use('/api', teacherRoutes) // Teacher routes tienen sus propios prefijos /teacher y /admin
 app.use('/api', forumRoutes)
 app.use('/api', quizRoutes)
 
