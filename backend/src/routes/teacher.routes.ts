@@ -12,7 +12,8 @@ import {
   getPendingApplicationsEndpoint,
   reviewCredential,
   approveTeacherEndpoint,
-  getApplicationDetail
+  getApplicationDetail,
+  rejectTeacherApplicationEndpoint
 } from '../controllers/teacher.controller'
 import { UserRole } from '../types/auth.types'
 
@@ -47,5 +48,8 @@ router.put('/admin/credentials/:id/review', authMiddleware, authorizeRoles(UserR
 
 // PUT /api/admin/applications/:id/approve - Aprobar profesor completo
 router.put('/admin/applications/:id/approve', authMiddleware, authorizeRoles(UserRole.ADMIN), approveTeacherEndpoint)
+
+// PUT /api/admin/applications/:id/reject - Rechazar solicitud de profesor
+router.put('/admin/applications/:id/reject', authMiddleware, authorizeRoles(UserRole.ADMIN), rejectTeacherApplicationEndpoint)
 
 export default router

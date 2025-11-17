@@ -56,6 +56,13 @@ export default function LoginPage() {
             <Button type="submit" variant="contained" disabled={loading}>Entrar</Button>
             <Box textAlign="center">
               <Typography variant="body2">
+                <MuiLink component={Link} to="/forgot-password">
+                  ¿Olvidaste tu contraseña?
+                </MuiLink>
+              </Typography>
+            </Box>
+            <Box textAlign="center">
+              <Typography variant="body2">
                 ¿No tienes cuenta?{' '}
                 <MuiLink component={Link} to={ROUTES.REGISTER}>
                   Regístrate aquí

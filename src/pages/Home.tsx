@@ -30,14 +30,33 @@ export default function Home() {
             </Stack>
           </Paper>
         ) : (
-          <Stack direction="row" spacing={2} justifyContent="center">
-            <Button variant="contained" size="large" component={Link} to={ROUTES.LOGIN}>
-              Iniciar Sesión
-            </Button>
-            <Button variant="outlined" size="large" component={Link} to={ROUTES.REGISTER}>
-              Registrarse
-            </Button>
-          </Stack>
+          <>
+            <Stack direction="row" spacing={2} justifyContent="center">
+              <Button variant="contained" size="large" component={Link} to={ROUTES.LOGIN}>
+                Iniciar Sesión
+              </Button>
+              <Button variant="outlined" size="large" component={Link} to={ROUTES.REGISTER}>
+                Registrarse
+              </Button>
+            </Stack>
+            
+            <Paper elevation={1} sx={{ mt: 4, p: 3, bgcolor: 'primary.50' }}>
+              <Typography variant="h6" gutterBottom color="primary">
+                ¿Quieres enseñar en TecnoRix Academy?
+              </Typography>
+              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
+                Comparte tu conocimiento y ayuda a miles de estudiantes a aprender
+              </Typography>
+              <Button 
+                variant="contained" 
+                color="primary" 
+                component={Link} 
+                to="/register/teacher"
+              >
+                Registrarse como Profesor
+              </Button>
+            </Paper>
+          </>
         )}
 
       </Box>

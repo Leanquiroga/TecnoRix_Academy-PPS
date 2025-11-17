@@ -14,7 +14,7 @@ import type {
   ApplicationStatusResponse
 } from '../types/teacher.types'
 import { UserStatus } from '../types/auth.types'
-import { hasApprovedCredential, countCredentialsByStatus } from '../types/teacher.types'
+import { hasApprovedCredential } from '../types/teacher.types'
 
 // ============================================
 // TEACHER PROFILES
@@ -220,16 +220,20 @@ export async function getPendingApplications(): Promise<PendingApplicationsRespo
       const credentials = await getTeacherCredentials(user.id)
 
       return {
-        user,
-        profile: profile!,
-        credentials,
-        credentials_count: countCredentialsByStatus(credentials)
+        user_id: user.id,
+        name: user.name,
+        email: user.email,
+        status: user.status,
+        role: 'teacher',
+        created_at: user.created_at,
+        profile: profile || undefined,
+        credentials: credentials || []
       }
     })
   )
 
   // Filtrar aplicaciones que tienen perfil
-  const validApplications = applications.filter(app => app.profile !== null)
+  const validApplications = applications.filter(app => app.profile !== undefined)
 
   return {
     applications: validApplications,

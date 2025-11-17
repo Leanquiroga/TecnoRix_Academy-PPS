@@ -31,3 +31,20 @@ export const upload = multer({
     fileSize: 100 * 1024 * 1024, // 100MB máximo
   },
 })
+
+// Configuración para uploads públicos durante registro (solo PDF, máx 5MB)
+const pdfOnlyFilter = (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
+  if (file.mimetype === 'application/pdf') {
+    cb(null, true)
+  } else {
+    cb(new Error('Solo se permiten archivos PDF para esta operación.'))
+  }
+}
+
+export const uploadPublicPdf = multer({
+  storage,
+  fileFilter: pdfOnlyFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB máximo
+  },
+})

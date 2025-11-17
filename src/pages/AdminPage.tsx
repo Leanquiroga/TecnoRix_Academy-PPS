@@ -1,10 +1,14 @@
-import { Box, Container, Typography, Paper, Stack } from '@mui/material'
+import { Box, Container, Typography, Paper, Stack, Tabs, Tab } from '@mui/material'
 import { useEffect, useState } from 'react'
 import UserManagement from '../components/admin/UserManagement'
+import TeacherApplicationsList from '../components/admin/TeacherApplicationsList'
 import { getUsers } from '../api/user.service'
+import { getPendingApplications } from '../api/teacher.service'
 import type { Role, UserStatus } from '../types/auth'
 
 export default function AdminPage() {
+  // Tab state
+  const [currentTab, setCurrentTab] = useState(0)
   // Estado para estadísticas rápidas
   const [pendingTeachers, setPendingTeachers] = useState<number | null>(null)
   const [totalUsers, setTotalUsers] = useState<number | null>(null)
@@ -17,11 +21,10 @@ export default function AdminPage() {
       try {
         setLoadingCounts(true)
         setCountsError(null)
-        const list = await getUsers({
-          role: 'teacher' as Role,
-          status: 'pending_validation' as UserStatus,
-        })
-        setPendingTeachers(list.length)
+        
+        // Usar el nuevo endpoint de teacher.service para obtener aplicaciones pendientes
+        const response = await getPendingApplications('pending_validation')
+        setPendingTeachers(response.data.total)
       } catch (err) {
         const error = err as Error
         setCountsError(error?.message ?? 'Error al cargar profesores pendientes')
@@ -54,12 +57,12 @@ export default function AdminPage() {
   const refreshDashboardStats = async () => {
     // Reutiliza las mismas cargas tras acciones del hijo
     try {
-      const [pending, all, studentsActive] = await Promise.all([
-        getUsers({ role: 'teacher' as Role, status: 'pending_validation' as UserStatus }),
+      const [pendingResponse, all, studentsActive] = await Promise.all([
+        getPendingApplications('pending_validation'),
         getUsers(),
         getUsers({ role: 'student' as Role, status: 'active' as UserStatus }),
       ])
-      setPendingTeachers(pending.length)
+      setPendingTeachers(pendingResponse.data.total)
       setTotalUsers(all.length)
       setActiveStudents(studentsActive.length)
     } catch (err) {
@@ -176,9 +179,51 @@ export default function AdminPage() {
         </Paper>
       </Stack>
 
-      {/* Gestión de Usuarios */}
+      {/* Tabs para diferentes secciones */}
+      <Paper sx={{ mb: 3 }}>
+        <Tabs 
+          value={currentTab} 
+          onChange={(_, newValue) => setCurrentTab(newValue)}
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+        >
+          <Tab label="Gestión de Usuarios" />
+          <Tab 
+            label={
+              <Stack direction="row" spacing={1} alignItems="center">
+                <span>Aplicaciones de Profesores</span>
+                {pendingTeachers !== null && pendingTeachers > 0 && (
+                  <Box
+                    component="span"
+                    sx={{
+                      bgcolor: 'warning.main',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: 24,
+                      height: 24,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                    }}
+                  >
+                    {pendingTeachers}
+                  </Box>
+                )}
+              </Stack>
+            }
+          />
+        </Tabs>
+      </Paper>
+
+      {/* Contenido según tab */}
       <Paper sx={{ p: 3 }}>
-        <UserManagement onDataChanged={refreshDashboardStats} />
+        {currentTab === 0 && (
+          <UserManagement onDataChanged={refreshDashboardStats} />
+        )}
+        {currentTab === 1 && (
+          <TeacherApplicationsList onDataChanged={refreshDashboardStats} />
+        )}
       </Paper>
     </Container>
   )

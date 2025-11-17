@@ -54,3 +54,33 @@ export async function refresh(): Promise<string> {
     throw error
   }
 }
+
+// ============================================
+// PASSWORD RECOVERY - FASE 6.6
+// ============================================
+
+export async function forgotPassword(email: string): Promise<string> {
+  try {
+    const { data } = await http.post<ApiResponse<never>>('/auth/forgot-password', { email })
+    if (!data.success) throw new Error(data.error || 'Error al enviar email de recuperación')
+    return data.message || 'Si el email existe, recibirás un link de recuperación'
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.data?.error) {
+      throw new Error(error.response.data.error)
+    }
+    throw error
+  }
+}
+
+export async function resetPassword(access_token: string, newPassword: string): Promise<string> {
+  try {
+    const { data} = await http.post<ApiResponse<never>>('/auth/reset-password', { access_token, newPassword })
+    if (!data.success) throw new Error(data.error || 'Error al restablecer contraseña')
+    return data.message || 'Contraseña actualizada exitosamente'
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.data?.error) {
+      throw new Error(error.response.data.error)
+    }
+    throw error
+  }
+}

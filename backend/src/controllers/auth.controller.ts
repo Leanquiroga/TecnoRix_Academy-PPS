@@ -4,6 +4,7 @@ import type { AuthRequest } from '../types/common.types'
 import type { RegisterRequest, LoginRequest } from '../types/auth.types'
 import { UserRole, UserStatus } from '../types/auth.types'
 import { createUser, getUserByAuthId, getUserByEmail, getUserById, signInWithPassword } from '../services/user.service'
+import { supabaseAdmin } from '../config/supabase'
 
 export async function register(req: Request, res: Response) {
   try {
@@ -141,5 +142,129 @@ export async function refresh(req: AuthRequest, res: Response) {
   } catch (err: any) {
     const msg = err?.message || 'Failed to refresh token'
     return res.status(400).json({ success: false, error: msg })
+  }
+}
+
+// ============================================
+// PASSWORD RECOVERY - FASE 6.6
+// ============================================
+
+/**
+ * POST /api/auth/forgot-password
+ * Envía email de recuperación de contraseña usando Supabase Auth
+ */
+export async function forgotPassword(req: Request, res: Response) {
+  try {
+    const { email } = req.body
+
+    if (!email) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email es obligatorio' 
+      })
+    }
+
+    // Validar formato de email
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Email inválido' 
+      })
+    }
+
+    // Verificar que el usuario existe en nuestra BD
+    const user = await getUserByEmail(email)
+    if (!user) {
+      // Por seguridad, no revelar si el email existe o no
+      return res.json({ 
+        success: true, 
+        message: 'Si el email existe, recibirás un link de recuperación' 
+      })
+    }
+
+    // Enviar email de recuperación usando Supabase Auth
+    const { error } = await supabaseAdmin.auth.resetPasswordForEmail(email, {
+      redirectTo: `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password`,
+    })
+
+    if (error) {
+      console.error('Error sending password reset email:', error)
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error al enviar el email de recuperación' 
+      })
+    }
+
+    return res.json({ 
+      success: true, 
+      message: 'Si el email existe, recibirás un link de recuperación' 
+    })
+  } catch (err: any) {
+    console.error('Forgot password error:', err)
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Error al procesar la solicitud' 
+    })
+  }
+}
+
+/**
+ * POST /api/auth/reset-password
+ * Actualiza la contraseña usando el token recibido por email
+ */
+export async function resetPassword(req: Request, res: Response) {
+  try {
+    const { access_token, newPassword } = req.body
+
+    if (!access_token || !newPassword) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Token y nueva contraseña son obligatorios' 
+      })
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'La contraseña debe tener al menos 6 caracteres' 
+      })
+    }
+
+    // Crear cliente de Supabase con el token del usuario
+    const { data: userData, error: userError } = await supabaseAdmin.auth.getUser(access_token)
+    
+    if (userError || !userData.user) {
+      console.error('Error verifying token:', userError)
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Token inválido o expirado' 
+      })
+    }
+
+    // Actualizar la contraseña usando el admin client
+    const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+      userData.user.id,
+      { password: newPassword }
+    )
+
+    if (updateError) {
+      console.error('Error updating password:', updateError)
+      return res.status(500).json({ 
+        success: false, 
+        error: 'Error al actualizar la contraseña' 
+      })
+    }
+
+    return res.json({ 
+      success: true, 
+      message: 'Contraseña actualizada exitosamente' 
+    })
+  } catch (err: any) {
+    console.error('Reset password error:', err)
+    return res.status(500).json({ 
+      success: false, 
+      error: 'Error al restablecer la contraseña' 
+    })
   }
 }

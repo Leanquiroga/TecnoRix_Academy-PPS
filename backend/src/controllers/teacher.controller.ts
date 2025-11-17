@@ -17,7 +17,8 @@ import {
   getApplicationStatus,
   getCredentialById,
   updateCredentialStatus,
-  approveTeacher
+  approveTeacher,
+  rejectTeacherApplication
 } from '../services/teacher.service'
 
 // ============================================
@@ -382,6 +383,61 @@ export async function getApplicationDetail(req: AuthRequest, res: Response) {
     return res.status(500).json({
       success: false,
       error: 'Error al obtener detalle de solicitud'
+    })
+  }
+}
+
+// ============================================
+// ENDPOINT: PUT /api/admin/applications/:id/reject
+// Rechazar solicitud de profesor (solo admin)
+// ============================================
+export async function rejectTeacherApplicationEndpoint(req: AuthRequest, res: Response) {
+  try {
+    const { id: userId } = req.params
+    const { reason } = req.body
+    const adminId = req.user?.userId
+
+    if (!adminId) {
+      return res.status(401).json({
+        success: false,
+        error: 'No autorizado'
+      })
+    }
+
+    if (!reason || typeof reason !== 'string' || reason.trim().length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Se requiere un motivo de rechazo'
+      })
+    }
+
+    const application = await getTeacherApplication(userId)
+    
+    if (!application) {
+      return res.status(404).json({
+        success: false,
+        error: 'Solicitud no encontrada'
+      })
+    }
+
+    if (application.user.status !== UserStatus.PENDING_VALIDATION) {
+      return res.status(400).json({
+        success: false,
+        error: 'Solo se pueden rechazar solicitudes pendientes'
+      })
+    }
+
+    await rejectTeacherApplication(userId, adminId, reason)
+
+    return res.json({
+      success: true,
+      message: 'Solicitud rechazada exitosamente'
+    })
+  } catch (error: any) {
+    console.error('Error rejecting teacher application:', error)
+    return res.status(500).json({
+      success: false,
+      error: 'Error al rechazar solicitud'
     })
   }
 }

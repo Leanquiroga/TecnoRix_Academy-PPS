@@ -109,21 +109,14 @@ export interface TeacherApplicationResponse {
 // Response de solicitudes pendientes para admin
 export interface PendingApplicationsResponse {
   applications: Array<{
-    user: {
-      id: string
-      name: string
-      email: string
-      status: string
-      created_at: string
-    }
-    profile: TeacherProfile
-    credentials: TeacherCredential[]
-    credentials_count: {
-      total: number
-      approved: number
-      pending: number
-      rejected: number
-    }
+    user_id: string
+    name: string
+    email: string
+    status: string
+    role: string
+    created_at: string
+    profile?: TeacherProfile
+    credentials?: TeacherCredential[]
   }>
   total: number
 }

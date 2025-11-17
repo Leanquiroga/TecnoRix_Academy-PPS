@@ -51,3 +51,44 @@ export async function uploadFileController(req: AuthRequest, res: Response) {
     return res.status(500).json({ success: false, error: msg })
   }
 }
+
+/**
+ * Controlador público para subir credenciales (PDF) durante el registro de profesores
+ * No requiere usuario autenticado. Aplica restricciones de tipo (PDF) y tamaño (via multer).
+ */
+export async function publicUploadCredentialController(req: any, res: Response) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'No se envió ningún archivo' })
+    }
+
+    const file = req.file as Express.Multer.File
+
+    if (file.mimetype !== 'application/pdf') {
+      return res.status(400).json({ success: false, error: 'Solo se permiten archivos PDF' })
+    }
+
+    // Carpeta dedicada para credenciales de registro
+    const folder = 'teacher-applications/credentials'
+
+    const result = await uploadToCloudinary(file.buffer, folder, 'raw')
+
+    return res.json({
+      success: true,
+      data: {
+        url: result.url,
+        publicId: result.publicId,
+        resourceType: result.resourceType,
+        format: result.format,
+        size: result.bytes,
+        originalName: file.originalname,
+        mimetype: file.mimetype,
+      },
+      message: 'Archivo subido exitosamente',
+    })
+  } catch (err: any) {
+    const msg = err?.message || 'Error al subir archivo'
+    console.error('[PublicUpload] Error:', msg, err)
+    return res.status(500).json({ success: false, error: msg })
+  }
+}

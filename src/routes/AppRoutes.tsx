@@ -3,6 +3,10 @@ import Home from '../pages/Home'
 import NotFound from '../pages/NotFound'
 import LoginPage from '../pages/Login'
 import RegisterPage from '../pages/Register'
+import ForgotPassword from '../pages/ForgotPassword'
+import ResetPassword from '../pages/ResetPassword'
+import TeacherRegister from '../pages/TeacherRegister'
+import TeacherPending from '../pages/TeacherPending'
 import DashboardPage from '../pages/Dashboard'
 import AdminPage from '../pages/AdminPage'
 import CreateCoursePage from '../pages/CreateCourse'
@@ -38,6 +42,10 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
+      { path: 'register/teacher', element: <TeacherRegister /> },
+      { path: 'teacher/pending', element: <TeacherPending /> },
       { path: 'courses', element: <CoursesList /> },
       { path: 'courses/:id', element: <CourseDetail /> },
       {
