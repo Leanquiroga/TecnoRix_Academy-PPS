@@ -23,11 +23,13 @@ import {
   Pending,
   CheckCircle,
   BarChart,
+  Edit,
+  Delete,
 } from '@mui/icons-material'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigation } from '../hooks/useNavigation'
 import { ROUTES } from '../routes/routes.config'
-import { listPublicCourses } from '../api/course.service'
+import { listPublicCourses, deleteCourse } from '../api/course.service'
 import { enrollmentService } from '../api/enrollment.service'
 import type { Course } from '../types/course'
 import { useQuizStore } from '../store/quiz.store'
@@ -131,6 +133,20 @@ export default function TeacherDashboard() {
       setError(error?.response?.data?.error || 'Error al cargar datos del profesor')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDeleteCourse = async (courseId: string, courseTitle: string) => {
+    if (!confirm(`¿Estás seguro de eliminar el curso "${courseTitle}"? Esta acción no se puede deshacer.`)) {
+      return
+    }
+    try {
+      await deleteCourse(courseId)
+      await loadTeacherData()
+      alert('Curso eliminado correctamente')
+    } catch (err) {
+      const error = err as { response?: { data?: { error?: string } } }
+      alert(error?.response?.data?.error || 'Error al eliminar el curso')
     }
   }
 
@@ -408,6 +424,14 @@ export default function TeacherDashboard() {
                           </Button>
                           <Button
                             size="small"
+                            variant="outlined"
+                            startIcon={<Edit />}
+                            onClick={() => goTo(ROUTES.COURSE.EDIT(course.id))}
+                          >
+                            Editar
+                          </Button>
+                          <Button
+                            size="small"
                             variant="contained"
                             onClick={() => goTo(ROUTES.TEACHER.STUDENTS_BY_COURSE(course.id))}
                           >
@@ -419,6 +443,15 @@ export default function TeacherDashboard() {
                             onClick={() => goTo(ROUTES.TEACHER.QUIZZES_BY_COURSE(course.id))}
                           >
                             Gestionar Quizzes
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            color="error"
+                            startIcon={<Delete />}
+                            onClick={() => handleDeleteCourse(course.id, course.title)}
+                          >
+                            Eliminar
                           </Button>
                         </Stack>
                       </TableCell>

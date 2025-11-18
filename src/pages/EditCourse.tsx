@@ -108,7 +108,8 @@ export function EditCourse() {
 
       setSuccess('Curso actualizado correctamente')
       setTimeout(() => {
-        goTo(ROUTES.TEACHER.COURSES)
+        // Redirigimos al dashboard del profesor (ruta existente) en lugar de /teacher/courses que no está definida
+        goTo(ROUTES.TEACHER.DASHBOARD)
       }, 2000)
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err)
@@ -119,7 +120,7 @@ export function EditCourse() {
   }
 
   const handleCancel = () => {
-    goTo(ROUTES.TEACHER.COURSES)
+    goTo(ROUTES.TEACHER.DASHBOARD)
   }
 
   if (loading) {
@@ -146,7 +147,7 @@ export function EditCourse() {
   return (
     <Container maxWidth="md" sx={{ py: 4 }}>
       <Button startIcon={<ArrowBack />} onClick={handleCancel} sx={{ mb: 2 }}>
-        Volver a mis cursos
+        Volver al dashboard
       </Button>
 
       <Typography variant="h4" component="h1" gutterBottom>
