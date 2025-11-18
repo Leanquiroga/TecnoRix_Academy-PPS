@@ -9,7 +9,7 @@ const mockCourse: CoursePublic = {
   title: 'Curso de React Avanzado',
   description: 'Aprende React desde cero hasta nivel avanzado con proyectos reales',
   price: 15000,
-  thumbnail_url: null,
+  thumbnail_url: 'https://example.com/thumb.jpg',
   category: 'Programación',
   level: 'intermediate',
   teacher_id: 'teacher-1',
@@ -54,12 +54,13 @@ function renderCourseCard(course: CoursePublic) {
 }
 
 describe('CourseCard', () => {
-  it('renderiza información básica del curso', () => {
+  it('renderiza información básica del curso y la portada', () => {
     renderCourseCard(mockCourse);
 
     expect(screen.getByText('Curso de React Avanzado')).toBeInTheDocument();
     expect(screen.getByText(/Aprende React desde cero/)).toBeInTheDocument();
     expect(screen.getByText('Instructor: Juan Pérez')).toBeInTheDocument();
+    expect(screen.getByTestId('course-thumbnail')).toBeInTheDocument();
   });
 
   it('muestra precio formateado en ARS', () => {

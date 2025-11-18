@@ -189,11 +189,27 @@ export function CourseView() {
           sx={{
             p: 6,
             textAlign: 'center',
-            bgcolor: 'background.paper',
             borderRadius: 2,
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? theme.palette.background.default
+                : theme.palette.grey[50],
+            border: (theme) =>
+              theme.palette.mode === 'dark'
+                ? `1px solid ${theme.palette.divider}`
+                : `1px solid ${theme.palette.grey[200]}`,
           }}
         >
-          <Typography variant="h6" color="text.secondary">
+          <Typography
+            variant="h6"
+            sx={(theme) => ({
+              color:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.text.primary
+                  : theme.palette.text.secondary,
+              fontWeight: 500,
+            })}
+          >
             Selecciona un material para visualizar
           </Typography>
         </Paper>
@@ -387,9 +403,24 @@ export function CourseView() {
       <Box display="flex" gap={3}>
         {/* Materials List */}
         <Paper sx={{ width: 300, flexShrink: 0 }}>
-          <Box sx={{ p: 2, bgcolor: 'primary.main' }}>
-            <Typography variant="h6" color="primary.contrastText">Contenido del curso</Typography>
-            <Typography variant="caption" color="primary.contrastText">
+          <Box
+            sx={(theme) => ({
+              p: 2,
+              bgcolor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.primary.dark
+                  : theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              borderBottom: theme.palette.mode === 'dark'
+                ? `1px solid ${theme.palette.divider}`
+                : 'none',
+            })}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>Contenido del curso</Typography>
+            <Typography
+              variant="caption"
+              sx={{ opacity: 0.85 }}
+            >
               {materials.length} {materials.length === 1 ? 'material' : 'materiales'}
             </Typography>
           </Box>

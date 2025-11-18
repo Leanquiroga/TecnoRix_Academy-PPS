@@ -39,10 +39,24 @@ export async function deleteCourse(id: string) {
 }
 
 // Admin endpoints
-export async function listPendingCourses() {
-  const { data } = await http.get<ApiResponse<Course[]>>('/admin/courses/pending')
+export async function listPendingCourses(
+  page = 1, 
+  limit = 20,
+  search?: string,
+  category?: string,
+  level?: string
+) {
+  const params: Record<string, string | number> = { page, limit }
+  if (search) params.search = search
+  if (category) params.category = category
+  if (level) params.level = level
+
+  const { data } = await http.get<ApiResponse<Course[]>>('/admin/courses/pending', { params })
   if (!data.success) throw new Error(data.error || 'Error al listar pendientes')
-  return data.data as Course[]
+  return {
+    courses: data.data as Course[],
+    pagination: data.pagination!
+  }
 }
 
 export async function approveCourse(id: string) {

@@ -11,6 +11,7 @@ export function useCourse() {
     currentCourse,
     materials,
     pendingCourses,
+    pendingPagination,
     loading,
     error,
 
@@ -41,6 +42,7 @@ export function useCourse() {
     currentCourse,
     materials,
     pendingCourses,
+    pendingPagination,
     loading,
     error,
 

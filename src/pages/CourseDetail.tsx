@@ -34,6 +34,7 @@ import { PdfViewer } from '../components/PdfViewer'
 import { useNavigation } from '../hooks/useNavigation'
 import { useCourse } from '../hooks/useCourse'
 import { EnrollButton } from '../components/EnrollButton'
+import { CourseThumbnail } from '../components/CourseThumbnail'
 import { useAuthStore } from '../store/auth.store'
 import { useQuizStore } from '../store/quiz.store'
 import QuizCard from '../components/quiz/QuizCard'
@@ -133,11 +134,27 @@ export function CourseDetail() {
           sx={{
             p: 6,
             textAlign: 'center',
-            bgcolor: 'grey.50',
             borderRadius: 2,
+            bgcolor: (theme) =>
+              theme.palette.mode === 'dark'
+                ? theme.palette.background.default
+                : theme.palette.grey[50],
+            border: (theme) =>
+              theme.palette.mode === 'dark'
+                ? `1px solid ${theme.palette.divider}`
+                : `1px solid ${theme.palette.grey[200]}`,
           }}
         >
-          <Typography variant="h6" color="text.secondary">
+          <Typography
+            variant="h6"
+            sx={(theme) => ({
+              color:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.text.primary
+                  : theme.palette.text.secondary,
+              fontWeight: 500,
+            })}
+          >
             Selecciona un material para visualizar
           </Typography>
         </Paper>
@@ -212,73 +229,73 @@ export function CourseDetail() {
         </Button>
 
         <Card>
-          <CardContent>
-            <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="space-between">
-              <Box sx={{ flex: 1 }}>
-                <Typography variant="h4" component="h1" gutterBottom>
+          {/* Portada full-width */}
+          <CourseThumbnail url={course.thumbnail_url} title={course.title} height={260} />
+          <CardContent sx={{ pt: 3 }}>
+            {/* Título y acciones */}
+            <Stack spacing={2}>
+              <Stack direction={{ xs: 'column', md: 'row' }} justifyContent="space-between" alignItems={{ xs: 'flex-start', md: 'flex-start' }} spacing={2}>
+                <Typography variant="h4" component="h1" sx={{ flex: 1 }}>
                   {course.title}
                 </Typography>
-
-                <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 2 }}>
-                  {course.level && (
-                    <Chip
-                      label={levelLabels[course.level]}
-                      color={levelColors[course.level]}
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <EnrollButton courseId={course.id} size="medium" />
+                  {(user?.role === 'teacher' || user?.role === 'admin') && (
+                    <Button variant="text" size="small" onClick={() => goToCourseForum(course.id)}>
+                      Foro
+                    </Button>
+                  )}
+                  {user?.role === 'teacher' && (
+                    <Button
+                      variant="outlined"
                       size="small"
-                    />
-                  )}
-                  {course.category && (
-                    <Chip label={course.category} variant="outlined" size="small" />
+                      component={RouterLink}
+                      to={`/teacher/courses/${course.id}/quizzes/create`}
+                    >
+                      Crear Quiz
+                    </Button>
                   )}
                 </Stack>
+              </Stack>
 
-                <Stack direction="row" spacing={3} sx={{ mb: 2 }}>
-                  {course.instructor_name && (
-                    <Box display="flex" alignItems="center" gap={1}>
-                      <Person fontSize="small" color="action" />
-                      <Typography variant="body2" color="text.secondary">
-                        {course.instructor_name}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <AttachMoney fontSize="small" color="action" />
-                    <Typography variant="body2" color="text.secondary">
-                      {course.price === 0 || course.price === null
-                        ? 'Gratis'
-                        : `ARS ${course.price.toLocaleString('es-AR')}`}
-                    </Typography>
-                  </Box>
-                </Stack>
-
-                <Typography variant="body1" color="text.secondary" paragraph>
-                  {course.description}
-                </Typography>
-              </Box>
-
-              <Stack spacing={1} alignItems="flex-end">
-                <EnrollButton
-                  courseId={course.id}
-                  size="large"
-                  sx={{ minWidth: 200 }}
-                />
-                {(user?.role === 'teacher' || user?.role === 'admin') && (
-                  <Button variant="text" size="small" onClick={() => goToCourseForum(course.id)}>
-                    Ir al Foro
-                  </Button>
-                )}
-                {user?.role === 'teacher' && (
-                  <Button
-                    variant="outlined"
+              {/* Chips de metadata */}
+              <Stack direction="row" spacing={1} flexWrap="wrap">
+                {course.level && (
+                  <Chip
+                    label={levelLabels[course.level]}
+                    color={levelColors[course.level]}
                     size="small"
-                    component={RouterLink}
-                    to={`/teacher/courses/${course.id}/quizzes/create`}
-                  >
-                    Crear Quiz
-                  </Button>
+                  />
+                )}
+                {course.category && (
+                  <Chip label={course.category} variant="outlined" size="small" />
                 )}
               </Stack>
+
+              {/* Info secundaria */}
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} alignItems="flex-start">
+                {course.instructor_name && (
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Person fontSize="small" color="action" />
+                    <Typography variant="body2" color="text.secondary">
+                      {course.instructor_name}
+                    </Typography>
+                  </Box>
+                )}
+                <Box display="flex" alignItems="center" gap={1}>
+                  <AttachMoney fontSize="small" color="action" />
+                  <Typography variant="body2" color="text.secondary">
+                    {course.price === 0 || course.price === null
+                      ? 'Gratis'
+                      : `ARS ${course.price.toLocaleString('es-AR')}`}
+                  </Typography>
+                </Box>
+              </Stack>
+
+              {/* Descripción */}
+              <Typography variant="body1" color="text.secondary" paragraph>
+                {course.description}
+              </Typography>
             </Stack>
           </CardContent>
         </Card>
@@ -288,9 +305,21 @@ export function CourseDetail() {
       <Box display="flex" gap={3}>
         {/* Materials List */}
         <Paper sx={{ width: 300, flexShrink: 0 }}>
-          <Box sx={{ p: 2, bgcolor: 'primary.main', color: 'white' }}>
-            <Typography variant="h6">Contenido del curso</Typography>
-            <Typography variant="caption">
+          <Box
+            sx={(theme) => ({
+              p: 2,
+              bgcolor:
+                theme.palette.mode === 'dark'
+                  ? theme.palette.primary.dark
+                  : theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              borderBottom: theme.palette.mode === 'dark'
+                ? `1px solid ${theme.palette.divider}`
+                : 'none',
+            })}
+          >
+            <Typography variant="h6" sx={{ fontWeight: 600 }}>Contenido del curso</Typography>
+            <Typography variant="caption" sx={{ opacity: 0.85 }}>
               {materials.length} {materials.length === 1 ? 'material' : 'materiales'}
             </Typography>
           </Box>

@@ -20,6 +20,8 @@ import {
 } from '@mui/material'
 import { ArrowBack } from '@mui/icons-material'
 import { getCoursePublicById, getCourseMaterials, updateCourse } from '../api/course.service'
+import { uploadFile } from '../api/upload.service'
+import { CourseThumbnail } from '../components/CourseThumbnail'
 import type { CoursePublic, CourseMaterial, CourseLevel } from '../types/course'
 import { useNavigation } from '../hooks/useNavigation'
 import { ROUTES } from '../routes/routes.config'
@@ -223,14 +225,52 @@ export function EditCourse() {
             </Select>
           </FormControl>
 
-          <TextField
-            label="URL de imagen de portada"
-            fullWidth
-            value={thumbnailUrl}
-            onChange={(e) => setThumbnailUrl(e.target.value)}
-            disabled={saving}
-            placeholder="https://..."
-          />
+          <Box>
+            <Typography variant="h6" gutterBottom>Portada</Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="flex-start">
+              <CourseThumbnail url={thumbnailUrl} title={title || 'Curso'} height={160} />
+              <Stack spacing={1} sx={{ flex: 1 }}>
+                <TextField
+                  label="URL de imagen de portada"
+                  fullWidth
+                  value={thumbnailUrl}
+                  onChange={(e) => setThumbnailUrl(e.target.value)}
+                  disabled={saving}
+                  placeholder="https://..."
+                />
+                <Button
+                  variant="outlined"
+                  component="label"
+                  disabled={saving}
+                >
+                  Subir nueva imagen
+                  <input
+                    hidden
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0]
+                      if (!file) return
+                      if (file.size > 3 * 1024 * 1024) {
+                        setError('La imagen excede 3MB')
+                        return
+                      }
+                      try {
+                        const res = await uploadFile(file)
+                        setThumbnailUrl(res.url)
+                      } catch (err) {
+                        const msg = err instanceof Error ? err.message : 'Error al subir imagen'
+                        setError(msg)
+                      }
+                    }}
+                  />
+                </Button>
+                <Typography variant="caption" color="text.secondary">
+                  Formato recomendado: JPG/PNG &lt; 3MB. Puedes pegar una URL externa.
+                </Typography>
+              </Stack>
+            </Stack>
+          </Box>
 
           <Box sx={{ mt: 2 }}>
             <Typography variant="h6" gutterBottom>

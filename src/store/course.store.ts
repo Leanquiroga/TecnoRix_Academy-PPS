@@ -8,6 +8,12 @@ interface CourseState {
   currentCourse: CoursePublic | null
   materials: CourseMaterial[]
   pendingCourses: Course[]
+  pendingPagination: {
+    page: number
+    limit: number
+    total: number
+    totalPages: number
+  }
   loading: boolean
   error: string | null
 
@@ -23,7 +29,7 @@ interface CourseState {
   deleteCourse: (id: string) => Promise<void>
 
   // Acciones de admin
-  fetchPendingCourses: () => Promise<void>
+  fetchPendingCourses: (page?: number, limit?: number, search?: string, category?: string, level?: string) => Promise<void>
   approveCourse: (id: string) => Promise<void>
   rejectCourse: (id: string, reason?: string) => Promise<void>
 
@@ -38,6 +44,12 @@ export const useCourseStore = create<CourseState>((set, get) => ({
   currentCourse: null,
   materials: [],
   pendingCourses: [],
+  pendingPagination: {
+    page: 1,
+    limit: 20,
+    total: 0,
+    totalPages: 0
+  },
   loading: false,
   error: null,
 
@@ -136,11 +148,15 @@ export const useCourseStore = create<CourseState>((set, get) => ({
   },
 
   // Acciones de admin
-  fetchPendingCourses: async () => {
+  fetchPendingCourses: async (page = 1, limit = 20, search?: string, category?: string, level?: string) => {
     try {
       set({ loading: true, error: null })
-      const data = await CourseAPI.listPendingCourses()
-      set({ pendingCourses: data, loading: false })
+      const { courses, pagination } = await CourseAPI.listPendingCourses(page, limit, search, category, level)
+      set({ 
+        pendingCourses: courses, 
+        pendingPagination: pagination,
+        loading: false 
+      })
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Error al cargar cursos pendientes'
       set({ error: message, loading: false })

@@ -1,12 +1,63 @@
-export async function listPendingCourses(): Promise<Course[]> {
-  console.log('[CourseService] listPendingCourses')
-  const { data, error } = await supabaseAdmin
+export async function listPendingCourses(
+  page = 1, 
+  limit = 20,
+  search?: string,
+  category?: string,
+  level?: string
+): Promise<{ courses: Course[]; total: number }> {
+  console.log('[CourseService] listPendingCourses', { page, limit, search, category, level })
+  
+  // Validar parámetros
+  const validPage = Math.max(1, page)
+  const validLimit = Math.min(Math.max(1, limit), 100) // Máximo 100 por página
+  const offset = (validPage - 1) * validLimit
+
+  // Construir query base para contar
+  let countQuery = supabaseAdmin
+    .from('courses')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'pending_approval')
+
+  // Construir query base para datos
+  let dataQuery = supabaseAdmin
     .from('courses')
     .select('*')
     .eq('status', 'pending_approval')
+
+  // Aplicar filtros de búsqueda (título o descripción)
+  if (search && search.trim()) {
+    const searchTerm = `%${search.trim()}%`
+    countQuery = countQuery.or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
+    dataQuery = dataQuery.or(`title.ilike.${searchTerm},description.ilike.${searchTerm}`)
+  }
+
+  // Aplicar filtro de categoría
+  if (category && category.trim()) {
+    countQuery = countQuery.eq('category', category.trim())
+    dataQuery = dataQuery.eq('category', category.trim())
+  }
+
+  // Aplicar filtro de nivel
+  if (level && level.trim()) {
+    countQuery = countQuery.eq('level', level.trim())
+    dataQuery = dataQuery.eq('level', level.trim())
+  }
+
+  // Obtener total de cursos pendientes con filtros
+  const { count, error: countError } = await countQuery
+  if (countError) throw countError
+
+  // Obtener cursos paginados con filtros
+  const { data, error } = await dataQuery
     .order('created_at', { ascending: false })
+    .range(offset, offset + validLimit - 1)
+  
   if (error) throw error
-  return (data ?? []) as Course[]
+  
+  return {
+    courses: (data ?? []) as Course[],
+    total: count ?? 0
+  }
 }
 
 export async function approveCourse(courseId: string): Promise<Course> {

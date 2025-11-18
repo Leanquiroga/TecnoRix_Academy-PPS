@@ -1,11 +1,30 @@
 import { listPendingCourses, approveCourse, rejectCourse, getCoursePublicById, updateCourse, deleteCourse, getCourseMaterials } from '../services/course.service'
 
 // ADMIN: Listar cursos pendientes
-export async function getPendingCoursesController(_req: AuthRequest, res: Response) {
+export async function getPendingCoursesController(req: AuthRequest, res: Response) {
   try {
-    console.log('[Courses][Admin] Listar pendientes')
-    const courses = await listPendingCourses()
-    return res.json({ success: true, data: courses })
+    const page = parseInt(req.query.page as string) || 1
+    const limit = parseInt(req.query.limit as string) || 20
+    const search = req.query.search as string
+    const category = req.query.category as string
+    const level = req.query.level as string
+    
+    console.log('[Courses][Admin] Listar pendientes', { page, limit, search, category, level })
+    
+    const { courses, total } = await listPendingCourses(page, limit, search, category, level)
+    
+    const totalPages = Math.ceil(total / limit)
+    
+    return res.json({ 
+      success: true, 
+      data: courses,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
+    })
   } catch (err: any) {
     const msg = err?.message || 'Error al listar cursos pendientes'
     console.error('[Courses][Admin] Error listando pendientes:', msg)

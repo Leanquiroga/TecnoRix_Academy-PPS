@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Box, Container, TextField, Typography, Stack, Paper, IconButton, Divider } from '@mui/material'
+import { Box, Container, TextField, Typography, Stack, Paper, IconButton, Divider, Button, Alert } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf'
@@ -8,6 +8,8 @@ import { useNotify } from '../hooks/useNotify'
 import { createCourse } from '../api/course.service'
 import FileUploadZone from '../components/common/FileUploadZone'
 import type { CourseCreateInput, CourseMaterialInput, CourseMaterialType } from '../types/course'
+import { uploadFile } from '../api/upload.service'
+import { CourseThumbnail } from '../components/CourseThumbnail'
 
 export default function CreateCoursePage() {
   const [title, setTitle] = useState('')
@@ -15,6 +17,9 @@ export default function CreateCoursePage() {
   const [price, setPrice] = useState<number | ''>('')
   const [materials, setMaterials] = useState<CourseMaterialInput[]>([])
   const [submitting, setSubmitting] = useState(false)
+  const [thumbnailUrl, setThumbnailUrl] = useState('')
+  const [thumbUploading, setThumbUploading] = useState(false)
+  const [thumbError, setThumbError] = useState<string | null>(null)
 
   const { uploading, error: uploadError, upload } = useFileUpload()
   const notify = useNotify()
@@ -45,6 +50,7 @@ export default function CreateCoursePage() {
         title: title.trim(),
         description: description.trim(),
         price: typeof price === 'number' ? price : undefined,
+        thumbnail_url: thumbnailUrl.trim() || undefined,
         materials,
       }
       await createCourse(payload)
@@ -53,6 +59,7 @@ export default function CreateCoursePage() {
       setDescription('')
       setPrice('')
       setMaterials([])
+      setThumbnailUrl('')
       notify({
         title: 'Curso creado',
         message: 'Tu curso fue enviado para aprobación',
@@ -63,6 +70,25 @@ export default function CreateCoursePage() {
       notify({ message: msg, severity: 'error' })
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const handleThumbnailFile = async (file: File | undefined) => {
+    if (!file) return
+    setThumbError(null)
+    if (file.size > 3 * 1024 * 1024) {
+      setThumbError('La imagen excede 3MB')
+      return
+    }
+    setThumbUploading(true)
+    try {
+      const res = await uploadFile(file)
+      setThumbnailUrl(res.url)
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Error al subir imagen'
+      setThumbError(msg)
+    } finally {
+      setThumbUploading(false)
     }
   }
 
@@ -103,6 +129,86 @@ export default function CreateCoursePage() {
               onChange={(e) => setPrice(e.target.value === '' ? '' : Number(e.target.value))}
             />
           </Box>
+          {/* Portada */}
+          <Paper variant="outlined" sx={{ p: 2 }}>
+            <Stack spacing={2}>
+              <Typography variant="h6" gutterBottom>Portada del curso</Typography>
+              
+              {/* Vista previa de la portada */}
+              <Box 
+                sx={{ 
+                  position: 'relative',
+                  bgcolor: 'background.paper',
+                  borderRadius: 1,
+                  overflow: 'hidden',
+                  border: '1px solid',
+                  borderColor: 'divider'
+                }} 
+                aria-busy={thumbUploading}
+              >
+                {thumbUploading && (
+                  <Box
+                    sx={{
+                      position: 'absolute', 
+                      inset: 0,
+                      bgcolor: 'rgba(0, 0, 0, 0.7)', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      color: 'common.white', 
+                      fontSize: 14, 
+                      zIndex: 1
+                    }}
+                  >
+                    Subiendo imagen…
+                  </Box>
+                )}
+                <CourseThumbnail url={thumbnailUrl} title={title || 'Curso'} height={200} />
+              </Box>
+
+              {/* Controles de portada */}
+              <Stack spacing={1.5}>
+                <TextField
+                  label="URL de portada"
+                  fullWidth
+                  value={thumbnailUrl}
+                  onChange={(e) => setThumbnailUrl(e.target.value)}
+                  placeholder="https://..."
+                  disabled={thumbUploading}
+                  size="small"
+                />
+                <Stack direction="row" spacing={1}>
+                  <Button
+                    variant="contained"
+                    component="label"
+                    disabled={thumbUploading}
+                    size="small"
+                  >
+                    {thumbUploading ? 'Subiendo…' : 'SUBIR IMAGEN'}
+                    <input
+                      hidden
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleThumbnailFile(e.target.files?.[0])}
+                    />
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    disabled={thumbUploading || !thumbnailUrl}
+                    onClick={() => setThumbnailUrl('')}
+                    size="small"
+                  >
+                    QUITAR PORTADA
+                  </Button>
+                </Stack>
+                {thumbError && <Alert severity="error" onClose={() => setThumbError(null)}>{thumbError}</Alert>}
+                <Typography variant="caption" color="text.secondary" sx={{ lineHeight: 1.4 }}>
+                  Recomendado: JPG/PNG 16:9 &lt; 3MB. Puedes pegar una URL externa o subir un archivo. Si no agregas portada se mostrará "Sin portada".
+                </Typography>
+              </Stack>
+            </Stack>
+          </Paper>
           <Box>
             <Typography variant="h6" gutterBottom>
               Materiales del curso
@@ -158,6 +264,7 @@ export default function CreateCoursePage() {
                   setDescription('')
                   setPrice('')
                   setMaterials([])
+                  setThumbnailUrl('')
                 }}
               >
                 Limpiar

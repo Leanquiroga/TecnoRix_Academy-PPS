@@ -15,6 +15,9 @@ import {
   TableHead,
   TableRow,
   Chip,
+  Tooltip,
+  ButtonGroup,
+  IconButton,
 } from '@mui/material'
 import {
   Add,
@@ -25,6 +28,8 @@ import {
   BarChart,
   Edit,
   Delete,
+  AttachMoney,
+  Quiz,
 } from '@mui/icons-material'
 import { useAuth } from '../hooks/useAuth'
 import { useNavigation } from '../hooks/useNavigation'
@@ -89,11 +94,12 @@ export default function TeacherDashboard() {
       )
 
       // Calcular estadísticas
+      const getStatus = (c: any) => (c && typeof c.status === 'string' ? c.status : 'approved')
       const activeCourses = teacherCourses.filter(
-        (course) => (course as { status?: string }).status === 'approved'
+        (course) => getStatus(course) === 'approved'
       ).length
       const pendingCourses = teacherCourses.filter(
-        (course) => (course as { status?: string }).status === 'pending_approval'
+        (course) => getStatus(course) === 'pending_approval'
       ).length
 
       // Para cada curso, obtener el conteo de estudiantes
@@ -379,23 +385,33 @@ export default function TeacherDashboard() {
                           {course.title}
                         </Typography>
                         <Typography variant="caption" color="text.secondary">
-                          {course.description.substring(0, 60)}
-                          {course.description.length > 60 ? '...' : ''}
+                          {(() => {
+                            const desc = typeof course.description === 'string' ? course.description : ''
+                            const trimmed = desc.slice(0, 60)
+                            return trimmed + (desc.length > 60 ? '…' : '')
+                          })()}
                         </Typography>
                       </TableCell>
                       <TableCell>{course.category}</TableCell>
                       <TableCell align="center">
-                        <Chip
-                          label={course.status}
-                          color={
-                              course.status === 'approved'
-                              ? 'success'
-                                : course.status === 'pending_approval'
-                              ? 'warning'
-                              : 'default'
+                        {(() => {
+                          const rawStatus = (course as any).status ?? 'approved'
+                          const statusMap: Record<string, { label: string; color: 'success' | 'warning' | 'error' | 'default' }> = {
+                            approved: { label: 'Aprobado', color: 'success' },
+                            pending_approval: { label: 'Pendiente', color: 'warning' },
+                            rejected: { label: 'Rechazado', color: 'error' },
+                            draft: { label: 'Borrador', color: 'default' },
                           }
-                          size="small"
-                        />
+                          const st = statusMap[rawStatus] || { label: rawStatus, color: 'default' }
+                          return (
+                            <Chip
+                              label={st.label}
+                              color={st.color}
+                              size="small"
+                              variant="outlined"
+                            />
+                          )
+                        })()}
                       </TableCell>
                       <TableCell align="center">
                         <Chip
@@ -407,52 +423,47 @@ export default function TeacherDashboard() {
                       </TableCell>
                       <TableCell align="center">
                         <Chip
-                            label={course.price === 0 ? 'Gratis' : 'Pago'}
-                            color={course.price === 0 ? 'success' : 'primary'}
+                          icon={course.price === 0 ? <AttachMoney fontSize="small" /> : undefined}
+                          label={course.price === 0 ? 'Gratis' : 'Pago'}
+                          color={course.price === 0 ? 'success' : 'primary'}
                           size="small"
                           variant="outlined"
                         />
                       </TableCell>
                       <TableCell align="right">
-                        <Stack direction="row" spacing={1} justifyContent="flex-end">
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => goToCourse(course.id)}
-                          >
-                            Ver Detalles
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            startIcon={<Edit />}
-                            onClick={() => goTo(ROUTES.COURSE.EDIT(course.id))}
-                          >
-                            Editar
-                          </Button>
+                        <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
+                          <ButtonGroup size="small" variant="outlined">
+                            <Button onClick={() => goToCourse(course.id)} aria-label="Ver detalles">Ver Detalles</Button>
+                            <Button onClick={() => goTo(ROUTES.COURSE.EDIT(course.id))} aria-label="Editar curso" startIcon={<Edit />}>Editar</Button>
+                          </ButtonGroup>
                           <Button
                             size="small"
                             variant="contained"
                             onClick={() => goTo(ROUTES.TEACHER.STUDENTS_BY_COURSE(course.id))}
+                            aria-label="Ver estudiantes"
                           >
-                            Ver Estudiantes
+                            Estudiantes
                           </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            onClick={() => goTo(ROUTES.TEACHER.QUIZZES_BY_COURSE(course.id))}
-                          >
-                            Gestionar Quizzes
-                          </Button>
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            color="error"
-                            startIcon={<Delete />}
-                            onClick={() => handleDeleteCourse(course.id, course.title)}
-                          >
-                            Eliminar
-                          </Button>
+                          <Tooltip title="Gestionar quizzes">
+                            <IconButton
+                              size="small"
+                              color="primary"
+                              aria-label="Gestionar quizzes"
+                              onClick={() => goTo(ROUTES.TEACHER.QUIZZES_BY_COURSE(course.id))}
+                            >
+                              <Quiz />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Eliminar curso">
+                            <IconButton
+                              size="small"
+                              color="error"
+                              aria-label="Eliminar"
+                              onClick={() => handleDeleteCourse(course.id, course.title)}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Tooltip>
                         </Stack>
                       </TableCell>
                     </TableRow>

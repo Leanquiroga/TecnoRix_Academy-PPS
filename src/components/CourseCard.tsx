@@ -1,6 +1,7 @@
 import { Card, CardContent, CardActions, Typography, Button, Chip, Stack, Box } from '@mui/material';
 import type { CoursePublic } from '../types/course';
 import { useNavigate } from 'react-router-dom';
+import { CourseThumbnail } from './CourseThumbnail';
 
 interface CourseCardProps {
   course: CoursePublic;
@@ -47,18 +48,19 @@ export const CourseCard = ({ course }: CourseCardProps) => {
   };
 
   return (
-    <Card 
-      sx={{ 
-        height: '100%', 
-        display: 'flex', 
+    <Card
+      sx={{
+        height: '100%',
+        display: 'flex',
         flexDirection: 'column',
         transition: 'transform 0.2s, box-shadow 0.2s',
         '&:hover': {
           transform: 'translateY(-4px)',
           boxShadow: 4,
-        }
+        },
       }}
     >
+      <CourseThumbnail url={course.thumbnail_url} title={course.title} />
       <CardContent sx={{ flexGrow: 1 }}>
         <Stack spacing={2}>
           <Box>
