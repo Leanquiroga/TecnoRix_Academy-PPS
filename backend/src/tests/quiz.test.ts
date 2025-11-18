@@ -254,7 +254,7 @@ describe('Quiz System', () => {
       expect(res.body.error).toContain('al menos una pregunta')
     })
 
-    it('debe validar que cada pregunta tenga al menos 5 caracteres', async () => {
+    it('debe validar que cada pregunta tenga al menos 6 caracteres', async () => {
       const res = await authenticatedRequest(app, teacherToken)
         .post(`/api/courses/${courseId}/quizzes`)
         .send({
@@ -274,7 +274,7 @@ describe('Quiz System', () => {
         })
 
       expect(res.status).toBe(400)
-      expect(res.body.error).toContain('al menos 5 caracteres')
+      expect(res.body.error).toContain('al menos 6 caracteres')
     })
 
     it('debe validar que cada pregunta tenga al menos 2 opciones', async () => {
@@ -848,13 +848,175 @@ describe('Quiz System', () => {
       expect(res.status).toBe(200)
       expect(res.body.success).toBe(true)
       expect(res.body.message).toContain('eliminado')
+      expect(res.body.data).toBeDefined()
+      expect(res.body.data.deleted_at).toBeDefined()
+      expect(res.body.data.deleted_at).not.toBeNull()
 
-      // Verificar que no aparece en listado
+      // Verificar que no aparece en listado (filtrado por deleted_at)
       const listRes = await authenticatedRequest(app, teacherToken)
         .get(`/api/courses/${courseId}/quizzes`)
       
       const deletedQuiz = listRes.body.data.find((q: any) => q.id === tempQuizId)
       expect(deletedQuiz).toBeUndefined()
+
+      // Verificar que el quiz sigue existiendo en BD con deleted_at
+      const { data: quizInDb } = await supabaseAdmin
+        .from('quizzes')
+        .select('*')
+        .eq('id', tempQuizId)
+        .single()
+      
+      expect(quizInDb).toBeDefined()
+      expect(quizInDb?.deleted_at).not.toBeNull()
+    })
+
+    it('debe permitir eliminar un quiz con intentos registrados (soft delete)', async () => {
+      // Crear un quiz temporal
+      const tempQuizRes = await authenticatedRequest(app, teacherToken)
+        .post(`/api/courses/${courseId}/quizzes`)
+        .send({
+          title: 'Quiz con intentos',
+          passing_score: 50,
+          questions: [
+            {
+              question_text: '¿Pregunta válida para test?',
+              type: QuestionType.TRUE_FALSE,
+              points: 5,
+              options: [
+                { option_text: 'Sí', is_correct: true },
+                { option_text: 'No', is_correct: false },
+              ],
+            },
+          ],
+        })
+
+      const tempQuizId = tempQuizRes.body.data.id
+
+      // Iniciar intento como estudiante
+      await authenticatedRequest(app, studentToken)
+        .post(`/api/quizzes/${tempQuizId}/start`)
+
+      // Intentar eliminar (ahora permitido con soft delete)
+      const delRes = await authenticatedRequest(app, teacherToken)
+        .delete(`/api/quizzes/${tempQuizId}`)
+
+      expect(delRes.status).toBe(200)
+      expect(delRes.body.success).toBe(true)
+      expect(delRes.body.data.deleted_at).not.toBeNull()
+
+      // Limpieza: solo intentos (el quiz queda con soft delete)
+      await supabaseAdmin.from('quiz_attempts').delete().eq('quiz_id', tempQuizId)
+    })
+  })
+
+  describe('PUT /api/quizzes/:quizId/questions', () => {
+    it('debe reemplazar preguntas cuando no hay intentos previos', async () => {
+      // Crear un quiz sin intentos
+      const createRes = await authenticatedRequest(app, teacherToken)
+        .post(`/api/courses/${courseId}/quizzes`)
+        .send({
+          title: 'Quiz editable',
+          passing_score: 60,
+          questions: [
+            {
+              question_text: 'Antigua pregunta 1',
+              type: QuestionType.MULTIPLE_CHOICE,
+              points: 1,
+              options: [
+                { option_text: 'A', is_correct: true },
+                { option_text: 'B', is_correct: false },
+              ],
+            },
+          ],
+        })
+
+      const editableQuizId = createRes.body.data.id
+
+      const putRes = await authenticatedRequest(app, teacherToken)
+        .put(`/api/quizzes/${editableQuizId}/questions`)
+        .send({
+          questions: [
+            {
+              question_text: 'Nueva pregunta 1',
+              type: QuestionType.TRUE_FALSE,
+              points: 2,
+              options: [
+                { option_text: 'Verdadero', is_correct: true },
+                { option_text: 'Falso', is_correct: false },
+              ],
+            },
+            {
+              question_text: 'Nueva pregunta 2',
+              type: QuestionType.MULTIPLE_CHOICE,
+              points: 3,
+              options: [
+                { option_text: 'O1', is_correct: true },
+                { option_text: 'O2', is_correct: false },
+              ],
+            },
+          ],
+        })
+
+      expect(putRes.status).toBe(200)
+      expect(putRes.body.success).toBe(true)
+      expect(Array.isArray(putRes.body.data.questions)).toBe(true)
+      expect(putRes.body.data.questions).toHaveLength(2)
+      expect(putRes.body.message).toContain('Preguntas actualizadas')
+
+      // Limpieza
+      await supabaseAdmin.from('question_options').delete().match({})
+      await supabaseAdmin.from('questions').delete().eq('quiz_id', editableQuizId)
+      await supabaseAdmin.from('quizzes').delete().eq('id', editableQuizId)
+    })
+
+    it('debe permitir editar preguntas incluso con intentos existentes', async () => {
+      // Crear quiz y generar intento
+      const createRes = await authenticatedRequest(app, teacherToken)
+        .post(`/api/courses/${courseId}/quizzes`)
+        .send({
+          title: 'Quiz con intento para editar',
+          passing_score: 60,
+          questions: [
+            {
+              question_text: 'Pregunta inicial válida',
+              type: QuestionType.TRUE_FALSE,
+              points: 1,
+              options: [
+                { option_text: 'Sí', is_correct: true },
+                { option_text: 'No', is_correct: false },
+              ],
+            },
+          ],
+        })
+
+      const qid = createRes.body.data.id
+      await authenticatedRequest(app, studentToken).post(`/api/quizzes/${qid}/start`)
+
+      // Ahora la edición debe ser permitida
+      const putRes = await authenticatedRequest(app, teacherToken)
+        .put(`/api/quizzes/${qid}/questions`)
+        .send({
+          questions: [
+            {
+              question_text: 'Pregunta editada',
+              type: QuestionType.TRUE_FALSE,
+              points: 1,
+              options: [
+                { option_text: 'Sí', is_correct: true },
+                { option_text: 'No', is_correct: false },
+              ],
+            },
+          ],
+        })
+
+      expect(putRes.status).toBe(200)
+      expect(putRes.body.success).toBe(true)
+
+      // Limpieza
+      await supabaseAdmin.from('quiz_attempts').delete().eq('quiz_id', qid)
+      await supabaseAdmin.from('question_options').delete().match({})
+      await supabaseAdmin.from('questions').delete().eq('quiz_id', qid)
+      await supabaseAdmin.from('quizzes').delete().eq('id', qid)
     })
   })
 })

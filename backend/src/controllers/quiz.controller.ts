@@ -55,7 +55,7 @@ export async function createQuizController(req: AuthRequest, res: Response): Pro
       // Validar pregunta
       if (!questionInput.question_text || questionInput.question_text.trim().length <= 5) {
         return res.status(400).json({ 
-          error: `La pregunta ${i + 1} debe tener al menos 5 caracteres` 
+          error: `La pregunta ${i + 1} debe tener al menos 6 caracteres` 
         })
       }
 
@@ -204,6 +204,7 @@ export async function listQuizzesController(req: AuthRequest, res: Response): Pr
       .from('quizzes')
       .select('*')
       .eq('course_id', courseId)
+      .is('deleted_at', null)
       .order('order_index', { ascending: true })
 
     if (error) {
@@ -245,6 +246,10 @@ export async function getQuizController(req: AuthRequest, res: Response): Promis
       .single()
 
     if (quizError || !quiz) {
+      return res.status(404).json({ error: 'Quiz no encontrado' })
+    }
+
+    if (quiz.deleted_at) {
       return res.status(404).json({ error: 'Quiz no encontrado' })
     }
 
@@ -331,6 +336,10 @@ export async function updateQuizController(req: AuthRequest, res: Response): Pro
       return res.status(404).json({ error: 'Quiz no encontrado' })
     }
 
+    if (quiz.deleted_at) {
+      return res.status(400).json({ error: 'El quiz está eliminado' })
+    }
+
     // Verificar permisos
     if (role === 'teacher' && quiz.courses.teacher_id !== userId) {
       return res.status(403).json({ error: 'No tienes permiso para actualizar este quiz' })
@@ -375,6 +384,146 @@ export async function updateQuizController(req: AuthRequest, res: Response): Pro
 }
 
 /**
+ * PUT /api/quizzes/:quizId/questions
+ * Reemplazar todas las preguntas y opciones de un quiz (solo si no hay intentos)
+ */
+export async function updateQuizQuestionsController(req: AuthRequest, res: Response): Promise<Response> {
+  try {
+    const { quizId } = req.params
+    const userId = req.user?.userId
+    const role = req.user?.role
+
+    if (!userId) {
+      return res.status(401).json({ error: 'Usuario no autenticado' })
+    }
+
+    if (role !== 'teacher' && role !== 'admin') {
+      return res.status(403).json({ error: 'Solo profesores pueden editar preguntas' })
+    }
+
+    // Obtener el quiz y verificar permisos
+    const { data: quiz, error: quizError } = await supabaseAdmin
+      .from('quizzes')
+      .select('*, courses!inner(teacher_id)')
+      .eq('id', quizId)
+      .single()
+
+    if (quizError || !quiz) {
+      return res.status(404).json({ error: 'Quiz no encontrado' })
+    }
+
+    if (quiz.deleted_at) {
+      return res.status(400).json({ error: 'El quiz está eliminado' })
+    }
+
+    if (role === 'teacher' && quiz.courses.teacher_id !== userId) {
+      return res.status(403).json({ error: 'No tienes permiso para editar este quiz' })
+    }
+
+    // Se permite edición aunque existan intentos (cambio solicitado)
+
+    const { questions } = req.body as { questions: Array<{
+      question_text: string
+      type: string
+      points: number
+      order_index?: number
+      explanation?: string
+      options: Array<{ option_text: string; is_correct: boolean; order_index?: number }>
+    }> }
+
+    if (!Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ error: 'Debes enviar al menos una pregunta' })
+    }
+
+    // Validaciones similares a createQuizController
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i]
+      if (!q.question_text || q.question_text.trim().length <= 5) {
+        return res.status(400).json({ error: `La pregunta ${i + 1} debe tener al menos 6 caracteres` })
+      }
+      if (!q.options || q.options.length < 2) {
+        return res.status(400).json({ error: `La pregunta ${i + 1} debe tener al menos 2 opciones` })
+      }
+      const correct = q.options.filter(o => o.is_correct)
+      if (correct.length === 0) {
+        return res.status(400).json({ error: `La pregunta ${i + 1} debe tener al menos una opción correcta` })
+      }
+      if ((q.type === 'multiple_choice' || q.type === 'true_false') && correct.length > 1) {
+        return res.status(400).json({ error: `La pregunta ${i + 1} de tipo ${q.type} solo puede tener una opción correcta` })
+      }
+    }
+
+    // Eliminar preguntas actuales (cascade elimina options)
+    const { error: deleteQsError } = await supabaseAdmin
+      .from('questions')
+      .delete()
+      .eq('quiz_id', quizId)
+
+    if (deleteQsError) {
+      console.error('Error al eliminar preguntas previas:', deleteQsError)
+      return res.status(500).json({ error: 'Error al reemplazar preguntas (fase de limpieza)' })
+    }
+
+    const createdQuestions: any[] = []
+    for (let i = 0; i < questions.length; i++) {
+      const q = questions[i]
+      const { data: question, error: questionError } = await supabaseAdmin
+        .from('questions')
+        .insert({
+          quiz_id: quizId,
+          question_text: q.question_text,
+          type: q.type,
+          points: q.points || 1,
+          order_index: q.order_index ?? i,
+          explanation: q.explanation || null,
+        })
+        .select()
+        .single()
+
+      if (questionError || !question) {
+        console.error('Error al crear pregunta (update):', questionError)
+        return res.status(500).json({ error: 'Error al crear preguntas nuevas' })
+      }
+
+      // Insertar opciones
+      const options = [] as any[]
+      for (let j = 0; j < q.options.length; j++) {
+        const opt = q.options[j]
+        const { data: option, error: optionError } = await supabaseAdmin
+          .from('question_options')
+          .insert({
+            question_id: question.id,
+            option_text: opt.option_text,
+            is_correct: opt.is_correct,
+            order_index: opt.order_index ?? j,
+          })
+          .select()
+          .single()
+
+        if (optionError || !option) {
+          console.error('Error al crear opción (update):', optionError)
+          return res.status(500).json({ error: 'Error al crear opciones nuevas' })
+        }
+        options.push(option)
+      }
+
+      createdQuestions.push({ ...question, options })
+    }
+
+    return res.json({
+      success: true,
+      data: { ...quiz, questions: createdQuestions },
+      message: 'Preguntas actualizadas correctamente',
+    })
+  } catch (error: any) {
+    console.error('Error al actualizar preguntas del quiz:', error)
+    return res.status(500).json({
+      error: 'Error al actualizar preguntas del quiz',
+      details: error.message,
+    })
+  }
+}
+/**
  * DELETE /api/quizzes/:quizId
  * Eliminar un quiz (soft delete)
  */
@@ -407,19 +556,23 @@ export async function deleteQuizController(req: AuthRequest, res: Response): Pro
       return res.status(403).json({ error: 'No tienes permiso para eliminar este quiz' })
     }
 
-    // Eliminar quiz (las preguntas y opciones se eliminarán por CASCADE)
-    const { error: deleteError } = await supabaseAdmin
+    // Soft delete: marcar deleted_at y updated_at (permitido incluso con intentos)
+    const timestamp = new Date().toISOString()
+    const { data: deletedQuiz, error: deleteError } = await supabaseAdmin
       .from('quizzes')
-      .delete()
+      .update({ deleted_at: timestamp, updated_at: timestamp })
       .eq('id', quizId)
+      .select()
+      .single()
 
-    if (deleteError) {
-      console.error('Error al eliminar quiz:', deleteError)
+    if (deleteError || !deletedQuiz) {
+      console.error('Error al eliminar (soft) quiz:', deleteError)
       return res.status(500).json({ error: 'Error al eliminar el quiz' })
     }
 
     return res.json({
       success: true,
+      data: deletedQuiz,
       message: 'Quiz eliminado exitosamente',
     })
   } catch (error: any) {

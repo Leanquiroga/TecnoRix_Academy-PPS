@@ -413,6 +413,13 @@ export default function TeacherDashboard() {
                           >
                             Ver Estudiantes
                           </Button>
+                          <Button
+                            size="small"
+                            variant="outlined"
+                            onClick={() => goTo(ROUTES.TEACHER.QUIZZES_BY_COURSE(course.id))}
+                          >
+                            Gestionar Quizzes
+                          </Button>
                         </Stack>
                       </TableCell>
                     </TableRow>

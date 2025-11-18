@@ -28,6 +28,8 @@ import QuizResults from '../pages/QuizResults'
 import RouteErrorElement from './RouteErrorElement'
 import CreateQuizPage from '../pages/CreateQuiz'
 import StudentProgressPage from '../pages/StudentProgress'
+import TeacherCourseQuizzes from '../pages/TeacherCourseQuizzes'
+import EditQuizPage from '../pages/EditQuiz'
 
 const router = createBrowserRouter([
   {
@@ -165,6 +167,22 @@ const router = createBrowserRouter([
         element: (
           <RoleRoute roles={['teacher']}>
             <StudentsList />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'teacher/courses/:id/quizzes',
+        element: (
+          <RoleRoute roles={['teacher']}>
+            <TeacherCourseQuizzes />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'teacher/quizzes/:quizId/edit',
+        element: (
+          <RoleRoute roles={['teacher']}>
+            <EditQuizPage />
           </RoleRoute>
         )
       },

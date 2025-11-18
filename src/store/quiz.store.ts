@@ -10,6 +10,7 @@ import {
   createQuiz,
   updateQuiz,
   deleteQuiz,
+  replaceQuizQuestions,
 } from '../api/quiz.service'
 import type {
   QuizWithQuestions,
@@ -49,6 +50,7 @@ interface QuizState {
   createQuiz: (payload: CreateQuizInput) => Promise<QuizWithQuestions>
   updateQuiz: (quizId: string, payload: UpdateQuizInput) => Promise<QuizWithQuestions>
   deleteQuiz: (quizId: string) => Promise<void>
+  replaceQuestions: (quizId: string, questions: CreateQuizInput['questions']) => Promise<QuizWithQuestions>
 }
 
 export const useQuizStore = create<QuizState>((set, get) => ({
@@ -65,8 +67,10 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     try {
       set({ loading: true, error: null })
       const res = await getQuizzesByCourse(courseId)
+      // Filtrar quizzes eliminados (soft delete)
+      const active = (res.data || []).filter(q => !q.deleted_at)
       set(state => ({
-        quizzesByCourse: { ...state.quizzesByCourse, [courseId]: res.data },
+        quizzesByCourse: { ...state.quizzesByCourse, [courseId]: active },
         loading: false,
       }))
     } catch (err) {
@@ -165,14 +169,69 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   // Teacher/admin
   createQuiz: async (payload: CreateQuizInput) => {
     const res = await createQuiz(payload)
-    return res.data
+    const quiz = res.data
+    if (quiz && !quiz.deleted_at) {
+      set(state => {
+        const list = state.quizzesByCourse[payload.course_id] || []
+        return {
+          quizzesByCourse: {
+            ...state.quizzesByCourse,
+            [payload.course_id]: [...list, quiz].sort((a, b) => a.order_index - b.order_index),
+          },
+        }
+      })
+    }
+    return quiz
   },
   updateQuiz: async (quizId: string, payload: UpdateQuizInput) => {
     const res = await updateQuiz(quizId, payload)
-    set({ currentQuiz: res.data })
+    const updated = res.data
+    set(state => {
+      // Actualizar lista si el quiz pertenece a alguna colección cargada
+      const courseId = (updated as any).course_id
+      if (courseId && state.quizzesByCourse[courseId]) {
+        const replaced = state.quizzesByCourse[courseId]
+          .filter(q => q.id !== quizId && !q.deleted_at)
+        const next = updated.deleted_at ? replaced : [...replaced, updated].sort((a, b) => a.order_index - b.order_index)
+        return {
+          currentQuiz: updated,
+          quizzesByCourse: { ...state.quizzesByCourse, [courseId]: next },
+        }
+      }
+      return { currentQuiz: updated }
+    })
     return res.data
   },
   deleteQuiz: async (quizId: string) => {
-    await deleteQuiz(quizId)
+    const current = get().currentQuiz
+    const res = await deleteQuiz(quizId)
+    // Si el backend retorna success sin data, recargar curso; asumimos ahora retorna data con deleted_at
+    if (current && current.id === quizId) {
+      set({ currentQuiz: null })
+    }
+    // Remover de listas
+    set(state => {
+      const updatedCollections: Record<string, QuizWithQuestions[]> = {}
+      for (const [cid, list] of Object.entries(state.quizzesByCourse)) {
+        updatedCollections[cid] = list.filter(q => q.id !== quizId && !q.deleted_at)
+      }
+      return { quizzesByCourse: updatedCollections }
+    })
+  },
+  replaceQuestions: async (quizId: string, questions: CreateQuizInput['questions']) => {
+    const res = await replaceQuizQuestions(quizId, questions)
+    const replaced = res.data as unknown as QuizWithQuestions
+    set(state => {
+      const courseId = (replaced as any).course_id
+      if (courseId && state.quizzesByCourse[courseId]) {
+        const list = state.quizzesByCourse[courseId].filter(q => q.id !== quizId && !q.deleted_at)
+        return {
+          currentQuiz: replaced,
+          quizzesByCourse: { ...state.quizzesByCourse, [courseId]: [...list, replaced].sort((a, b) => a.order_index - b.order_index) },
+        }
+      }
+      return { currentQuiz: replaced }
+    })
+    return res.data as unknown as QuizWithQuestions
   },
 }))

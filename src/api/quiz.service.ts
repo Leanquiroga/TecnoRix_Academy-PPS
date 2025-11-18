@@ -15,6 +15,7 @@ import type {
   GetAttemptDetailsResponse,
   GetStatisticsResponse,
   UpdateQuizInput,
+  CreateQuestionInput,
 } from '../types/quiz.types'
 
 /**
@@ -46,6 +47,17 @@ export const createQuiz = async (data: CreateQuizInput): Promise<CreateQuizRespo
  */
 export const updateQuiz = async (quizId: string, data: UpdateQuizInput): Promise<GetQuizResponse> => {
   const response = await http.put(`/quizzes/${quizId}`, data)
+  return response.data
+}
+
+/**
+ * Reemplazar todas las preguntas de un quiz (teacher/admin)
+ */
+export const replaceQuizQuestions = async (
+  quizId: string,
+  questions: CreateQuestionInput[]
+): Promise<GetQuizResponse> => {
+  const response = await http.put(`/quizzes/${quizId}/questions`, { questions })
   return response.data
 }
 
@@ -153,6 +165,7 @@ const quizService = {
   getQuiz,
   createQuiz,
   updateQuiz,
+  replaceQuizQuestions,
   deleteQuiz,
   startQuizAttempt,
   submitQuizAttempt,

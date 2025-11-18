@@ -202,4 +202,68 @@ describe('CreateQuiz', () => {
       expect(screen.queryByLabelText(/pregunta 2/i)).not.toBeInTheDocument()
     })
   })
+
+  it('valida título mínimo de 3 caracteres', async () => {
+    renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
+
+    const user = userEvent.setup()
+    const titleInput = screen.getByLabelText(/^título/i)
+    const submitBtn = screen.getByRole('button', { name: /crear quiz/i })
+
+    await user.clear(titleInput)
+    await user.type(titleInput, 'Ab')
+    await user.click(submitBtn)
+
+    // La validación previene el submit, así que no debería llamarse createQuiz
+    expect(createQuizMock).not.toHaveBeenCalled()
+  })
+
+  it('valida pregunta mínimo de 6 caracteres', async () => {
+    renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
+
+    const user = userEvent.setup()
+    const titleInput = screen.getByLabelText(/^título/i)
+    const questionInput = screen.getByLabelText(/pregunta 1/i)
+    const submitBtn = screen.getByRole('button', { name: /crear quiz/i })
+
+    await user.type(titleInput, 'Quiz válido')
+    await user.clear(questionInput)
+    await user.type(questionInput, '¿Qué?')
+    await user.click(submitBtn)
+
+    expect(createQuizMock).not.toHaveBeenCalled()
+    expect(await screen.findByRole('alert')).toHaveTextContent(/al menos 6 caracteres/i)
+  })
+
+  it('valida passing score entre 0 y 100', async () => {
+    renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
+
+    const user = userEvent.setup()
+    const passingScoreInput = screen.getByLabelText(/passing score/i)
+    const submitBtn = screen.getByRole('button', { name: /crear quiz/i })
+
+    await user.clear(passingScoreInput)
+    await user.type(passingScoreInput, '150')
+    await user.click(submitBtn)
+
+    expect(createQuizMock).not.toHaveBeenCalled()
+  })
+
+  it('aplica enforceSingleCorrect al marcar opción correcta', async () => {
+    renderWithRoute('/teacher/courses/:id/quizzes/create', <CreateQuizPage />)
+
+    const user = userEvent.setup()
+    const correctButtons = screen.getAllByRole('button', { name: /correcta/i })
+
+    // Primera opción correcta por defecto
+    expect(correctButtons[0].className).toMatch(/MuiButton-contained/)
+
+    // Marcar segunda como correcta
+    await user.click(correctButtons[1])
+
+    await waitFor(() => {
+      expect(correctButtons[0].className).toMatch(/MuiButton-outlined/)
+      expect(correctButtons[1].className).toMatch(/MuiButton-contained/)
+    })
+  })
 })

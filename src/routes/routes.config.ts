@@ -50,6 +50,8 @@ export const ROUTES = {
     COURSES: '/teacher/courses',
     COURSE_CREATE: '/courses/create',
     COURSE_EDIT: (id: string) => `/courses/${id}/edit`,
+    QUIZZES_BY_COURSE: (courseId: string) => `/teacher/courses/${courseId}/quizzes`,
+    QUIZ_EDIT: (quizId: string) => `/teacher/quizzes/${quizId}/edit`,
     STUDENTS: '/teacher/students',
     STUDENTS_BY_COURSE: (courseId: string) => `/teacher/courses/${courseId}/students`,
     STATISTICS: '/teacher/statistics',

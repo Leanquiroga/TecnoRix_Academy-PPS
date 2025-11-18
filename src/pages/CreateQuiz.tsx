@@ -4,6 +4,7 @@ import { Box, Button, Card, CardContent, TextField, Typography, Paper, IconButto
 import { Add, Delete } from '@mui/icons-material'
 import { useQuizStore } from '../store/quiz.store'
 import { QuestionType, type CreateQuizInput } from '../types/quiz.types'
+import { validateQuizMeta, validateQuestions, buildCreatePayload, enforceSingleCorrect } from '../validation/quizRules'
 
 const CreateQuizPage: React.FC = () => {
   const { id: courseId } = useParams<{ id: string }>()
@@ -45,12 +46,9 @@ const CreateQuizPage: React.FC = () => {
   const updateOption = (qIdx: number, oIdx: number, patch: Partial<{ option_text: string; is_correct: boolean }>) => {
     setQuestions(qs => qs.map((q, i) => {
       if (i !== qIdx) return q
-      const opts = q.options.map((o, j) => j === oIdx ? { ...o, ...patch } : o)
-      // Asegurar una sola opción correcta en multiple_choice
-      if (patch.is_correct) {
-        for (let k = 0; k < opts.length; k++) {
-          if (k !== oIdx) opts[k].is_correct = false
-        }
+      let opts = q.options.map((o, j) => j === oIdx ? { ...o, ...patch } : o)
+      if (patch.is_correct && (q.type === QuestionType.MULTIPLE_CHOICE || q.type === QuestionType.TRUE_FALSE)) {
+        opts = enforceSingleCorrect(opts, oIdx)
       }
       return { ...q, options: opts }
     }))
@@ -69,64 +67,20 @@ const CreateQuizPage: React.FC = () => {
     if (!courseId) return
     setError(null)
 
-    // Validaciones cliente (alineadas con el backend)
-    const t = title.trim()
-    if (t.length < 3) {
-      setError('El título debe tener al menos 3 caracteres')
-      return
-    }
-    if (passingScore < 0 || passingScore > 100) {
-      setError('La nota de aprobación debe estar entre 0 y 100')
-      return
-    }
-    if (!questions.length) {
-      setError('El quiz debe tener al menos una pregunta')
-      return
-    }
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i]
-      const qt = q.question_text.trim()
-      if (qt.length <= 5) {
-        setError(`La pregunta ${i + 1} debe tener al menos 6 caracteres`)
-        return
-      }
-      if (!q.options || q.options.length < 2) {
-        setError(`La pregunta ${i + 1} debe tener al menos 2 opciones`)
-        return
-      }
-      const correctCount = q.options.filter(o => o.is_correct).length
-      if (correctCount === 0) {
-        setError(`La pregunta ${i + 1} debe tener al menos una opción correcta`)
-        return
-      }
-      if ((q.type === QuestionType.MULTIPLE_CHOICE || q.type === QuestionType.TRUE_FALSE) && correctCount > 1) {
-        setError(`La pregunta ${i + 1} solo puede tener una opción correcta`)
-        return
-      }
-      // Validación mínima de opciones
-      for (let j = 0; j < q.options.length; j++) {
-        if (!q.options[j].option_text.trim()) {
-          setError(`La opción ${j + 1} de la pregunta ${i + 1} no puede estar vacía`)
-          return
-        }
-      }
-    }
+    // Validaciones centralizadas
+    const metaError = validateQuizMeta(title, Number(passingScore))
+    if (metaError) { setError(metaError); return }
+    const questionsError = validateQuestions(questions as any)
+    if (questionsError) { setError(questionsError); return }
 
-    const payload: CreateQuizInput = {
-      course_id: courseId,
+    const payload: CreateQuizInput = buildCreatePayload({
+      courseId,
       title,
       description,
-      passing_score: Number(passingScore),
-      time_limit_minutes: timeLimit === '' ? undefined : Number(timeLimit),
-      max_attempts: maxAttempts === '' ? undefined : Number(maxAttempts),
-      questions: questions.map((q, idx) => ({
-        question_text: q.question_text,
-        type: q.type,
-        points: q.points,
-        order_index: idx + 1,
-        options: q.options.map((o, j) => ({ option_text: o.option_text, is_correct: o.is_correct, order_index: j + 1 })),
-      })),
-    }
+      passingScore: Number(passingScore),
+      timeLimit,
+      maxAttempts,
+    }, questions as any)
 
     try {
       const quiz = await createQuiz(payload)

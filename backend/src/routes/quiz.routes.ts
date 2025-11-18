@@ -16,6 +16,7 @@ router.post('/courses/:courseId/quizzes', QuizController.createQuizController)
 router.get('/courses/:courseId/quizzes', QuizController.listQuizzesController)
 router.get('/quizzes/:quizId', QuizController.getQuizController)
 router.put('/quizzes/:quizId', QuizController.updateQuizController)
+router.put('/quizzes/:quizId/questions', QuizController.updateQuizQuestionsController)
 router.delete('/quizzes/:quizId', QuizController.deleteQuizController)
 
 // Intentos de quizzes
