@@ -238,9 +238,14 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight="bold">
-          Aplicaciones de Profesores
-        </Typography>
+        <Box>
+          <Typography variant="h5" fontWeight="bold">
+            Aplicaciones de Profesores
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mt={0.5}>
+            Mostrando {applications.length} aplicacion{applications.length !== 1 ? 'es' : ''}
+          </Typography>
+        </Box>
         <Button
           startIcon={<RefreshIcon />}
           onClick={() => { loadApplications(); onDataChanged?.() }}

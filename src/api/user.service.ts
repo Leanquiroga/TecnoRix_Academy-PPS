@@ -9,17 +9,29 @@ export interface GetUsersFilters {
 }
 
 export async function getUsers(filters?: GetUsersFilters): Promise<User[]> {
+  // Mantener API antigua para compatibilidad (sin paginación)
+  const { users } = await listUsers({ ...filters })
+  return users
+}
+
+export interface ListUsersParams extends GetUsersFilters {
+  page?: number
+  limit?: number
+  search?: string
+}
+
+export async function listUsers(params: ListUsersParams = {}): Promise<{ users: User[]; pagination: NonNullable<ApiResponse['pagination']> }> {
   try {
-    const params = new URLSearchParams()
-    if (filters?.role) params.append('role', filters.role)
-    if (filters?.status) params.append('status', filters.status)
-    
-    const queryString = params.toString()
-    const url = `/admin/users${queryString ? `?${queryString}` : ''}`
-    
-    const { data } = await http.get<ApiResponse<User[]>>(url)
+    const query: Record<string, string | number> = {}
+    if (params.role) query.role = params.role
+    if (params.status) query.status = params.status
+    if (params.page) query.page = params.page
+    if (params.limit) query.limit = params.limit
+    if (params.search) query.search = params.search
+
+    const { data } = await http.get<ApiResponse<User[]>>('/admin/users', { params: query })
     if (!data.success || !data.data) throw new Error(data.error || 'Error al obtener usuarios')
-    return data.data
+    return { users: data.data, pagination: data.pagination! }
   } catch (error) {
     if (error instanceof AxiosError && error.response?.data?.error) {
       throw new Error(error.response.data.error)

@@ -24,6 +24,7 @@ import {
   Typography,
   Stack,
   Tooltip,
+  TextField,
 } from '@mui/material'
 import {
   CheckCircle as ApproveIcon,
@@ -34,6 +35,7 @@ import {
 } from '@mui/icons-material'
 import type { User, Role, UserStatus } from '../../types/auth'
 import * as userService from '../../api/user.service'
+import { listUsers } from '../../api/user.service'
 
 interface Props {
   onDataChanged?: () => void
@@ -41,6 +43,8 @@ interface Props {
 
 export default function UserManagement({ onDataChanged }: Props) {
   const [users, setUsers] = useState<User[]>([])
+  const [page, setPage] = useState(1)
+  const [pagination, setPagination] = useState<{ page: number; limit: number; total: number; totalPages: number }>({ page: 1, limit: 20, total: 0, totalPages: 0 })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
@@ -48,6 +52,7 @@ export default function UserManagement({ onDataChanged }: Props) {
   // Filtros
   const [roleFilter, setRoleFilter] = useState<Role | ''>('')
   const [statusFilter, setStatusFilter] = useState<UserStatus | ''>('')
+  const [searchText, setSearchText] = useState('')
   
   // Dialog states
   const [roleDialog, setRoleDialog] = useState<{ open: boolean; user: User | null; newRole: Role }>({
@@ -71,26 +76,34 @@ export default function UserManagement({ onDataChanged }: Props) {
   // Nota: la carga depende de los filtros a través de loadUsers (memoizado con useCallback)
   // Por ello, sólo necesitamos un useEffect que dependa de loadUsers.
 
-  const loadUsers = useCallback(async () => {
+  const loadUsers = useCallback(async (targetPage = 1) => {
     setLoading(true)
     setError(null)
     try {
-      const filters = {
-        ...(roleFilter && { role: roleFilter }),
-        ...(statusFilter && { status: statusFilter }),
-      }
-      const data = await userService.getUsers(filters)
+      const { users: data, pagination: p } = await listUsers({
+        page: targetPage,
+        limit: pagination.limit,
+        role: roleFilter || undefined,
+        status: statusFilter || undefined,
+        search: searchText || undefined,
+      })
       setUsers(data)
+      setPagination(p)
+      setPage(p.page)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al cargar usuarios')
     } finally {
       setLoading(false)
     }
-  }, [roleFilter, statusFilter])
+  }, [roleFilter, statusFilter, searchText, pagination.limit])
 
+  // Cargar inicial y debounce búsqueda
   useEffect(() => {
-    loadUsers()
-  }, [loadUsers])
+    const timer = setTimeout(() => {
+      loadUsers(1)
+    }, searchText ? 500 : 0)
+    return () => clearTimeout(timer)
+  }, [searchText, roleFilter, statusFilter, loadUsers])
 
   const handleApprove = async (user: User) => {
     try {
@@ -181,9 +194,14 @@ export default function UserManagement({ onDataChanged }: Props) {
   return (
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h5" fontWeight="bold">
-          Gestión de Usuarios
-        </Typography>
+        <Box>
+          <Typography variant="h5" fontWeight="bold">
+            Gestión de Usuarios
+          </Typography>
+          <Typography variant="body2" color="text.secondary" mt={0.5}>
+            Mostrando {users.length} de {pagination.total} usuario{pagination.total !== 1 ? 's' : ''}
+          </Typography>
+        </Box>
         <Button
           startIcon={<RefreshIcon />}
           onClick={() => { loadUsers(); onDataChanged?.() }}
@@ -206,36 +224,56 @@ export default function UserManagement({ onDataChanged }: Props) {
         </Alert>
       )}
 
-      {/* Filtros */}
+      {/* Filtros y búsqueda */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-          <FormControl fullWidth>
-            <InputLabel>Filtrar por Rol</InputLabel>
-            <Select
-              value={roleFilter}
-              label="Filtrar por Rol"
-              onChange={(e) => setRoleFilter(e.target.value as Role | '')}
+        <Stack spacing={2}>
+          <TextField
+            fullWidth
+            placeholder="Buscar por nombre o email..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            disabled={loading}
+          />
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <FormControl fullWidth>
+              <InputLabel>Filtrar por Rol</InputLabel>
+              <Select
+                value={roleFilter}
+                label="Filtrar por Rol"
+                onChange={(e) => setRoleFilter(e.target.value as Role | '')}
+                disabled={loading}
+              >
+                <MenuItem value="">Todos</MenuItem>
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="teacher">Profesor</MenuItem>
+                <MenuItem value="student">Estudiante</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel>Filtrar por Estado</InputLabel>
+              <Select
+                value={statusFilter}
+                label="Filtrar por Estado"
+                onChange={(e) => setStatusFilter(e.target.value as UserStatus | '')}
+                disabled={loading}
+              >
+                <MenuItem value="">Todos</MenuItem>
+                <MenuItem value="active">Activo</MenuItem>
+                <MenuItem value="suspended">Suspendido</MenuItem>
+                <MenuItem value="pending_validation">Pendiente</MenuItem>
+              </Select>
+            </FormControl>
+          </Stack>
+          {(searchText || roleFilter || statusFilter) && (
+            <Button
+              variant="outlined"
+              onClick={() => { setSearchText(''); setRoleFilter(''); setStatusFilter(''); loadUsers(1) }}
+              disabled={loading}
+              sx={{ alignSelf: { sm: 'flex-start' } }}
             >
-              <MenuItem value="">Todos</MenuItem>
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="teacher">Profesor</MenuItem>
-              <MenuItem value="student">Estudiante</MenuItem>
-            </Select>
-          </FormControl>
-
-          <FormControl fullWidth>
-            <InputLabel>Filtrar por Estado</InputLabel>
-            <Select
-              value={statusFilter}
-              label="Filtrar por Estado"
-              onChange={(e) => setStatusFilter(e.target.value as UserStatus | '')}
-            >
-              <MenuItem value="">Todos</MenuItem>
-              <MenuItem value="active">Activo</MenuItem>
-              <MenuItem value="suspended">Suspendido</MenuItem>
-              <MenuItem value="pending_validation">Pendiente</MenuItem>
-            </Select>
-          </FormControl>
+              Limpiar filtros
+            </Button>
+          )}
         </Stack>
       </Paper>
 
@@ -348,6 +386,19 @@ export default function UserManagement({ onDataChanged }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Paginación */}
+      {pagination.totalPages > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Button size="small" disabled={loading || page === 1} onClick={() => loadUsers(1)}>Primera</Button>
+            <Button size="small" disabled={loading || page === 1} onClick={() => loadUsers(page - 1)}>Anterior</Button>
+            <Typography variant="body2">Página {page} de {pagination.totalPages}</Typography>
+            <Button size="small" disabled={loading || page === pagination.totalPages} onClick={() => loadUsers(page + 1)}>Siguiente</Button>
+            <Button size="small" disabled={loading || page === pagination.totalPages} onClick={() => loadUsers(pagination.totalPages)}>Última</Button>
+          </Stack>
+        </Box>
+      )}
 
       {/* Dialog: Cambiar Rol */}
       <Dialog open={roleDialog.open} onClose={() => setRoleDialog({ open: false, user: null, newRole: 'student' })}>

@@ -35,7 +35,7 @@ export const ADMIN_NAVIGATION: NavigationItem[] = [
     children: [
       {
         id: 'admin-users-pending',
-        label: 'Usuarios Pendientes',
+        label: 'Profesores Pendientes',
         path: '/admin/users/pending',
         icon: 'PendingActions',
         roles: ['admin'],

@@ -9,6 +9,8 @@ import TeacherRegister from '../pages/TeacherRegister'
 import TeacherPending from '../pages/TeacherPending'
 import DashboardPage from '../pages/Dashboard'
 import AdminPage from '../pages/AdminPage'
+import AdminUsers from '../pages/AdminUsers'
+import AdminUsersPending from '../pages/AdminUsersPending'
 import CreateCoursePage from '../pages/CreateCourse'
 import EditCoursePage from '../pages/EditCourse'
 import CourseApprovalPage from '../pages/CourseApproval'
@@ -137,6 +139,22 @@ const router = createBrowserRouter([
             <AdminPage />
           </RoleRoute>
         ) 
+      },
+      {
+        path: 'admin/users',
+        element: (
+          <RoleRoute roles={['admin']}>
+            <AdminUsers />
+          </RoleRoute>
+        )
+      },
+      {
+        path: 'admin/users/pending',
+        element: (
+          <RoleRoute roles={['admin']}>
+            <AdminUsersPending />
+          </RoleRoute>
+        )
       },
       {
         path: 'admin/courses/approval',

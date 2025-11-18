@@ -75,19 +75,57 @@ export async function signInWithPassword(email: string, password: string) {
   return data
 }
 
-export async function getAllUsers(filters?: { role?: UserRole; status?: UserStatus }) {
-  let query = supabaseAdmin.from('users').select('*')
+// Nuevo listado con paginación y búsqueda
+export async function listUsers(
+  page = 1,
+  limit = 20,
+  search?: string,
+  role?: UserRole,
+  status?: UserStatus
+): Promise<{ users: any[]; total: number }> { // `any[]` para no romper importadores existentes; ideal tipar User
+  const validPage = Math.max(1, page)
+  const validLimit = Math.min(Math.max(1, limit), 100) // defensa: máximo 100 por página
+  const offset = (validPage - 1) * validLimit
 
-  if (filters?.role) {
-    query = query.eq('role', filters.role)
+  // Query base para conteo
+  let countQuery = supabaseAdmin
+    .from('users')
+    .select('*', { count: 'exact', head: true })
+
+  // Query base para datos
+  let dataQuery = supabaseAdmin
+    .from('users')
+    .select('*')
+
+  if (role) {
+    countQuery = countQuery.eq('role', role)
+    dataQuery = dataQuery.eq('role', role)
   }
-  if (filters?.status) {
-    query = query.eq('status', filters.status)
+  if (status) {
+    countQuery = countQuery.eq('status', status)
+    dataQuery = dataQuery.eq('status', status)
   }
 
-  const { data, error } = await query.order('created_at', { ascending: false })
+  if (search && search.trim()) {
+    const term = `%${search.trim()}%`
+    // Búsqueda por nombre o email (case-insensitive)
+    countQuery = countQuery.or(`name.ilike.${term},email.ilike.${term}`)
+    dataQuery = dataQuery.or(`name.ilike.${term},email.ilike.${term}`)
+  }
+
+  const { count, error: countError } = await countQuery
+  if (countError) throw countError
+
+  const { data, error } = await dataQuery
+    .order('created_at', { ascending: false })
+    .range(offset, offset + validLimit - 1)
+
   if (error) throw error
-  return data
+
+  return {
+    users: data || [],
+    total: count || 0,
+  }
 }
 
 export async function updateUserStatus(userId: string, status: UserStatus) {

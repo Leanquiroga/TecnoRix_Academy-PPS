@@ -1,25 +1,30 @@
 import type { Response } from 'express'
 import type { AuthRequest } from '../types/common.types'
 import { UserRole, UserStatus } from '../types/auth.types'
-import { getAllUsers, getUserById, updateUserRole, updateUserStatus } from '../services/user.service'
+import { listUsers, getUserById, updateUserRole, updateUserStatus } from '../services/user.service'
 
 export async function getUsers(req: AuthRequest, res: Response) {
   try {
-    const { role, status } = req.query
+    const { role, status, page, limit, search } = req.query
 
-    const filters: { role?: UserRole; status?: UserStatus } = {}
-    if (role && typeof role === 'string') {
-      filters.role = role as UserRole
-    }
-    if (status && typeof status === 'string') {
-      filters.status = status as UserStatus
-    }
+    const pageNum = parseInt(page as string) || 1
+    const limitNum = parseInt(limit as string) || 20
+    const roleStr = typeof role === 'string' ? (role as UserRole) : undefined
+    const statusStr = typeof status === 'string' ? (status as UserStatus) : undefined
+    const searchStr = typeof search === 'string' ? search : undefined
 
-    const users = await getAllUsers(filters)
+    const { users, total } = await listUsers(pageNum, limitNum, searchStr, roleStr, statusStr)
+    const totalPages = Math.ceil(total / limitNum)
 
     return res.status(200).json({
       success: true,
       data: users,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages,
+      },
     })
   } catch (error: any) {
     console.error('Error getting users:', error)
