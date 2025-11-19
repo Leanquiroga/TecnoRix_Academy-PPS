@@ -216,7 +216,7 @@ describe('course.store', () => {
         },
       ]
 
-      vi.mocked(CourseAPI.listPendingCourses).mockResolvedValue(mockPending)
+      vi.mocked(CourseAPI.listPendingCourses).mockResolvedValue({ courses: mockPending, pagination: { page: 1, limit: 20, total: mockPending.length, totalPages: 1 } })
 
       const { fetchPendingCourses } = useCourseStore.getState()
       await fetchPendingCourses()

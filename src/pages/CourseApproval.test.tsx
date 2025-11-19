@@ -73,8 +73,10 @@ describe('CourseApproval', () => {
     expect(screen.getByRole('progressbar')).toBeInTheDocument()
   })
 
+  const pendingResult = (courses: Course[]) => ({ courses, pagination: { page: 1, limit: 20, total: courses.length, totalPages: 1 } })
+
   it('carga y muestra la lista de cursos pendientes', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
 
     renderCourseApproval()
 
@@ -100,7 +102,7 @@ describe('CourseApproval', () => {
   })
 
   it('muestra mensaje cuando no hay cursos pendientes', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue([])
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult([]))
 
     renderCourseApproval()
 
@@ -110,7 +112,7 @@ describe('CourseApproval', () => {
   })
 
   it('aprueba un curso correctamente', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
     const approveSpy = vi.spyOn(CourseAPI, 'approveCourse').mockResolvedValue({
       ...mockCourses[0],
       status: 'approved',
@@ -144,7 +146,7 @@ describe('CourseApproval', () => {
   })
 
   it('muestra error al aprobar curso cuando falla', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
     vi.spyOn(CourseAPI, 'approveCourse').mockRejectedValue(new Error('Error al aprobar'))
 
     const user = userEvent.setup()
@@ -166,7 +168,7 @@ describe('CourseApproval', () => {
   })
 
   it('abre modal de rechazo y valida razón requerida', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
 
     const user = userEvent.setup()
     renderCourseApproval()
@@ -195,7 +197,7 @@ describe('CourseApproval', () => {
   })
 
   it('rechaza un curso con razón correctamente', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
     const rejectSpy = vi.spyOn(CourseAPI, 'rejectCourse').mockResolvedValue({
       ...mockCourses[0],
       status: 'rejected',
@@ -239,7 +241,7 @@ describe('CourseApproval', () => {
   }, 10000)
 
   it('permite cancelar el rechazo', async () => {
-    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
     const rejectSpy = vi.spyOn(CourseAPI, 'rejectCourse')
 
     const user = userEvent.setup()
@@ -275,7 +277,7 @@ describe('CourseApproval', () => {
   })
 
   it('permite actualizar la lista de cursos', async () => {
-    const listSpy = vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(mockCourses)
+    const listSpy = vi.spyOn(CourseAPI, 'listPendingCourses').mockResolvedValue(pendingResult(mockCourses))
 
     const user = userEvent.setup()
     renderCourseApproval()

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   Box,
   Paper,
@@ -21,12 +21,18 @@ import {
   Avatar,
   IconButton,
   Tooltip,
+  TextField,
+  InputAdornment,
+  Pagination,
 } from '@mui/material'
 import {
   Visibility as ViewIcon,
   Refresh as RefreshIcon,
+  Search as SearchIcon,
+  Clear as ClearIcon,
 } from '@mui/icons-material'
-import { getPendingApplications, type TeacherApplication } from '../../api/teacher.service'
+import { type TeacherApplication } from '../../api/teacher.service'
+import { useUser } from '../../hooks/useUser'
 import TeacherApplicationModal from './TeacherApplicationModal.js'
 
 interface Props {
@@ -36,35 +42,44 @@ interface Props {
 type StatusFilter = 'all' | 'pending_validation' | 'active' | 'rejected' | 'suspended'
 
 export default function TeacherApplicationsList({ onDataChanged }: Props) {
-  const [applications, setApplications] = useState<TeacherApplication[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const {
+    applications,
+    applicationsStatusFilter,
+    loading,
+    error,
+    success,
+    setApplicationsStatusFilter,
+    fetchTeacherApplications,
+    clearError,
+    clearSuccess,
+  } = useUser()
   
   // Filtros
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('pending_validation')
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(applicationsStatusFilter as StatusFilter)
+  const [searchText, setSearchText] = useState('')
+  const [page, setPage] = useState(1)
+  const limit = 20
   
   // Modal state
   const [selectedApplication, setSelectedApplication] = useState<TeacherApplication | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
 
   const loadApplications = useCallback(async () => {
-    setLoading(true)
-    setError(null)
-    try {
-      const status = statusFilter === 'all' ? undefined : statusFilter
-      const response = await getPendingApplications(status)
-      setApplications(response.data.applications)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar aplicaciones')
-    } finally {
-      setLoading(false)
-    }
-  }, [statusFilter])
+    setApplicationsStatusFilter(statusFilter)
+    await fetchTeacherApplications(statusFilter)
+  }, [statusFilter, fetchTeacherApplications, setApplicationsStatusFilter])
 
   useEffect(() => {
     loadApplications()
   }, [loadApplications])
+
+  // Auto clear de mensajes de éxito tras 3s
+  useEffect(() => {
+    if (success) {
+      const t = setTimeout(() => clearSuccess(), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [success, clearSuccess])
 
   const handleViewDetails = (application: TeacherApplication) => {
     setSelectedApplication(application)
@@ -76,29 +91,16 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     setSelectedApplication(null)
   }
 
-  const handleApplicationUpdated = async (message: string, shouldClose: boolean = true) => {
-    setSuccess(message)
-    
-    // Recargar la lista de aplicaciones
+  const handleApplicationUpdated = async (_message: string, shouldClose: boolean = true) => {
+    // success se gestiona por fuera; mostrar mensaje usando clearSuccess/temporizador
     await loadApplications()
     onDataChanged?.()
-    
-    // Si el modal debe permanecer abierto, actualizar la aplicación seleccionada
     if (!shouldClose && selectedApplication) {
-      // Buscar la aplicación actualizada en la nueva lista
-      const status = statusFilter === 'all' ? undefined : statusFilter
-      const response = await getPendingApplications(status)
-      const updatedApplication = response.data.applications.find(
-        app => app.user_id === selectedApplication.user_id
-      )
-      if (updatedApplication) {
-        setSelectedApplication(updatedApplication)
-      }
+      // refrescar selectedApplication desde store
+      const updatedApplication = applications.find(app => app.user_id === selectedApplication.user_id)
+      if (updatedApplication) setSelectedApplication(updatedApplication)
     }
-    
-    if (shouldClose) {
-      handleCloseModal()
-    }
+    if (shouldClose) handleCloseModal()
   }
 
   const getStatusColor = (status: string) => {
@@ -136,6 +138,27 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     return application.credentials.filter(c => c.verification_status === 'pending').length
   }
 
+  const filteredApplications = useMemo(() => {
+    if (!searchText.trim()) return applications
+    const q = searchText.toLowerCase()
+    return applications.filter(app => (
+      (app.name && app.name.toLowerCase().includes(q)) ||
+      (app.email && app.email.toLowerCase().includes(q)) ||
+      (app.profile?.headline && app.profile.headline.toLowerCase().includes(q))
+    ))
+  }, [applications, searchText])
+
+  const totalPages = Math.max(1, Math.ceil(filteredApplications.length / limit))
+  const currentPageApplications = useMemo(() => {
+    const start = (page - 1) * limit
+    return filteredApplications.slice(start, start + limit)
+  }, [filteredApplications, page])
+
+  // Reset página al cambiar filtros/búsqueda
+  useEffect(() => {
+    setPage(1)
+  }, [searchText, statusFilter])
+
   const renderTableContent = () => {
     if (loading) {
       return (
@@ -147,7 +170,7 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
       )
     }
 
-    if (applications.length === 0) {
+    if (filteredApplications.length === 0) {
       return (
         <TableRow>
           <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
@@ -159,7 +182,7 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
       )
     }
 
-    return applications.map((application, index) => (
+    return currentPageApplications.map((application, index) => (
       <TableRow key={`${application.user_id}-${index}`} hover>
         <TableCell>
           <Stack direction="row" spacing={2} alignItems="center">
@@ -243,7 +266,7 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
             Aplicaciones de Profesores
           </Typography>
           <Typography variant="body2" color="text.secondary" mt={0.5}>
-            Mostrando {applications.length} aplicacion{applications.length !== 1 ? 'es' : ''}
+            Mostrando {currentPageApplications.length} de {filteredApplications.length} aplicacion{filteredApplications.length !== 1 ? 'es' : ''}
           </Typography>
         </Box>
         <Button
@@ -257,37 +280,69 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
       </Stack>
 
       {error && (
-        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
+        <Alert severity="error" onClose={() => clearError()} sx={{ mb: 2 }}>
           {error}
         </Alert>
       )}
 
       {success && (
-        <Alert severity="success" onClose={() => setSuccess(null)} sx={{ mb: 2 }}>
+        <Alert severity="success" onClose={() => clearSuccess()} sx={{ mb: 2 }}>
           {success}
         </Alert>
       )}
 
-      {/* Filtros */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-          <FormControl sx={{ minWidth: 200 }}>
-            <InputLabel>Filtrar por Estado</InputLabel>
-            <Select
-              value={statusFilter}
-              label="Filtrar por Estado"
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            >
-              <MenuItem value="all">Todos</MenuItem>
-              <MenuItem value="pending_validation">Pendientes</MenuItem>
-              <MenuItem value="active">Aprobados</MenuItem>
-              <MenuItem value="rejected">Rechazados</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
-            Total: <strong>{applications.length}</strong> aplicaciones
-          </Typography>
+        <Stack spacing={2}>
+          <TextField
+            fullWidth
+            placeholder="Buscar por nombre, email o titular..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            disabled={loading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: searchText && (
+                <InputAdornment position="end">
+                  <IconButton size="small" aria-label="Limpiar búsqueda" onClick={() => setSearchText('')}>
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+          />
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
+            <FormControl sx={{ minWidth: 200 }}>
+              <InputLabel>Filtrar por Estado</InputLabel>
+              <Select
+                value={statusFilter}
+                label="Filtrar por Estado"
+                onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+                disabled={loading}
+              >
+                <MenuItem value="all">Todos</MenuItem>
+                <MenuItem value="pending_validation">Pendientes</MenuItem>
+                <MenuItem value="active">Aprobados</MenuItem>
+                <MenuItem value="rejected">Rechazados</MenuItem>
+              </Select>
+            </FormControl>
+            {(searchText || statusFilter !== 'all') && (
+              <Button
+                variant="outlined"
+                onClick={() => { setSearchText(''); setStatusFilter('all'); loadApplications() }}
+                disabled={loading}
+                sx={{ minWidth: { sm: 160 } }}
+              >
+                Limpiar filtros
+              </Button>
+            )}
+            <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
+              Total: <strong>{applications.length}</strong>
+            </Typography>
+          </Stack>
         </Stack>
       </Paper>
 
@@ -311,6 +366,20 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {totalPages > 1 && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={(_e: React.ChangeEvent<unknown>, p: number) => setPage(p)}
+            color="primary"
+            showFirstButton
+            showLastButton
+            disabled={loading}
+          />
+        </Box>
+      )}
 
       {/* Modal de detalles */}
       {selectedApplication && (

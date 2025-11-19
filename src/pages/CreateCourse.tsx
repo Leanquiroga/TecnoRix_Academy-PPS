@@ -33,7 +33,7 @@ export default function CreateCoursePage() {
       title: file.name,
       type,
       url: uploaded.url,
-      order: materials.length + 1,
+      order_index: materials.length + 1,
     }
     setMaterials((prev) => [...prev, item])
   }

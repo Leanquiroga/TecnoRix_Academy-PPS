@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Box } from '@mui/material'
 import { AppLayout } from './AppLayout'
+import { LandingLayout } from './LandingLayout'
 import { ROUTES } from '../routes/routes.config'
 
 interface RootLayoutProps {
@@ -49,9 +50,15 @@ export function RootLayout({ children }: RootLayoutProps) {
   }
 
   if (isPublicRoute) {
-    // Navbar pero sin sidebar
+    if (isHome) {
+      return <LandingLayout>{children}</LandingLayout>
+    }
     return (
-      <AppLayout showNavbar={true} showSidebar={false} showBreadcrumbs={!isHome}>
+      <AppLayout
+        showNavbar={true}
+        showSidebar={false}
+        showBreadcrumbs={!isHome}
+      >
         {children}
       </AppLayout>
     )

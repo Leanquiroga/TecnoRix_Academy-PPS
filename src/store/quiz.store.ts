@@ -204,7 +204,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   },
   deleteQuiz: async (quizId: string) => {
     const current = get().currentQuiz
-    const res = await deleteQuiz(quizId)
+    await deleteQuiz(quizId)
     // Si el backend retorna success sin data, recargar curso; asumimos ahora retorna data con deleted_at
     if (current && current.id === quizId) {
       set({ currentQuiz: null })

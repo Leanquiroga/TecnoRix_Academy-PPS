@@ -1,65 +1,47 @@
-import { Container, Typography, Box, Button, Stack, Paper } from '@mui/material'
+import { Box, Paper, Container, Typography, Button, Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
-import { ROUTES } from '../routes/routes.config'
+import Hero from '../components/home/Hero'
+import Features from '../components/home/Features'
+import FeaturedCourses from '../components/home/FeaturedCourses'
 
 export default function Home() {
-  const { isAuthenticated, user } = useAuth()
+  // isAuthenticated ya no se usa en CTA (botón secundario removido)
+  // Se mantiene hook por si futuras secciones requieren estado de auth
+  useAuth()
 
   return (
-    <Container maxWidth="md" sx={{ py: 8 }}>
-      <Box textAlign="center">
-        <Typography variant="h3" component="h1" gutterBottom>
-          {import.meta.env.VITE_APP_NAME || 'TecnoRix Academy'}
-        </Typography>
+    <Box>
+      <Hero />
+      <Features />
+      <FeaturedCourses />
 
-        {isAuthenticated ? (
-          <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Bienvenido, {user?.name}!
+      {/* Teacher CTA Section */}
+      <Box component="section" sx={{ py: { xs: 6, md: 8 }, bgcolor: 'background.paper' }}>
+        <Container maxWidth="md">
+          <Paper elevation={4} sx={{ p: { xs: 4, md: 6 }, textAlign: 'center', borderRadius: 4 }}>
+            <Typography variant="h5" component="h3" sx={{ fontWeight: 'bold', mb: 2 }}>
+              ¿Eres experto en tu campo?
             </Typography>
-            <Stack direction="row" spacing={2} justifyContent="center" sx={{ mt: 2 }}>
-              <Button variant="contained" component={Link} to={ROUTES.DASHBOARD}>
-                Ir al Dashboard
-              </Button>
-              {user?.role === 'admin' && (
-                <Button variant="outlined" component={Link} to={ROUTES.ADMIN.ROOT}>
-                  Panel Admin
-                </Button>
-              )}
-            </Stack>
-          </Paper>
-        ) : (
-          <>
-            <Stack direction="row" spacing={2} justifyContent="center">
-              <Button variant="contained" size="large" component={Link} to={ROUTES.LOGIN}>
-                Iniciar Sesión
-              </Button>
-              <Button variant="outlined" size="large" component={Link} to={ROUTES.REGISTER}>
-                Registrarse
-              </Button>
-            </Stack>
-            
-            <Paper elevation={1} sx={{ mt: 4, p: 3, bgcolor: 'primary.50' }}>
-              <Typography variant="h6" gutterBottom color="primary">
-                ¿Quieres enseñar en TecnoRix Academy?
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
-                Comparte tu conocimiento y ayuda a miles de estudiantes a aprender
-              </Typography>
-              <Button 
-                variant="contained" 
-                color="primary" 
-                component={Link} 
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+              Comparte tu conocimiento y ayuda a cientos de estudiantes a aprender habilidades tecnológicas.
+            </Typography>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} justifyContent="center">
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                component={Link}
                 to="/register/teacher"
               >
-                Registrarse como Profesor
+                Convertirse en Profesor
               </Button>
-            </Paper>
-          </>
-        )}
-
+            </Stack>
+          </Paper>
+        </Container>
       </Box>
-    </Container>
+
+      {/* Footer ahora provisto por LandingLayout */}
+    </Box>
   )
 }

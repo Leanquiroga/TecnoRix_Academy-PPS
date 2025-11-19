@@ -25,6 +25,8 @@ import {
   Stack,
   Tooltip,
   TextField,
+  Pagination,
+  InputAdornment,
 } from '@mui/material'
 import {
   CheckCircle as ApproveIcon,
@@ -32,22 +34,32 @@ import {
   CheckCircleOutline as ActivateIcon,
   Edit as EditIcon,
   Refresh as RefreshIcon,
+  Search as SearchIcon,
+  Clear as ClearIcon,
 } from '@mui/icons-material'
 import type { User, Role, UserStatus } from '../../types/auth'
-import * as userService from '../../api/user.service'
-import { listUsers } from '../../api/user.service'
+import { useUser } from '../../hooks/useUser'
 
 interface Props {
   onDataChanged?: () => void
 }
 
 export default function UserManagement({ onDataChanged }: Props) {
-  const [users, setUsers] = useState<User[]>([])
-  const [page, setPage] = useState(1)
-  const [pagination, setPagination] = useState<{ page: number; limit: number; total: number; totalPages: number }>({ page: 1, limit: 20, total: 0, totalPages: 0 })
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const {
+    users,
+    usersPagination: pagination,
+    loading,
+    error,
+    success,
+    fetchUsers,
+    approveTeacher,
+    changeUserRole,
+    suspendUser,
+    clearError,
+    clearSuccess,
+  } = useUser()
+  // Usaremos la página del store para consistencia; mantenemos local solo para triggering controlado.
+  const [localPage, setLocalPage] = useState(pagination.page)
   
   // Filtros
   const [roleFilter, setRoleFilter] = useState<Role | ''>('')
@@ -77,25 +89,15 @@ export default function UserManagement({ onDataChanged }: Props) {
   // Por ello, sólo necesitamos un useEffect que dependa de loadUsers.
 
   const loadUsers = useCallback(async (targetPage = 1) => {
-    setLoading(true)
-    setError(null)
-    try {
-      const { users: data, pagination: p } = await listUsers({
-        page: targetPage,
-        limit: pagination.limit,
-        role: roleFilter || undefined,
-        status: statusFilter || undefined,
-        search: searchText || undefined,
-      })
-      setUsers(data)
-      setPagination(p)
-      setPage(p.page)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar usuarios')
-    } finally {
-      setLoading(false)
-    }
-  }, [roleFilter, statusFilter, searchText, pagination.limit])
+    await fetchUsers(
+      targetPage,
+      pagination.limit,
+      searchText || undefined,
+      (roleFilter || undefined) as Role | undefined,
+      (statusFilter || undefined) as UserStatus | undefined
+    )
+    setLocalPage(targetPage)
+  }, [fetchUsers, pagination.limit, searchText, roleFilter, statusFilter])
 
   // Cargar inicial y debounce búsqueda
   useEffect(() => {
@@ -105,42 +107,42 @@ export default function UserManagement({ onDataChanged }: Props) {
     return () => clearTimeout(timer)
   }, [searchText, roleFilter, statusFilter, loadUsers])
 
+  // Auto clear de mensajes de éxito tras 3s
+  useEffect(() => {
+    if (success) {
+      const t = setTimeout(() => clearSuccess(), 3000)
+      return () => clearTimeout(t)
+    }
+  }, [success, clearSuccess])
+
   const handleApprove = async (user: User) => {
     try {
-      setError(null)
-      await userService.approveTeacher(user.id)
-      setSuccess(`Profesor ${user.name} aprobado exitosamente`)
-      loadUsers()
+      await approveTeacher(user.id)
       onDataChanged?.()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al aprobar profesor')
+      loadUsers(localPage)
+    } catch {
+      /* error ya gestionado en store */
     }
   }
 
   const handleSuspend = async (user: User, suspend: boolean) => {
     try {
-      setError(null)
-      await userService.suspendUser(user.id, suspend)
-      setSuccess(`Usuario ${user.name} ${suspend ? 'suspendido' : 'activado'} exitosamente`)
-      loadUsers()
+      await suspendUser(user.id, suspend)
       onDataChanged?.()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cambiar estado')
+      loadUsers(localPage)
+    } catch {
+      /* error en store */
     }
   }
 
   const handleChangeRole = async () => {
     if (!roleDialog.user) return
-    
     try {
-      setError(null)
-      await userService.changeUserRole(roleDialog.user.id, roleDialog.newRole)
-      setSuccess(`Rol de ${roleDialog.user.name} cambiado a ${roleDialog.newRole}`)
+      await changeUserRole(roleDialog.user.id, roleDialog.newRole)
       setRoleDialog({ open: false, user: null, newRole: 'student' })
-      loadUsers()
       onDataChanged?.()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cambiar rol')
+      loadUsers(localPage)
+    } catch {
       setRoleDialog({ open: false, user: null, newRole: 'student' })
     }
   }
@@ -195,16 +197,14 @@ export default function UserManagement({ onDataChanged }: Props) {
     <Box>
       <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
         <Box>
-          <Typography variant="h5" fontWeight="bold">
-            Gestión de Usuarios
-          </Typography>
+          <Typography variant="h5" fontWeight="bold">Gestión de Usuarios</Typography>
           <Typography variant="body2" color="text.secondary" mt={0.5}>
             Mostrando {users.length} de {pagination.total} usuario{pagination.total !== 1 ? 's' : ''}
           </Typography>
         </Box>
         <Button
           startIcon={<RefreshIcon />}
-          onClick={() => { loadUsers(); onDataChanged?.() }}
+          onClick={() => { loadUsers(localPage); onDataChanged?.() }}
           variant="outlined"
           disabled={loading}
         >
@@ -213,18 +213,12 @@ export default function UserManagement({ onDataChanged }: Props) {
       </Stack>
 
       {error && (
-        <Alert severity="error" onClose={() => setError(null)} sx={{ mb: 2 }}>
-          {error}
-        </Alert>
+        <Alert severity="error" onClose={() => clearError()} sx={{ mb: 2 }}>{error}</Alert>
       )}
-
       {success && (
-        <Alert severity="success" onClose={() => setSuccess(null)} sx={{ mb: 2 }}>
-          {success}
-        </Alert>
+        <Alert severity="success" onClose={() => clearSuccess()} sx={{ mb: 2 }}>{success}</Alert>
       )}
 
-      {/* Filtros y búsqueda */}
       <Paper sx={{ p: 2, mb: 3 }}>
         <Stack spacing={2}>
           <TextField
@@ -233,6 +227,20 @@ export default function UserManagement({ onDataChanged }: Props) {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             disabled={loading}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              endAdornment: searchText && (
+                <InputAdornment position="end">
+                  <IconButton size="small" aria-label="Limpiar búsqueda" onClick={() => setSearchText('')}>
+                    <ClearIcon />
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
           <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <FormControl fullWidth>
@@ -263,21 +271,20 @@ export default function UserManagement({ onDataChanged }: Props) {
                 <MenuItem value="pending_validation">Pendiente</MenuItem>
               </Select>
             </FormControl>
+            {(searchText || roleFilter || statusFilter) && (
+              <Button
+                variant="outlined"
+                onClick={() => { setSearchText(''); setRoleFilter(''); setStatusFilter(''); loadUsers(1) }}
+                disabled={loading}
+                sx={{ minWidth: { sm: 160 } }}
+              >
+                Limpiar filtros
+              </Button>
+            )}
           </Stack>
-          {(searchText || roleFilter || statusFilter) && (
-            <Button
-              variant="outlined"
-              onClick={() => { setSearchText(''); setRoleFilter(''); setStatusFilter(''); loadUsers(1) }}
-              disabled={loading}
-              sx={{ alignSelf: { sm: 'flex-start' } }}
-            >
-              Limpiar filtros
-            </Button>
-          )}
         </Stack>
       </Paper>
 
-      {/* Tabla de usuarios */}
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -304,75 +311,51 @@ export default function UserManagement({ onDataChanged }: Props) {
                 </TableCell>
               </TableRow>
             ) : (
-              users.map((user) => (
+              users.map(user => (
                 <TableRow key={user.id} hover>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
                   <TableCell>
-                    <Chip
-                      label={user.role.toUpperCase()}
-                      color={getRoleColor(user.role)}
-                      size="small"
-                    />
+                    <Chip label={user.role.toUpperCase()} color={getRoleColor(user.role)} size="small" />
                   </TableCell>
                   <TableCell>
-                    <Chip
-                      label={getStatusLabel(user.status)}
-                      color={getStatusColor(user.status)}
-                      size="small"
-                      variant="outlined"
-                    />
+                    <Chip label={getStatusLabel(user.status)} color={getStatusColor(user.status)} size="small" variant="outlined" />
                   </TableCell>
-                  <TableCell>
-                    {new Date(user.created_at).toLocaleDateString('es-ES')}
-                  </TableCell>
+                  <TableCell>{new Date(user.created_at).toLocaleDateString('es-ES')}</TableCell>
                   <TableCell>
                     <Stack direction="row" spacing={1} justifyContent="center">
-                      {/* Aprobar Teacher */}
                       {user.role === 'teacher' && user.status === 'pending_validation' && (
                         <Tooltip title="Aprobar profesor">
                           <IconButton
                             size="small"
                             color="success"
-                            onClick={() =>
-                              openConfirmDialog(
-                                'Aprobar Profesor',
-                                `¿Estás seguro de aprobar a ${user.name} como profesor?`,
-                                () => handleApprove(user)
-                              )
-                            }
+                            aria-label="Aprobar profesor"
+                            onClick={() => openConfirmDialog(
+                              'Aprobar Profesor',
+                              `¿Estás seguro de aprobar a ${user.name} como profesor?`,
+                              () => handleApprove(user)
+                            )}
                           >
                             <ApproveIcon />
                           </IconButton>
                         </Tooltip>
                       )}
-
-                      {/* Cambiar Rol */}
                       <Tooltip title="Cambiar rol">
-                        <IconButton
-                          size="small"
-                          color="primary"
-                          onClick={() =>
-                            setRoleDialog({ open: true, user, newRole: user.role })
-                          }
-                        >
+                        <IconButton size="small" color="primary" aria-label="Cambiar rol" onClick={() => setRoleDialog({ open: true, user, newRole: user.role })}>
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-
-                      {/* Suspender/Activar */}
                       {user.status !== 'pending_validation' && (
                         <Tooltip title={user.status === 'suspended' ? 'Activar usuario' : 'Suspender usuario'}>
                           <IconButton
                             size="small"
                             color={user.status === 'suspended' ? 'success' : 'error'}
-                            onClick={() =>
-                              openConfirmDialog(
-                                user.status === 'suspended' ? 'Activar Usuario' : 'Suspender Usuario',
-                                `¿Estás seguro de ${user.status === 'suspended' ? 'activar' : 'suspender'} a ${user.name}?`,
-                                () => handleSuspend(user, user.status !== 'suspended')
-                              )
-                            }
+                            aria-label={user.status === 'suspended' ? 'Activar usuario' : 'Suspender usuario'}
+                            onClick={() => openConfirmDialog(
+                              user.status === 'suspended' ? 'Activar Usuario' : 'Suspender Usuario',
+                              `¿Estás seguro de ${user.status === 'suspended' ? 'activar' : 'suspender'} a ${user.name}?`,
+                              () => handleSuspend(user, user.status !== 'suspended')
+                            )}
                           >
                             {user.status === 'suspended' ? <ActivateIcon /> : <BlockIcon />}
                           </IconButton>
@@ -386,35 +369,30 @@ export default function UserManagement({ onDataChanged }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-
-      {/* Paginación */}
       {pagination.totalPages > 1 && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Button size="small" disabled={loading || page === 1} onClick={() => loadUsers(1)}>Primera</Button>
-            <Button size="small" disabled={loading || page === 1} onClick={() => loadUsers(page - 1)}>Anterior</Button>
-            <Typography variant="body2">Página {page} de {pagination.totalPages}</Typography>
-            <Button size="small" disabled={loading || page === pagination.totalPages} onClick={() => loadUsers(page + 1)}>Siguiente</Button>
-            <Button size="small" disabled={loading || page === pagination.totalPages} onClick={() => loadUsers(pagination.totalPages)}>Última</Button>
-          </Stack>
+          <Pagination
+            count={pagination.totalPages}
+            page={localPage}
+            onChange={(_, p) => loadUsers(p)}
+            color="primary"
+            disabled={loading}
+            showFirstButton
+            showLastButton
+          />
         </Box>
       )}
 
-      {/* Dialog: Cambiar Rol */}
       <Dialog open={roleDialog.open} onClose={() => setRoleDialog({ open: false, user: null, newRole: 'student' })}>
         <DialogTitle>Cambiar Rol de Usuario</DialogTitle>
         <DialogContent>
-          <Typography variant="body2" color="text.secondary" mb={2}>
-            Usuario: <strong>{roleDialog.user?.name}</strong>
-          </Typography>
+          <Typography variant="body2" color="text.secondary" mb={2}>Usuario: <strong>{roleDialog.user?.name}</strong></Typography>
           <FormControl fullWidth sx={{ mt: 2 }}>
             <InputLabel>Nuevo Rol</InputLabel>
             <Select
               value={roleDialog.newRole}
               label="Nuevo Rol"
-              onChange={(e) =>
-                setRoleDialog({ ...roleDialog, newRole: e.target.value as Role })
-              }
+              onChange={(e) => setRoleDialog({ ...roleDialog, newRole: e.target.value as Role })}
             >
               <MenuItem value="admin">Admin</MenuItem>
               <MenuItem value="teacher">Profesor</MenuItem>
@@ -428,26 +406,17 @@ export default function UserManagement({ onDataChanged }: Props) {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRoleDialog({ open: false, user: null, newRole: 'student' })}>
-            Cancelar
-          </Button>
-          <Button onClick={handleChangeRole} variant="contained" autoFocus>
-            Cambiar Rol
-          </Button>
+          <Button onClick={() => setRoleDialog({ open: false, user: null, newRole: 'student' })}>Cancelar</Button>
+          <Button onClick={handleChangeRole} variant="contained" autoFocus>Cambiar Rol</Button>
         </DialogActions>
       </Dialog>
 
-      {/* Dialog: Confirmación */}
       <Dialog open={confirmDialog.open} onClose={closeConfirmDialog}>
         <DialogTitle>{confirmDialog.title}</DialogTitle>
-        <DialogContent>
-          <Typography>{confirmDialog.message}</Typography>
-        </DialogContent>
+        <DialogContent><Typography>{confirmDialog.message}</Typography></DialogContent>
         <DialogActions>
           <Button onClick={closeConfirmDialog}>Cancelar</Button>
-          <Button onClick={executeAction} variant="contained" color="primary" autoFocus>
-            Confirmar
-          </Button>
+          <Button onClick={executeAction} variant="contained" color="primary" autoFocus>Confirmar</Button>
         </DialogActions>
       </Dialog>
     </Box>

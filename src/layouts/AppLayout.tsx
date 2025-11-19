@@ -13,6 +13,8 @@ interface AppLayoutProps {
   showNavbar?: boolean
   showSidebar?: boolean
   showBreadcrumbs?: boolean
+  fluid?: boolean
+  hideFooter?: boolean
 }
 
 /**
@@ -26,6 +28,8 @@ export function AppLayout({
   showNavbar = true,
   showSidebar = true,
   showBreadcrumbs = true,
+  fluid = false,
+  hideFooter = false,
 }: AppLayoutProps) {
   const { isAuthenticated } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -112,7 +116,18 @@ export function AppLayout({
               }),
           }}
         >
-          {disablePadding ? (
+          {fluid ? (
+            <Box
+              sx={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+              }}
+            >
+              {showBreadcrumbs && <Breadcrumbs />}
+              {children}
+            </Box>
+          ) : disablePadding ? (
             <Box sx={{ flex: 1, p: 2 }}>
               {showBreadcrumbs && <Breadcrumbs />}
               {children}
@@ -132,52 +147,54 @@ export function AppLayout({
             </Container>
           )}
 
-          {/* Footer */}
-          <Box
-            component="footer"
-            sx={{
-              py: 2,
-              px: 2,
-              mt: 'auto',
-              bgcolor: 'background.paper',
-              borderTop: 1,
-              borderColor: 'divider',
-            }}
-          >
-            <Container maxWidth={maxWidth}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: 2,
-                }}
-              >
-                <Box sx={{ typography: 'body2', color: 'text.secondary' }}>
-                  © 2025 Tecnorix Academy. Todos los derechos reservados.
-                </Box>
+          {/* Footer (condicional) */}
+          {!hideFooter && (
+            <Box
+              component="footer"
+              sx={{
+                py: 2,
+                px: 2,
+                mt: 'auto',
+                bgcolor: 'background.paper',
+                borderTop: 1,
+                borderColor: 'divider',
+              }}
+            >
+              <Container maxWidth={maxWidth}>
                 <Box
                   sx={{
                     display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
                     gap: 2,
-                    typography: 'body2',
-                    color: 'text.secondary',
                   }}
                 >
-                  <Box component="a" href="/about" sx={{ color: 'inherit' }}>
-                    Nosotros
+                  <Box sx={{ typography: 'body2', color: 'text.secondary' }}>
+                    © 2025 Tecnorix Academy. Todos los derechos reservados.
                   </Box>
-                  <Box component="a" href="/contact" sx={{ color: 'inherit' }}>
-                    Contacto
-                  </Box>
-                  <Box component="a" href="/privacy" sx={{ color: 'inherit' }}>
-                    Privacidad
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 2,
+                      typography: 'body2',
+                      color: 'text.secondary',
+                    }}
+                  >
+                    <Box component="a" href="/about" sx={{ color: 'inherit' }}>
+                      Nosotros
+                    </Box>
+                    <Box component="a" href="/contact" sx={{ color: 'inherit' }}>
+                      Contacto
+                    </Box>
+                    <Box component="a" href="/privacy" sx={{ color: 'inherit' }}>
+                      Privacidad
+                    </Box>
                   </Box>
                 </Box>
-              </Box>
-            </Container>
-          </Box>
+              </Container>
+            </Box>
+          )}
         </Box>
       </Box>
     </Box>

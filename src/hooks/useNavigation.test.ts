@@ -63,12 +63,12 @@ describe('useNavigation', () => {
   })
 
   describe('Navegación por Dashboard', () => {
-    it('goToDashboard sin rol navega al dashboard genérico', () => {
+    it('goToDashboard sin rol navega a home (fallback)', () => {
       const { result } = renderHook(() => useNavigation())
 
       result.current.goToDashboard()
 
-      expect(mockNavigate).toHaveBeenCalledWith('/dashboard')
+      expect(mockNavigate).toHaveBeenCalledWith('/')
     })
 
     it('goToDashboard con rol admin navega a ruta de admin', () => {

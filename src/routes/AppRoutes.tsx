@@ -7,7 +7,6 @@ import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from '../pages/ResetPassword'
 import TeacherRegister from '../pages/TeacherRegister'
 import TeacherPending from '../pages/TeacherPending'
-import DashboardPage from '../pages/Dashboard'
 import AdminPage from '../pages/AdminPage'
 import AdminUsers from '../pages/AdminUsers'
 import AdminUsersPending from '../pages/AdminUsersPending'
@@ -124,14 +123,6 @@ const router = createBrowserRouter([
             </RoleRoute>
           )
         },
-      { 
-        path: 'dashboard',
-        element: (
-          <PrivateRoute>
-            <DashboardPage />
-          </PrivateRoute>
-        ) 
-      },
       { 
         path: 'admin', 
         element: (

@@ -23,11 +23,14 @@ export function useNavigation() {
    */
   const goToDashboard = useCallback(
     (role?: Role) => {
+      // Redirigir directo a la ruta específica por rol.
       if (role) {
         navigate(getDefaultRouteByRole(role))
-      } else {
-        navigate(ROUTES.DASHBOARD)
+        return
       }
+      // Si no se provee rol, intentar deducirlo desde almacenamiento/session (fase futura)
+      // Por ahora fallback al home.
+      navigate(ROUTES.HOME)
     },
     [navigate]
   )
