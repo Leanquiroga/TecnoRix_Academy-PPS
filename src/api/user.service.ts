@@ -78,3 +78,35 @@ export async function suspendUser(userId: string, suspend: boolean): Promise<Use
     throw error
   }
 }
+
+export interface UpdateProfilePayload {
+  name?: string
+  bio?: string | null
+  country?: string | null
+  avatar_url?: string | null
+}
+
+export async function updateProfile(payload: UpdateProfilePayload): Promise<User> {
+  try {
+    const { data } = await http.put<ApiResponse<User>>('/users/profile', payload)
+    if (!data.success || !data.data) throw new Error(data.error || 'Error al actualizar perfil')
+    return data.data
+  } catch (error) {
+    if (error instanceof AxiosError && error.response?.data?.error) {
+      throw new Error(error.response.data.error)
+    }
+    throw error
+  }
+}
+
+// Activity summary types
+export type ActivitySummary =
+  | { role: 'student'; totalEnrolled: number; averageProgress: number; certificates: number }
+  | { role: 'teacher'; totalCourses: number; totalStudents: number }
+  | { role: 'admin'; totalUsers: number; totalCourses: number; totalQuizzes: number }
+
+export async function getActivitySummary(): Promise<ActivitySummary> {
+  const { data } = await http.get<ApiResponse<ActivitySummary>>('/users/activity')
+  if (!data.success || !data.data) throw new Error(data.error || 'Error obteniendo actividad')
+  return data.data
+}

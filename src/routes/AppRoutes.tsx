@@ -31,6 +31,7 @@ import CreateQuizPage from '../pages/CreateQuiz'
 import StudentProgressPage from '../pages/StudentProgress'
 import TeacherCourseQuizzes from '../pages/TeacherCourseQuizzes'
 import EditQuizPage from '../pages/EditQuiz'
+import ProfilePage from '../pages/Profile'
 
 const router = createBrowserRouter([
   {
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
       { path: 'reset-password', element: <ResetPassword /> },
       { path: 'register/teacher', element: <TeacherRegister /> },
       { path: 'teacher/pending', element: <TeacherPending /> },
+      {
+        path: 'profile',
+        element: (
+          <PrivateRoute>
+            <ProfilePage />
+          </PrivateRoute>
+        )
+      },
       { path: 'courses', element: <CoursesList /> },
       { path: 'courses/:id', element: <CourseDetail /> },
       {

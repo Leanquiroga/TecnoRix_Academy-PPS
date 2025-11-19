@@ -6,17 +6,17 @@ import { useNavigation } from '../hooks/useNavigation'
 import { ROUTES } from '../routes/routes.config'
 
 export default function LoginPage() {
-  const { login, loading, error, isAuthenticated } = useAuth()
+  const { login, loading, error, isAuthenticated, user } = useAuth()
   const { goToDashboard } = useNavigation()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [localError, setLocalError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (isAuthenticated) {
-      goToDashboard()
+    if (isAuthenticated && user?.role) {
+      goToDashboard(user.role)
     }
-  }, [isAuthenticated, goToDashboard])
+  }, [isAuthenticated, user, goToDashboard])
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

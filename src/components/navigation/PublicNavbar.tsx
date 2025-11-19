@@ -3,6 +3,7 @@ import { Brightness4, Brightness7 } from '@mui/icons-material'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../routes/routes.config'
 import { useAuth } from '../../hooks/useAuth'
+import { useNavigation } from '../../hooks/useNavigation'
 import { useThemeStore } from '../../store/theme.store'
 
 /**
@@ -10,7 +11,8 @@ import { useThemeStore } from '../../store/theme.store'
  * No muestra avatar, menú de usuario ni notificaciones.
  */
 export function PublicNavbar() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
+  const { goToDashboard } = useNavigation()
   const { toggleMode } = useThemeStore()
   const theme = useTheme()
 
@@ -79,8 +81,7 @@ export function PublicNavbar() {
           </IconButton>
           {isAuthenticated ? (
             <Button
-              component={Link}
-              to={ROUTES.DASHBOARD}
+              onClick={() => goToDashboard(user?.role)}
               variant="contained"
               color="primary"
             >

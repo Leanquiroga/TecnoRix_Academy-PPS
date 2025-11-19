@@ -2,9 +2,11 @@ import { Box, Container, Typography, Stack, Button, Paper } from '@mui/material'
 import { useAuth } from '../../hooks/useAuth'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '../../routes/routes.config'
+import { useNavigation } from '../../hooks/useNavigation'
 
 export function Hero() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
+  const { goToDashboard } = useNavigation()
 
   return (
     <Box
@@ -53,15 +55,26 @@ export function Hero() {
           >
             Explorar Cursos
           </Button>
-          <Button
-            size="large"
-            variant="outlined"
-            color="inherit"
-            component={Link}
-            to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.REGISTER}
-          >
-            {isAuthenticated ? 'Ir al Dashboard' : 'Comenzar Ahora'}
-          </Button>
+          {isAuthenticated ? (
+            <Button
+              size="large"
+              variant="outlined"
+              color="inherit"
+              onClick={() => goToDashboard(user?.role)}
+            >
+              Ir al Dashboard
+            </Button>
+          ) : (
+            <Button
+              size="large"
+              variant="outlined"
+              color="inherit"
+              component={Link}
+              to={ROUTES.REGISTER}
+            >
+              Comenzar Ahora
+            </Button>
+          )}
         </Stack>
 
         {/* Estadísticas */}

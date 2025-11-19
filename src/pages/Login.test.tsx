@@ -14,7 +14,9 @@ function renderWithRouter(initialPath = '/login') {
   const router = createMemoryRouter([
     { path: '/', element: <Home /> },
     { path: '/login', element: <LoginPage /> },
-    { path: '/dashboard', element: <DummyDashboard /> },
+    { path: '/student/dashboard', element: <DummyDashboard /> },
+    { path: '/teacher/dashboard', element: <DummyDashboard /> },
+    { path: '/admin', element: <DummyDashboard /> },
   ], { initialEntries: [initialPath] })
   return render(<RouterProvider router={router} />)
 }
@@ -46,6 +48,11 @@ describe('LoginPage', () => {
 
     await waitFor(() => {
       expect(useAuthStore.getState().isAuthenticated).toBe(true)
+    })
+
+    // Verifica navegación a dashboard específico de estudiante
+    await waitFor(() => {
+      expect(screen.getByText(/dashboard/i)).toBeInTheDocument()
     })
   })
 })

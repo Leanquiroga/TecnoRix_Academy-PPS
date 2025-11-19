@@ -268,3 +268,50 @@ export async function resetPassword(req: Request, res: Response) {
     })
   }
 }
+
+// ============================================
+// CHANGE PASSWORD (perfil autenticado)
+// ============================================
+/**
+ * POST /api/auth/change-password
+ * Requiere usuario autenticado. Verifica la contraseña actual usando signInWithPassword
+ * y luego actualiza la contraseña en Supabase Auth.
+ */
+export async function changePassword(req: AuthRequest, res: Response) {
+  try {
+    if (!req.user) return res.status(401).json({ success: false, error: 'Unauthorized' })
+    const { currentPassword, newPassword } = req.body as { currentPassword?: string; newPassword?: string }
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, error: 'Parámetros incompletos' })
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, error: 'La nueva contraseña debe tener al menos 6 caracteres' })
+    }
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ success: false, error: 'La nueva contraseña debe ser distinta a la actual' })
+    }
+
+    // Obtener perfil para email y auth_user_id
+    const profile = await getUserById(req.user.userId)
+    if (!profile) return res.status(404).json({ success: false, error: 'Usuario no encontrado' })
+
+    // Verificar contraseña actual intentando login
+    try {
+      await signInWithPassword(profile.email, currentPassword)
+    } catch (e: any) {
+      return res.status(401).json({ success: false, error: 'Contraseña actual incorrecta' })
+    }
+
+    // Actualizar contraseña en Auth usando service role y auth_user_id
+    const { error: updateErr } = await supabaseAdmin.auth.admin.updateUserById(profile.auth_user_id, { password: newPassword })
+    if (updateErr) {
+      console.error('[changePassword] update error', updateErr)
+      return res.status(500).json({ success: false, error: 'Error al actualizar la contraseña' })
+    }
+
+    return res.json({ success: true, message: 'Contraseña actualizada exitosamente' })
+  } catch (err: any) {
+    console.error('Change password error:', err)
+    return res.status(500).json({ success: false, error: 'Error interno al cambiar contraseña' })
+  }
+}

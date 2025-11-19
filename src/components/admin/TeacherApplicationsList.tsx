@@ -10,10 +10,6 @@ import {
   TableRow,
   Chip,
   Button,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
   Alert,
   CircularProgress,
   Typography,
@@ -39,12 +35,9 @@ interface Props {
   onDataChanged?: () => void
 }
 
-type StatusFilter = 'all' | 'pending_validation' | 'active' | 'rejected' | 'suspended'
-
 export default function TeacherApplicationsList({ onDataChanged }: Props) {
   const {
     applications,
-    applicationsStatusFilter,
     loading,
     error,
     success,
@@ -54,8 +47,7 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     clearSuccess,
   } = useUser()
   
-  // Filtros
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>(applicationsStatusFilter as StatusFilter)
+  // Búsqueda
   const [searchText, setSearchText] = useState('')
   const [page, setPage] = useState(1)
   const limit = 20
@@ -65,9 +57,10 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
   const [modalOpen, setModalOpen] = useState(false)
 
   const loadApplications = useCallback(async () => {
-    setApplicationsStatusFilter(statusFilter)
-    await fetchTeacherApplications(statusFilter)
-  }, [statusFilter, fetchTeacherApplications, setApplicationsStatusFilter])
+    // Traer todas las aplicaciones (sin filtro de estado en UI)
+    setApplicationsStatusFilter('all')
+    await fetchTeacherApplications('all')
+  }, [fetchTeacherApplications, setApplicationsStatusFilter])
 
   useEffect(() => {
     loadApplications()
@@ -133,10 +126,6 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     }
   }
 
-  const getPendingCredentialsCount = (application: TeacherApplication) => {
-    if (!application.credentials) return 0
-    return application.credentials.filter(c => c.verification_status === 'pending').length
-  }
 
   const filteredApplications = useMemo(() => {
     if (!searchText.trim()) return applications
@@ -154,16 +143,16 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     return filteredApplications.slice(start, start + limit)
   }, [filteredApplications, page])
 
-  // Reset página al cambiar filtros/búsqueda
+  // Reset página al cambiar búsqueda
   useEffect(() => {
     setPage(1)
-  }, [searchText, statusFilter])
+  }, [searchText])
 
   const renderTableContent = () => {
     if (loading) {
       return (
         <TableRow>
-          <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
+          <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
             <CircularProgress />
           </TableCell>
         </TableRow>
@@ -173,9 +162,9 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
     if (filteredApplications.length === 0) {
       return (
         <TableRow>
-          <TableCell colSpan={8} align="center" sx={{ py: 4 }}>
+          <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
             <Typography color="text.secondary">
-              No hay aplicaciones {statusFilter !== 'all' && `con estado "${getStatusLabel(statusFilter)}"`}
+              No hay aplicaciones
             </Typography>
           </TableCell>
         </TableRow>
@@ -199,11 +188,6 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
           </Stack>
         </TableCell>
         <TableCell>
-          <Typography variant="body2" color="text.secondary">
-            {application.email || '—'}
-          </Typography>
-        </TableCell>
-        <TableCell>
           <Typography variant="body2" noWrap sx={{ maxWidth: 200 }}>
             {application.profile?.headline || '—'}
           </Typography>
@@ -215,21 +199,6 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
               : '—'
             }
           </Typography>
-        </TableCell>
-        <TableCell>
-          <Stack direction="row" spacing={0.5} alignItems="center">
-            <Typography variant="body2">
-              {application.credentials?.length || 0}
-            </Typography>
-            {getPendingCredentialsCount(application) > 0 && (
-              <Chip 
-                label={`${getPendingCredentialsCount(application)} pendientes`}
-                size="small"
-                color="warning"
-                variant="outlined"
-              />
-            )}
-          </Stack>
         </TableCell>
         <TableCell>
           <Chip
@@ -295,7 +264,7 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
         <Stack spacing={2}>
           <TextField
             fullWidth
-            placeholder="Buscar por nombre, email o titular..."
+            placeholder="Buscar por nombre o titular..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             disabled={loading}
@@ -314,35 +283,6 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
               )
             }}
           />
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
-            <FormControl sx={{ minWidth: 200 }}>
-              <InputLabel>Filtrar por Estado</InputLabel>
-              <Select
-                value={statusFilter}
-                label="Filtrar por Estado"
-                onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-                disabled={loading}
-              >
-                <MenuItem value="all">Todos</MenuItem>
-                <MenuItem value="pending_validation">Pendientes</MenuItem>
-                <MenuItem value="active">Aprobados</MenuItem>
-                <MenuItem value="rejected">Rechazados</MenuItem>
-              </Select>
-            </FormControl>
-            {(searchText || statusFilter !== 'all') && (
-              <Button
-                variant="outlined"
-                onClick={() => { setSearchText(''); setStatusFilter('all'); loadApplications() }}
-                disabled={loading}
-                sx={{ minWidth: { sm: 160 } }}
-              >
-                Limpiar filtros
-              </Button>
-            )}
-            <Typography variant="body2" color="text.secondary" sx={{ ml: 'auto' }}>
-              Total: <strong>{applications.length}</strong>
-            </Typography>
-          </Stack>
         </Stack>
       </Paper>
 
@@ -352,10 +292,8 @@ export default function TeacherApplicationsList({ onDataChanged }: Props) {
           <TableHead>
             <TableRow>
               <TableCell><strong>Profesor</strong></TableCell>
-              <TableCell><strong>Email</strong></TableCell>
               <TableCell><strong>Especialidad</strong></TableCell>
               <TableCell><strong>Experiencia</strong></TableCell>
-              <TableCell><strong>Credenciales</strong></TableCell>
               <TableCell><strong>Estado</strong></TableCell>
               <TableCell><strong>Fecha</strong></TableCell>
               <TableCell align="center"><strong>Acciones</strong></TableCell>

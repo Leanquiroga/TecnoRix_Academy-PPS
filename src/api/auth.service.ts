@@ -84,3 +84,9 @@ export async function resetPassword(access_token: string, newPassword: string): 
     throw error
   }
 }
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<string> {
+  const { data } = await http.post<ApiResponse<{ message: string }>>('/auth/change-password', { currentPassword, newPassword })
+  if (!data.success) throw new Error(data.error || 'Error al cambiar contraseña')
+  return data.message || 'Contraseña actualizada'
+}

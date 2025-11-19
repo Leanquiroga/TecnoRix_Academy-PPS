@@ -9,6 +9,10 @@ export interface User {
   role: Role
   status: UserStatus
   avatar_url?: string
+  bio?: string | null
+  country?: string | null
+  last_login?: string | null
+  verified_at?: string | null
   created_at: string
   updated_at: string
 }

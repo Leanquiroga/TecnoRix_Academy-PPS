@@ -25,7 +25,13 @@ export const ROUTES = {
   COURSE_DETAIL: (id: string) => `/courses/${id}`,
 
   // Rutas privadas generales
-  DASHBOARD: '/dashboard',
+  /**
+   * @deprecated Ruta genérica eliminada. Usar rutas específicas por rol:
+   * - Student: ROUTES.STUDENT.DASHBOARD
+   * - Teacher: ROUTES.TEACHER.DASHBOARD
+   * - Admin: ROUTES.ADMIN.ROOT
+   */
+  DASHBOARD: '/__deprecated_dashboard',
   PROFILE: '/profile',
   SETTINGS: '/settings',
 
@@ -135,13 +141,7 @@ export const ROUTE_CONFIGS: RouteConfig[] = [
   },
 
   // Rutas privadas
-  {
-    path: ROUTES.DASHBOARD,
-    label: 'Dashboard',
-    requiresAuth: true,
-    showInMenu: true,
-    icon: 'Dashboard',
-  },
+  // Dashboard genérico deprecado - se reemplaza por dashboards específicos
   {
     path: ROUTES.PROFILE,
     label: 'Mi Perfil',

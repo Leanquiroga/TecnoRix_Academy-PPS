@@ -164,28 +164,6 @@ describe('TeacherApplicationsList Component', () => {
     });
   });
 
-  describe('Filtros de estado', () => {
-    beforeEach(async () => {
-      vi.mocked(teacherService.getPendingApplications).mockResolvedValue({
-        success: true,
-        data: { applications: mockApplications, total: mockApplications.length }
-      });
-      render(<TeacherApplicationsList />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Juan Pérez')).toBeInTheDocument();
-      });
-    });
-
-    it('debería mostrar solo aplicaciones pendientes por defecto', () => {
-      // El filtro por defecto es "pending_validation", solo debe mostrar Juan Pérez
-      expect(screen.getByText('Juan Pérez')).toBeInTheDocument();
-    });
-
-    it.skip('debería permitir cambiar filtro a "Todos"', async () => {
-      // Interacción con MUI Select omitida en JSDOM
-    });
-  });
 
   describe('Visualización de datos', () => {
     beforeEach(async () => {
@@ -210,26 +188,12 @@ describe('TeacherApplicationsList Component', () => {
       expect(carlosInitial).toBeInTheDocument();
     });
 
-    it('debería mostrar el email de cada profesor', () => {
-      expect(screen.getByText('juan@example.com')).toBeInTheDocument();
-      expect(screen.getByText('maria@example.com')).toBeInTheDocument();
-      expect(screen.getByText('carlos@example.com')).toBeInTheDocument();
-    });
 
     it('debería mostrar el headline del perfil profesional', () => {
       expect(screen.getByText('Profesor de Matemáticas')).toBeInTheDocument();
       expect(screen.getByText('Profesora de Física')).toBeInTheDocument();
     });
 
-    it('debería mostrar el conteo de credenciales', () => {
-      const credentialCounts = screen.getAllByText(/^[0-9]+$/);
-      expect(credentialCounts.length).toBeGreaterThan(0);
-    });
-
-    it('debería mostrar badge de pendientes cuando hay credenciales pendientes', () => {
-      const badges = screen.getAllByText(/pendientes/);
-      expect(badges.length).toBeGreaterThan(0);
-    });
 
     it('debería mostrar chips de estado correctamente coloreados', () => {
       const pendingChip = screen.getByText('Pendiente').closest('.MuiChip-root');

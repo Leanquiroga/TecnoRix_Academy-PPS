@@ -41,6 +41,7 @@ import { useNotify } from '../hooks/useNotify'
 import { Breadcrumbs } from '../components/navigation/Breadcrumbs'
 import { useQuizStore } from '../store/quiz.store'
 import QuizCard from '../components/quiz/QuizCard'
+import { CourseThumbnail } from '../components/CourseThumbnail'
 
 const levelColors = {
   beginner: 'success',
@@ -308,6 +309,8 @@ export function CourseView() {
         </Button>
 
         <Card>
+          {/* Portada del curso */}
+          <CourseThumbnail url={course.thumbnail_url} title={course.title} height={260} />
           <CardContent>
             <Stack spacing={2}>
               <Box>

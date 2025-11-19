@@ -151,3 +151,29 @@ export async function updateUserRole(userId: string, role: UserRole) {
   if (error) throw error
   return data
 }
+
+// Actualizar perfil (name, bio, country, avatar_url)
+export async function updateUserProfile(userId: string, updates: {
+  name?: string
+  bio?: string | null
+  country?: string | null
+  avatar_url?: string | null
+}) {
+  // Construir objeto limpio sin undefined
+  const payload: Record<string, any> = {}
+  if (typeof updates.name === 'string') payload.name = updates.name
+  if (typeof updates.bio === 'string' || updates.bio === null) payload.bio = updates.bio
+  if (typeof updates.country === 'string' || updates.country === null) payload.country = updates.country
+  if (typeof updates.avatar_url === 'string' || updates.avatar_url === null) payload.avatar_url = updates.avatar_url
+  payload.updated_at = new Date().toISOString()
+
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .update(payload)
+    .eq('id', userId)
+    .select('*')
+    .single()
+
+  if (error) throw error
+  return data
+}
